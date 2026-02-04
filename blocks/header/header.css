@@ -1,15 +1,17 @@
 /* header and nav layout */
 header .nav-wrapper {
   width: 100%;
-  z-index: 2;
+  z-index: 100;
   position: fixed;
+  top: 0;
+  left: 0;
   background:
-    linear-gradient(to right, rgb(255 255 255 / 50%), rgb(255 255 255 / 50%)),
+    linear-gradient(135deg, rgb(139 0 0 / 70%) 0%, rgb(80 0 40 / 60%) 30%, rgb(60 0 80 / 50%) 60%, rgb(0 50 100 / 40%) 100%),
     url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1920&q=80');
   background-size: cover;
   background-position: center;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px rgb(0 0 0 / 15%), 0 2px 4px rgb(0 0 0 / 10%);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgb(139 0 0 / 30%), 0 2px 8px rgb(0 0 0 / 20%);
 }
 
 header nav {
@@ -61,9 +63,15 @@ header nav p {
 }
 
 header nav a:any-link {
-  color: #1a1a2e;
-  text-shadow: 0 1px 2px rgb(255 255 255 / 60%);
+  color: #fff;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 50%);
   font-weight: 600;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+header nav a:any-link:hover {
+  color: #ffd700;
+  text-shadow: 0 2px 8px rgb(255 215 0 / 50%);
 }
 
 header nav .nav-brand {
@@ -72,8 +80,8 @@ header nav .nav-brand {
   font-size: var(--heading-font-size-s);
   font-weight: 700;
   line-height: 1;
-  color: #1a1a2e;
-  text-shadow: 0 1px 3px rgb(255 255 255 / 70%);
+  color: #fff;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 50%);
 }
 
 /* hamburger */
@@ -234,6 +242,7 @@ header nav .nav-sections ul > li > ul > li {
 
   header nav .nav-sections ul {
     display: flex;
+    align-items: center;
     gap: 24px;
     margin: 0;
   }
@@ -241,38 +250,75 @@ header nav .nav-sections ul > li > ul > li {
   header nav .nav-sections .default-content-wrapper > ul > li {
     flex: 0 1 auto;
     position: relative;
+    padding: 0;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > a,
+  header nav .nav-sections .default-content-wrapper > ul > li > p {
+    display: block;
+    padding: 20px 8px;
+    margin: 0;
+    line-height: 1.2;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li > ul {
-    display: none;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: absolute;
+    left: -16px;
+    width: 220px;
+    top: 100%;
+    margin-top: 8px;
+    padding: 12px 0;
+    background: linear-gradient(135deg, rgb(139 0 0 / 95%) 0%, rgb(60 0 60 / 90%) 100%);
+    backdrop-filter: blur(16px);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgb(0 0 0 / 50%), 0 4px 12px rgb(139 0 0 / 30%);
+    white-space: initial;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
   }
 
+  header nav .nav-sections .default-content-wrapper > ul > li:hover > ul,
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
-    display: block;
-    position: absolute;
-    left: -24px;
-    width: 200px;
-    top: 150%;
-    padding: 16px;
-    background-color: var(--light-color);
-    white-space: initial;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li > ul::before {
     content: '';
     position: absolute;
     top: -8px;
-    left: 16px;
+    left: 24px;
     width: 0;
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 8px solid var(--light-color);
+    border-bottom: 8px solid rgb(139 0 0 / 90%);
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li > ul > li {
-    padding: 8px 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li a {
+    display: block;
+    padding: 12px 20px;
+    color: #fff;
+    transition: background-color 0.2s ease, padding-left 0.2s ease;
+  }
+
+  header nav .nav-sections .default-content-wrapper > ul > li > ul > li a:hover {
+    background-color: rgb(255 255 255 / 15%);
+    padding-left: 24px;
+    color: #ffd700;
   }
 }
 
