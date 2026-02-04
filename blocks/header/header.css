@@ -1,9 +1,15 @@
 /* header and nav layout */
 header .nav-wrapper {
-  background-color: var(--background-color);
   width: 100%;
   z-index: 2;
   position: fixed;
+  background:
+    linear-gradient(to right, rgb(255 255 255 / 50%), rgb(255 255 255 / 50%)),
+    url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 15%), 0 2px 4px rgb(0 0 0 / 10%);
 }
 
 header nav {
@@ -55,7 +61,19 @@ header nav p {
 }
 
 header nav a:any-link {
-  color: currentcolor;
+  color: #1a1a2e;
+  text-shadow: 0 1px 2px rgb(255 255 255 / 60%);
+  font-weight: 600;
+}
+
+header nav .nav-brand {
+  grid-area: brand;
+  flex-basis: 128px;
+  font-size: var(--heading-font-size-s);
+  font-weight: 700;
+  line-height: 1;
+  color: #1a1a2e;
+  text-shadow: 0 1px 3px rgb(255 255 255 / 70%);
 }
 
 /* hamburger */
@@ -72,7 +90,7 @@ header nav .nav-hamburger button {
   border: 0;
   border-radius: 0;
   padding: 0;
-  background-color: var(--background-color);
+  background-color: transparent;
   color: inherit;
   overflow: initial;
   text-overflow: initial;
@@ -140,14 +158,6 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 }
 
 /* brand */
-header .nav-brand {
-  grid-area: brand;
-  flex-basis: 128px;
-  font-size: var(--heading-font-size-s);
-  font-weight: 700;
-  line-height: 1;
-}
-
 header nav .nav-brand img {
   width: 128px;
   height: auto;

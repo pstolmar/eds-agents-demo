@@ -4,9 +4,10 @@
 
 .tabs-list {
   display: flex;
-  gap: 0;
+  gap: 0.5rem;
   border-bottom: 2px solid #e0e0e0;
   margin-bottom: 0;
+  padding-bottom: 0.5rem;
 }
 
 .tabs-tab {
@@ -18,24 +19,90 @@
   font-weight: 500;
   color: #666;
   position: relative;
-  transition: color 0.2s ease, background-color 0.2s ease;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: -0.5rem;
+  transform-origin: bottom center;
+  transition:
+    color 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background 0.3s ease;
+  overflow: hidden;
+}
+
+/* Animated underline that zips across */
+.tabs-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b9d, #c44dff, #00d4ff);
+  border-radius: 3px;
+  transition:
+    width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Subtle glow background on hover */
+.tabs-tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgb(255 107 157 / 0%) 0%, rgb(196 77 255 / 0%) 50%, rgb(0 212 255 / 0%) 100%);
+  border-radius: 8px 8px 0 0;
+  transition: background 0.3s ease;
+  z-index: -1;
 }
 
 .tabs-tab:hover {
-  color: #333;
-  background-color: #f5f5f5;
+  color: #1a1a2e;
+  transform: scale(1.08) translateY(-2px);
+}
+
+.tabs-tab:hover::after {
+  width: 80%;
+  left: 10%;
+}
+
+.tabs-tab:hover::before {
+  background: linear-gradient(135deg, rgb(255 107 157 / 15%) 0%, rgb(196 77 255 / 15%) 50%, rgb(0 212 255 / 15%) 100%);
 }
 
 .tabs-tab:focus {
-  outline: 2px solid #06c;
-  outline-offset: -2px;
+  outline: 2px solid #c44dff;
+  outline-offset: 2px;
+}
+
+.tabs-tab:active {
+  transform: scale(0.98) translateY(0);
+  transition: transform 0.1s ease;
 }
 
 .tabs-tab.active {
-  color: #06c;
-  border-bottom-color: #06c;
+  color: #1a1a2e;
+  font-weight: 600;
+  transform: scale(1.05) translateY(-1px);
+  background: linear-gradient(135deg, rgb(255 107 157 / 10%) 0%, rgb(196 77 255 / 10%) 50%, rgb(0 212 255 / 10%) 100%);
+}
+
+.tabs-tab.active::after {
+  width: 100%;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff6b9d, #c44dff, #00d4ff, #ff6b9d);
+  background-size: 300% 100%;
+  animation: tabs-gradient-shift 3s linear infinite;
+}
+
+@keyframes tabs-gradient-shift {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  100% {
+    background-position: 300% 0%;
+  }
 }
 
 .tabs-panels {
@@ -43,7 +110,7 @@
 }
 
 .tabs-panel {
-  animation: tabs-fade-in 0.2s ease;
+  animation: tabs-fade-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .tabs-panel[hidden] {
@@ -53,10 +120,12 @@
 @keyframes tabs-fade-in {
   from {
     opacity: 0;
+    transform: translateY(10px);
   }
 
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -64,11 +133,21 @@
 @media (width <= 600px) {
   .tabs-list {
     flex-wrap: wrap;
+    gap: 0.25rem;
   }
 
   .tabs-tab {
     flex: 1 1 auto;
     text-align: center;
     padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .tabs-tab:hover {
+    transform: scale(1.04) translateY(-1px);
+  }
+
+  .tabs-tab.active {
+    transform: scale(1.02);
   }
 }
