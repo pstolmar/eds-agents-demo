@@ -22,6 +22,16 @@
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
+.stats-item > div {
+  display: block;
+}
+
+/* Dividers between stats */
+.stats-item + .stats-item {
+  border-left: 1px solid rgb(255 255 255 / 15%);
+  padding-left: 48px;
+}
+
 .stats.visible .stats-item {
   opacity: 1;
   transform: translateY(0);
@@ -35,10 +45,6 @@
   transition-delay: 0.3s;
 }
 
-.stats-item > div {
-  display: block;
-}
-
 .stats-value {
   font-family: var(--heading-font-family);
   font-size: 64px;
@@ -50,15 +56,9 @@
 
 .stats-label {
   font-size: var(--body-font-size-s);
-  color: rgba(255 255 255 / 0.7);
+  color: rgb(255 255 255 / 70%);
   line-height: 1.5;
   max-width: 220px;
-}
-
-/* Dividers between stats */
-.stats-item + .stats-item {
-  border-left: 1px solid rgba(255 255 255 / 0.15);
-  padding-left: 48px;
 }
 
 @media (width < 900px) {
@@ -74,7 +74,7 @@
 
   .stats-item + .stats-item {
     border-left: none;
-    border-top: 1px solid rgba(255 255 255 / 0.15);
+    border-top: 1px solid rgb(255 255 255 / 15%);
     padding-left: 0;
     padding-top: 36px;
   }

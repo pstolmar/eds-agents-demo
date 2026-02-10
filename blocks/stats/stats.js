@@ -49,7 +49,7 @@ export default function decorate(block) {
           const valueEl = row.querySelector('.stats-value');
           if (valueEl) {
             const target = parseInt(valueEl.dataset.target, 10);
-            const suffix = valueEl.dataset.suffix;
+            const { suffix } = valueEl.dataset;
             // Stagger animation start for each stat
             setTimeout(() => animateValue(valueEl, target, suffix, 1800), i * 200);
           }
