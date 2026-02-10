@@ -1,0 +1,41 @@
+{
+  "variantName": "cards-article",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-02-10T16:26:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://blog.adobe.com/en/topics/digital-transformation",
+    "originPage": "blog topic listing page",
+    "blockPosition": "middle"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "compact",
+    "purpose": "article-listing",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + category + title + description + date",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "blog article listing grids",
+      "topic pages with multiple articles",
+      "news feed card grids"
+    ],
+    "notSuitableFor": [
+      "single featured article highlights",
+      "product cards with CTAs",
+      "icon-based feature lists"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "content/test/digitaltransformation"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-02-10T16:26:00.000Z"
+  }
+}

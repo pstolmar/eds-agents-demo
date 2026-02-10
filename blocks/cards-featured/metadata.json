@@ -1,0 +1,41 @@
+{
+  "variantName": "cards-featured",
+  "baseBlock": "cards",
+  "version": "1.0.0",
+  "created": "2026-02-10T16:26:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://blog.adobe.com/en/topics/digital-transformation",
+    "originPage": "blog topic listing page",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "featured-article",
+    "imagePattern": "large"
+  },
+  "contentPattern": {
+    "structure": "image + category + title + description + date",
+    "buttonCount": 0,
+    "imageCount": 1
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "featured article highlights",
+      "blog topic landing pages",
+      "single prominent article cards"
+    ],
+    "notSuitableFor": [
+      "multi-card grid layouts",
+      "product listings",
+      "icon-based feature cards"
+    ]
+  },
+  "usage": {
+    "pagesUsing": [
+      "content/test/digitaltransformation"
+    ],
+    "reuseCount": 1,
+    "lastUsed": "2026-02-10T16:26:00.000Z"
+  }
+}

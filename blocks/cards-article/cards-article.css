@@ -1,0 +1,83 @@
+/* Article card grid - 3 columns on desktop, matching Adobe Blog topic pages */
+.cards-article > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.cards-article > ul > li {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  background-color: var(--background-color);
+  overflow: hidden;
+}
+
+.cards-article .cards-article-card-image {
+  line-height: 0;
+}
+
+.cards-article > ul > li img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+}
+
+.cards-article .cards-article-card-body {
+  padding: 32px;
+}
+
+/* Category label */
+.cards-article .cards-article-card-body > p:first-child {
+  margin: 0 0 8px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cards-article .cards-article-card-body > p:first-child a {
+  color: #686868;
+  text-decoration: none;
+}
+
+/* Title */
+.cards-article .cards-article-card-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #2c2c2c;
+  margin: 0 0 8px;
+}
+
+/* Description */
+.cards-article .cards-article-card-body > p:nth-child(3) {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+
+/* Date */
+.cards-article .cards-article-card-body > p:last-child {
+  font-size: 10px;
+  color: #686868;
+  margin: 0;
+}
+
+/* Tablet: 2 columns */
+@media (width < 1200px) {
+  .cards-article > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile: single column */
+@media (width < 600px) {
+  .cards-article > ul {
+    grid-template-columns: 1fr;
+  }
+}
