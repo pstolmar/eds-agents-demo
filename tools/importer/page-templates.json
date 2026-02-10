@@ -1,0 +1,25 @@
+{
+  "templates": [
+    {
+      "name": "blog-topic-listing",
+      "urls": [
+        "https://blog.adobe.com/en/topics/digital-transformation"
+      ],
+      "description": "Blog topic listing page with featured article card and article feed grid",
+      "blocks": [
+        {
+          "name": "cards-featured",
+          "instances": [
+            ".featured-article"
+          ]
+        },
+        {
+          "name": "cards-article",
+          "instances": [
+            ".article-feed .article-cards"
+          ]
+        }
+      ]
+    }
+  ]
+}
