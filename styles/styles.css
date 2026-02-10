@@ -18,8 +18,8 @@
   --text-color: #2c2c2c;
   --link-color: #3b63fb;
   --link-hover-color: #1d3ecf;
-  --button-color: #800080;
-  --button-hover-color: #8a00c4;
+  --button-color: #228b22;
+  --button-hover-color: #1a6b1a;
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
@@ -230,7 +230,7 @@ main > .section {
 }
 
 main > .section > div {
-  max-width: 1200px;
+  max-width: 800px;
   margin: auto;
   padding: 0 24px;
 }
