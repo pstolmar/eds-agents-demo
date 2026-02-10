@@ -3,7 +3,8 @@
     {
       "name": "blog-topic-listing",
       "urls": [
-        "https://blog.adobe.com/en/topics/digital-transformation"
+        "https://blog.adobe.com/en/topics/digital-transformation",
+        "https://blog.adobe.com/en/topics/news"
       ],
       "description": "Blog topic listing page with featured article card and article feed grid",
       "blocks": [
@@ -17,6 +18,21 @@
           "name": "cards-article",
           "instances": [
             ".article-feed .article-cards"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Blog Page",
+      "urls": [
+        "https://blog.adobe.com/en/publish/2024/04/15/choice-generative-ai-models-advances-firefly"
+      ],
+      "description": "Blog article page with author byline, hero image, body content, inline images, CTA section, and recommended articles grid",
+      "blocks": [
+        {
+          "name": "cards-article",
+          "instances": [
+            ".recommended-articles .recommended-articles-cards"
           ]
         }
       ]
