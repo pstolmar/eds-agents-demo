@@ -22,8 +22,12 @@ function animateValue(el, target, suffix, duration) {
 export default function decorate(block) {
   const rows = [...block.children];
 
+  block.setAttribute('role', 'list');
+  block.setAttribute('aria-label', 'Key statistics');
+
   rows.forEach((row) => {
     row.classList.add('stats-item');
+    row.setAttribute('role', 'listitem');
     const cols = [...row.children];
 
     if (cols[0]) {
@@ -33,6 +37,8 @@ export default function decorate(block) {
       const suffix = text.replace(/[\d,]/g, '').trim();
       cols[0].dataset.target = num;
       cols[0].dataset.suffix = suffix;
+      // Keep full value accessible while showing animated value visually
+      cols[0].setAttribute('aria-label', text);
       cols[0].textContent = `0${suffix}`;
     }
 
