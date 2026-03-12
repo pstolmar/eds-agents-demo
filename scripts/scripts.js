@@ -121,6 +121,9 @@ async function loadLazy(doc) {
   /* page-specific: Walmart media library */
   if (window.location.pathname.includes('wm-media-library')) {
     loadCSS(`${window.hlx.codeBasePath}/styles/wm-media-library.css`);
+    if (new URLSearchParams(window.location.search).has('extras')) {
+      loadCSS(`${window.hlx.codeBasePath}/styles/wm-extras.css`);
+    }
     import('./wm-media-library.js').then((mod) => mod.default());
   }
 

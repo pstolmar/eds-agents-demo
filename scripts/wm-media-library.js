@@ -315,6 +315,13 @@ export default function init() {
     const searchInput = buildSearchBar();
     const tabCtrl = buildFilterTabs();
     wireSearch(searchInput, tabCtrl);
+
+    /* Load extras mode when ?extras is present */
+    if (new URLSearchParams(window.location.search).has('extras')) {
+      document.body.classList.add('wm-extras');
+      import('./wm-extras.js').then((mod) => mod.default());
+    }
+
     return true;
   }
 
