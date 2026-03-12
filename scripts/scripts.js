@@ -118,6 +118,12 @@ async function loadEager(doc) {
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
+  /* page-specific: Walmart media library */
+  if (window.location.pathname.includes('wm-media-library')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-media-library.css`);
+    import('./wm-media-library.js').then((mod) => mod.default());
+  }
+
   loadHeader(doc.querySelector('header'));
 
   const main = doc.querySelector('main');
