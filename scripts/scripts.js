@@ -118,13 +118,25 @@ async function loadEager(doc) {
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
-  /* page-specific: Walmart media library */
-  if (window.location.pathname.includes('wm-media-library')) {
+  /* page-specific modules */
+  const { pathname } = window.location;
+  const params = new URLSearchParams(window.location.search);
+
+  if (pathname.includes('wm-media-library')) {
     loadCSS(`${window.hlx.codeBasePath}/styles/wm-media-library.css`);
-    if (new URLSearchParams(window.location.search).has('extras')) {
+    if (params.has('extras')) {
       loadCSS(`${window.hlx.codeBasePath}/styles/wm-extras.css`);
     }
     import('./wm-media-library.js').then((mod) => mod.default());
+  } else if (pathname.includes('/partly-gated')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-partly-gated.css`);
+    import('./wm-partly-gated.js').then((mod) => mod.default());
+  } else if (pathname.includes('/gated')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-gated.css`);
+    import('./wm-gated.js').then((mod) => mod.default());
+  } else if (pathname.includes('/personalized')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-personalized.css`);
+    import('./wm-personalized.js').then((mod) => mod.default());
   }
 
   loadHeader(doc.querySelector('header'));
