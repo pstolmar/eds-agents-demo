@@ -1,0 +1,58 @@
+.promo-banner {
+  max-width: 600px;
+  margin: 32px 0;
+}
+
+.promo-banner > div {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 0;
+  border-top: 2px solid #d4d4d4;
+  border-bottom: 2px solid #d4d4d4;
+}
+
+.promo-banner .promo-banner-image {
+  flex: 0 0 100px;
+  width: 100px;
+}
+
+.promo-banner .promo-banner-image picture {
+  display: block;
+  width: 100px;
+}
+
+.promo-banner .promo-banner-image img {
+  width: 100px;
+  height: auto;
+  display: block;
+}
+
+.promo-banner .promo-banner-text h3 {
+  font-size: var(--body-font-size-m);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  margin: 0 0 8px;
+}
+
+.promo-banner .promo-banner-text p {
+  margin: 0 0 8px;
+  font-size: var(--body-font-size-m);
+  line-height: 1.5;
+}
+
+.promo-banner .promo-banner-text a {
+  color: #274dea;
+  text-decoration: underline;
+  font-size: var(--body-font-size-m);
+  font-weight: 400;
+  background: none;
+  border: none;
+  padding: 0;
+  white-space: normal;
+}
+
+.promo-banner .promo-banner-text a:hover {
+  color: #1a35b8;
+}
