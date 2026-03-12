@@ -26,12 +26,16 @@
   pointer-events: none;
 }
 
+.pull-quote-figure {
+  margin: 0;
+}
+
 .pull-quote-text {
   font-size: var(--heading-font-size-l);
   font-style: italic;
   line-height: 1.5;
   color: var(--text-color);
-  margin-bottom: 16px;
+  margin: 0 0 16px;
 }
 
 .pull-quote-attribution {
@@ -40,7 +44,7 @@
   font-weight: 600;
 }
 
-.pull-quote-attribution > div::before {
+.pull-quote-attribution::before {
   content: '\2014\00a0';
 }
 

@@ -8,28 +8,42 @@ export default function decorate(block) {
   const panelCount = rows.length;
   if (panelCount === 0) return;
 
+  // Carousel ARIA semantics
+  block.setAttribute('role', 'region');
+  block.setAttribute('aria-roledescription', 'carousel');
+  block.setAttribute('aria-label', 'Featured content');
+
   // Transform rows into crossfade panels
   rows.forEach((row, i) => {
     row.classList.add('crossfade-panel');
     if (i === 0) row.classList.add('active');
+    row.setAttribute('role', 'group');
+    row.setAttribute('aria-roledescription', 'slide');
+    row.setAttribute('aria-label', `Slide ${i + 1} of ${panelCount}`);
     const cols = [...row.children];
     if (cols[0]) cols[0].classList.add('crossfade-panel-media');
     if (cols[1]) cols[1].classList.add('crossfade-panel-content');
   });
 
-  // Panel counter label
+  // Panel counter label (live region for screen readers)
   const counter = document.createElement('div');
   counter.className = 'crossfade-counter';
+  counter.setAttribute('aria-live', 'polite');
+  counter.setAttribute('aria-atomic', 'true');
   counter.textContent = `1 / ${panelCount}`;
   block.append(counter);
 
   // Navigation dots
   const nav = document.createElement('div');
   nav.className = 'crossfade-nav';
+  nav.setAttribute('role', 'tablist');
+  nav.setAttribute('aria-label', 'Slide controls');
   rows.forEach((_, i) => {
     const dot = document.createElement('button');
     dot.className = `crossfade-dot${i === 0 ? ' active' : ''}`;
-    dot.setAttribute('aria-label', `Panel ${i + 1} of ${panelCount}`);
+    dot.setAttribute('role', 'tab');
+    dot.setAttribute('aria-label', `Slide ${i + 1} of ${panelCount}`);
+    dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
     nav.append(dot);
   });
   block.append(nav);
@@ -66,6 +80,7 @@ export default function decorate(block) {
     rows.forEach((panel, i) => panel.classList.toggle('active', i === idx));
     nav.querySelectorAll('.crossfade-dot').forEach((dot, i) => {
       dot.classList.toggle('active', i === idx);
+      dot.setAttribute('aria-selected', i === idx ? 'true' : 'false');
     });
     counter.textContent = `${idx + 1} / ${panelCount}`;
   };
