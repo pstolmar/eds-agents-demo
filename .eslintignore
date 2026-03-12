@@ -1,2 +1,3 @@
 helix-importer-ui
+*.bundle.js
 *.min.js
