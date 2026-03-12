@@ -297,6 +297,81 @@ function wireSearch(searchInput, tabCtrl) {
   });
 }
 
+/* ===== Extras Toggle Panel ===== */
+const EXTRAS_FEATURES = [
+  { key: 'dm', label: 'Dynamic Media', desc: 'Smart crop & renditions' },
+  { key: 'wf', label: 'Workfront', desc: 'Review & approval panel' },
+  { key: 'analytics', label: 'Analytics', desc: 'Engagement dashboard' },
+  { key: 'cf', label: 'Content Fragment', desc: 'CF model editor' },
+  { key: 'ff', label: 'Firefly', desc: 'Generative fill overlay' },
+  { key: 'forms', label: 'AEM Forms', desc: 'Asset request forms' },
+  { key: 'ab', label: 'A/B Test', desc: 'Experiment configurator' },
+];
+
+function buildExtrasToggle(params) {
+  const active = new Set((params.get('extras') || '').split(',').map((s) => s.trim()).filter(Boolean));
+
+  /* Floating toggle button */
+  const toggle = document.createElement('button');
+  toggle.className = 'wm-extras-toggle';
+  toggle.title = 'Configure AEM Features';
+  toggle.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">'
+    + '<circle cx="10" cy="10" r="3"/>'
+    + '<path d="M10 1v3M10 16v3M1 10h3M16 10h3M3.5 3.5l2 2M14.5 14.5l2 2M3.5 16.5l2-2M14.5 5.5l2-2"/>'
+    + '</svg>';
+
+  /* Panel */
+  const panel = document.createElement('div');
+  panel.className = 'wm-extras-panel';
+  panel.innerHTML = '<div class="wm-extras-panel-header">'
+    + '<strong>AEM Feature Toggles</strong>'
+    + '<small>Select features to preview</small>'
+    + '</div>'
+    + '<div class="wm-extras-panel-body"></div>'
+    + '<div class="wm-extras-panel-footer">'
+    + '<button class="wm-extras-apply">Apply</button>'
+    + '<button class="wm-extras-clear">Clear All</button>'
+    + '</div>';
+
+  const body = panel.querySelector('.wm-extras-panel-body');
+  EXTRAS_FEATURES.forEach((f) => {
+    const row = document.createElement('label');
+    row.className = 'wm-extras-feature';
+    row.innerHTML = `<input type="checkbox" value="${f.key}" ${active.has(f.key) ? 'checked' : ''}>
+      <span class="wm-extras-feature-info">
+        <span class="wm-extras-feature-name">${f.label}</span>
+        <span class="wm-extras-feature-desc">${f.desc}</span>
+      </span>`;
+    body.appendChild(row);
+  });
+
+  /* Toggle panel open/close */
+  toggle.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    toggle.classList.toggle('active');
+  });
+
+  /* Apply button — reload with selected extras */
+  panel.querySelector('.wm-extras-apply').addEventListener('click', () => {
+    const checked = [...body.querySelectorAll('input:checked')].map((cb) => cb.value);
+    const url = new URL(window.location.href);
+    if (checked.length > 0) {
+      url.searchParams.set('extras', checked.join(','));
+    } else {
+      url.searchParams.delete('extras');
+    }
+    window.location.href = url.toString();
+  });
+
+  /* Clear all */
+  panel.querySelector('.wm-extras-clear').addEventListener('click', () => {
+    body.querySelectorAll('input').forEach((cb) => { cb.checked = false; });
+  });
+
+  document.body.appendChild(toggle);
+  document.body.appendChild(panel);
+}
+
 /**
  * Initialize everything
  */
@@ -317,10 +392,14 @@ export default function init() {
     wireSearch(searchInput, tabCtrl);
 
     /* Load extras mode when ?extras is present */
-    if (new URLSearchParams(window.location.search).has('extras')) {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('extras')) {
       document.body.classList.add('wm-extras');
       import('./wm-extras.js').then((mod) => mod.default());
     }
+
+    /* Extras toggle panel */
+    buildExtrasToggle(params);
 
     return true;
   }

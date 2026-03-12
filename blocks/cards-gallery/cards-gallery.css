@@ -47,6 +47,37 @@
   color: #666;
 }
 
+/* Missing / broken image watermark */
+.cards-gallery .cards-gallery-missing {
+  position: relative;
+  background: repeating-linear-gradient(
+    -45deg,
+    #f8f8f8,
+    #f8f8f8 10px,
+    #f0f0f0 10px,
+    #f0f0f0 20px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.cards-gallery .cards-gallery-missing img {
+  opacity: 0;
+}
+
+.cards-gallery .cards-gallery-missing::after {
+  content: 'MISSING';
+  position: absolute;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #e53e3e;
+  letter-spacing: 6px;
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
 @media (width >= 900px) {
   .cards-gallery > ul {
     grid-template-columns: repeat(3, 1fr);

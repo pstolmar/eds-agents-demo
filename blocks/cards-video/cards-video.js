@@ -61,4 +61,24 @@ export default function decorate(block) {
     }
   });
   block.replaceChildren(ul);
+
+  /* Detect broken / missing video thumbnails (about:error from ingestion failures) */
+  ul.querySelectorAll('img').forEach((img) => {
+    const src = img.getAttribute('src') || '';
+    if (src === 'about:error' || src === '') {
+      const wrapper = img.closest('.cards-video-image');
+      if (wrapper) wrapper.classList.add('cards-video-missing');
+    }
+  });
+
+  /* Undo EDS button decoration on links inside card bodies */
+  ul.querySelectorAll('.cards-video-body .button-container').forEach((bc) => {
+    const a = bc.querySelector('a');
+    if (a) {
+      a.classList.remove('button', 'primary', 'secondary');
+      const p = document.createElement('p');
+      p.appendChild(a);
+      bc.replaceWith(p);
+    }
+  });
 }

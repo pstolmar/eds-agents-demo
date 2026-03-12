@@ -36,4 +36,13 @@ export default function decorate(block) {
     }
   });
   block.replaceChildren(ul);
+
+  /* Detect broken / missing images */
+  ul.querySelectorAll('img').forEach((img) => {
+    const src = img.getAttribute('src') || '';
+    if (src === 'about:error' || src === '') {
+      const wrapper = img.closest('.cards-gallery-image');
+      if (wrapper) wrapper.classList.add('cards-gallery-missing');
+    }
+  });
 }

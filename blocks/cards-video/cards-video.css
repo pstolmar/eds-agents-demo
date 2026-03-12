@@ -94,6 +94,20 @@
   color: #fff;
 }
 
+/* Missing / broken video thumbnail */
+.cards-video .cards-video-missing {
+  position: relative;
+  background: #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+}
+
+.cards-video .cards-video-missing img {
+  opacity: 0;
+}
+
 @media (width >= 900px) {
   .cards-video > ul {
     grid-template-columns: repeat(3, 1fr);
