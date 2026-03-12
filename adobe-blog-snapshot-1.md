@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic:
+      - navigation "Main":
+        - button "Navigation menu" [ref=e15]: ☰
+        - link "Adobe Blog" [ref=e16] [cursor=pointer]:
+          - /url: /
+          - img "Adobe Blog" [ref=e17]
+        - link "Sign In" [ref=e19] [cursor=pointer]:
+          - /url: https://www.adobe.com/login
+  - main [ref=e3]:
+    - generic [ref=e8]:
+      - heading "Create with unlimited generations in Adobe Firefly, the all-in-one creative AI studio" [level=1] [ref=e9]
+      - paragraph [ref=e10]:
+        - link "Read more" [ref=e11] [cursor=pointer]:
+          - /url: /en/publish/2026/02/02/create-unlimited-generations-adobe-firefly-all-in-one-creative-ai-studio
+      - paragraph [ref=e12]: Adobe Firefly subscribers can now create unlimited generations with industry-leading image models, including Google Nano Banana Pro, GPT Image Generation, Runway Gen-4 Image, as well as Adobe's commercially safe Firefly image and video models — sign up before March 16.
+    - generic [ref=e20]:
+      - heading "More from the Adobe Blog" [level=2] [ref=e24]
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: Exclude
+          - generic [ref=e28]: UK Exclusive, APAC Exclusive
+        - generic [ref=e29]:
+          - generic [ref=e30]: feed
+          - link "https://main--blog--adobecom.hlx.page/en/query-index.json" [ref=e32] [cursor=pointer]:
+            - /url: /en/query-index.json
+  - contentinfo [ref=e33]:
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - button "Change Language" [ref=e38] [cursor=pointer]:
+          - img [ref=e39]
+          - generic [ref=e41]: Change Language
+        - img "Adobe" [ref=e42]:
+          - img [ref=e44]
+      - list [ref=e47]:
+        - listitem [ref=e48]:
+          - text: Copyright © 2026 All rights reserved.
+          - generic [ref=e49]: /
+        - listitem [ref=e50]:
+          - link "Privacy" [ref=e51] [cursor=pointer]:
+            - /url: https://www.adobe.com/privacy.html
+          - generic [ref=e52]: /
+        - listitem [ref=e53]:
+          - link "Terms of Use" [ref=e54] [cursor=pointer]:
+            - /url: https://www.adobe.com/legal/terms.html
+          - generic [ref=e55]: /
+        - listitem [ref=e56]:
+          - link "Cookie preferences" [ref=e57] [cursor=pointer]:
+            - /url: https://www.adobe.com/#openPrivacy
+          - generic [ref=e58]: /
+        - listitem [ref=e59]:
+          - link "Do not sell or share my personal information" [ref=e60] [cursor=pointer]:
+            - /url: https://www.adobe.com/go/ca-rights
+          - generic [ref=e61]: /
+        - listitem [ref=e62]:
+          - link "AdChoices" [ref=e63] [cursor=pointer]:
+            - /url: https://www.adobe.com/privacy/opt-out.html#interest-based-ads
+            - img [ref=e64]
+            - text: AdChoices
