@@ -36,6 +36,12 @@ const ICN = {
   page: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8l4 4v12a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M12 2v4h4"/></svg>',
   place: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="16" height="16" rx="2"/><path d="M2 8h16M8 2v16"/><path d="M5 11l2 2 3-4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   trending: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12l4-4 3 3 7-8M11 3h4v4"/></svg>',
+  fragment: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="1" width="14" height="18" rx="2"/><path d="M7 5h6M7 9h6M7 13h4"/></svg>',
+  firefly: '<svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l1.5 3.5L15 6l-3.5 1.5L10 11 8.5 7.5 5 6l3.5-1.5L10 1zM4 11l1 2 2 1-2 1-1 2-1-2-2-1 2-1 1-2zM15 12l.8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7L12.5 14.5l1.7-.8z"/></svg>',
+  form: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="16" height="16" rx="2"/><path d="M5 6h10M5 10h7M5 14h4"/><circle cx="14" cy="14" r="2" fill="currentColor"/></svg>',
+  ab: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2v16M2 2h7v16H2zM11 2h7v16h-7z"/><path d="M5 8l1.5 4M8 8L6.5 12M5.5 11h2" stroke-width="1.2"/><path d="M14 8v4M14 8h1.5a1.5 1.5 0 010 3H14M14 11h1.5a1.5 1.5 0 010 0" stroke-width="1.2"/></svg>',
+  move: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2v16M2 10h16M10 2l-3 3M10 2l3 3M10 18l-3-3M10 18l3-3M2 10l3-3M2 10l3 3M18 10l-3-3M18 10l-3 3"/></svg>',
+  confirm: '<svg viewBox="0 0 20 20" fill="none" stroke="#22c55e" stroke-width="2.5"><path d="M4 10l4 4 8-8"/></svg>',
 };
 
 /* ────────── Configuration ────────── */
@@ -104,6 +110,32 @@ const SMART_TAGS = [
 ];
 
 const BADGE_LABELS = { expired: 'Expired', expiring: 'Expiring Soon', new: 'New' };
+
+/* Vimeo thumbnail fallback URLs (CDN URLs that EDS can't ingest) */
+const VIMEO_THUMBS = [
+  'https://i.vimeocdn.com/video/2063608988-7441c0c1e0678e9769bf67443bbf6a6cb6df44afb11934e63cd9c18456a441c8-d?mw=960',
+  'https://i.vimeocdn.com/video/2059108368-36df3e4271e4191599ec53ecfea9a3db76130792b72a4dc84e24d4d3e167d7a8-d?mw=960',
+  'https://i.vimeocdn.com/video/2059107265-aeb3fe7ee09a431600e1b2a8848f7bfccca1587cdf69c87d019ed6ddab6fd265-d?mw=960',
+  'https://i.vimeocdn.com/video/2054935657-bce2284e6f450cf05069ddef419b78b92abbe50a91c0a8fa72a18a8ef193d57d-d?mw=960',
+  'https://i.vimeocdn.com/video/2052195797-3b27021bdb70a2361d1c01d7263f2dd5e5311e33d9512f77d3d03c2bdacbbc58-d?mw=960',
+  'https://i.vimeocdn.com/video/1920705689-105871e947f0fef94847f80259bcfe84b8c3cc258d7bf5a3140bcef870c15472-d?mw=960',
+];
+
+/* People search — image/gallery indices containing people */
+const PEOPLE_CARDS = {
+  imgCards: [0, 1, 2, 3, 4],
+  galCards: [0, 2],
+};
+
+/* Content Fragment mock data (for extras=cf) */
+const CF_FIELDS = [
+  { label: 'Title', type: 'text' },
+  { label: 'Alt Text', type: 'text' },
+  { label: 'Caption', type: 'textarea' },
+  { label: 'Rights', type: 'select', options: ['Royalty-Free', 'Rights-Managed', 'Editorial Only', 'Internal Use'] },
+  { label: 'Expiry Date', type: 'date' },
+  { label: 'Category', type: 'select', options: ['Corporate', 'Brand', 'Event', 'Product', 'Campaign'] },
+];
 
 /* Mock analytics data per card */
 const ANALYTICS = {
@@ -348,61 +380,112 @@ function openSmartCropPreview(li) {
   const img = li.querySelector('img');
   if (!img) return;
 
-  /* Close any existing previews */
   document.querySelectorAll('.wm-dm-overlay').forEach((o) => o.remove());
-
-  const imgDiv = li.querySelector('[class$="-image"]') || li.querySelector('div:first-child');
-  if (!imgDiv) return;
 
   const overlay = makeEl('div', 'wm-dm-overlay');
   overlay.innerHTML = `
-    <div class="wm-dm-header">
-      <span>${ICN.crop} Smart Crop Preview</span>
-      <button class="wm-dm-close">${ICN.close}</button>
-    </div>
-    <div class="wm-dm-stage">
-      <img src="${img.src}" alt="${img.alt}" class="wm-dm-img" />
-      <div class="wm-dm-crop-box"></div>
-    </div>
-    <div class="wm-dm-presets"></div>
-    <div class="wm-dm-quality">
-      <span>Rendition Quality:</span>
-      <div class="wm-dm-quality-btns"></div>
-      <span class="wm-dm-filesize">~2.4 MB</span>
+    <div class="wm-dm-dialog">
+      <div class="wm-dm-header">
+        <span>${ICN.crop} Dynamic Media — Smart Crop</span>
+        <button class="wm-dm-close">${ICN.close}</button>
+      </div>
+      <div class="wm-dm-body">
+        <div class="wm-dm-stage">
+          <img src="${img.src}" alt="${img.alt}" class="wm-dm-img" />
+          <div class="wm-dm-crop-box">
+            <div class="wm-dm-crop-handle wm-dm-h-tl"></div>
+            <div class="wm-dm-crop-handle wm-dm-h-tr"></div>
+            <div class="wm-dm-crop-handle wm-dm-h-bl"></div>
+            <div class="wm-dm-crop-handle wm-dm-h-br"></div>
+          </div>
+        </div>
+        <div class="wm-dm-sidebar">
+          <h4>Crop Presets</h4>
+          <div class="wm-dm-presets"></div>
+          <h4>Quality</h4>
+          <div class="wm-dm-quality">
+            <div class="wm-dm-quality-btns"></div>
+            <span class="wm-dm-filesize">~2.4 MB</span>
+          </div>
+          <h4>Preview</h4>
+          <div class="wm-dm-preview-area">
+            <img class="wm-dm-preview-img" src="${img.src}" alt="Crop preview" />
+            <span class="wm-dm-preview-dims">1920 × 1080</span>
+          </div>
+          <div class="wm-dm-actions">
+            <button class="wm-dm-confirm-btn">${ICN.confirm} ${hasExtra('wf') ? 'Submit for Review' : 'Upload Rendition'}</button>
+          </div>
+        </div>
+      </div>
     </div>
   `;
 
   const presetsRow = overlay.querySelector('.wm-dm-presets');
   const cropBox = overlay.querySelector('.wm-dm-crop-box');
   const filesizeEl = overlay.querySelector('.wm-dm-filesize');
+  const previewImg = overlay.querySelector('.wm-dm-preview-img');
+  const previewDims = overlay.querySelector('.wm-dm-preview-dims');
+  const stage = overlay.querySelector('.wm-dm-stage');
   const qualities = ['Low', 'Medium', 'High', 'Lossless'];
   const fileSizes = ['~180 KB', '~540 KB', '~2.4 MB', '~8.1 MB'];
   let activeQuality = 2;
+  let cropState = {
+    x: 5, y: 5, w: 90, h: 85,
+  };
+
+  function updatePreview() {
+    previewImg.style.objectPosition = `${cropState.x + cropState.w / 2}% ${cropState.y + cropState.h / 2}%`;
+    const pw = Math.round((cropState.w / 100) * 4000);
+    const ph = Math.round((cropState.h / 100) * 3000);
+    previewDims.textContent = `${pw} × ${ph}`;
+  }
 
   function applyCrop(preset) {
     presetsRow.querySelectorAll('.wm-dm-preset').forEach((b) => b.classList.remove('active'));
     const btn = presetsRow.querySelector(`[data-ratio="${preset.ratio}"]`);
     if (btn) btn.classList.add('active');
-
-    /* Calculate crop box based on ratio */
     const [rw, rh] = preset.ratio.split(':').map(Number);
-    const containerW = 100;
-    const containerH = 100;
-    let boxW;
-    let boxH;
-    if (rw / rh > containerW / containerH) {
-      boxW = 90;
-      boxH = (90 * rh) / rw;
-    } else {
-      boxH = 85;
-      boxW = (85 * rw) / rh;
-    }
+    let boxW; let boxH;
+    if (rw / rh > 1) { boxW = 90; boxH = (90 * rh) / rw; } else { boxH = 85; boxW = (85 * rw) / rh; }
+    cropState = {
+      x: (100 - boxW) / 2, y: (100 - boxH) / 2, w: boxW, h: boxH,
+    };
     cropBox.style.width = `${boxW}%`;
     cropBox.style.height = `${boxH}%`;
-    cropBox.style.left = `${(100 - boxW) / 2}%`;
-    cropBox.style.top = `${(100 - boxH) / 2}%`;
+    cropBox.style.left = `${cropState.x}%`;
+    cropBox.style.top = `${cropState.y}%`;
     cropBox.style.opacity = '1';
+    updatePreview();
   }
+
+  /* Draggable crop box */
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragStartCrop = {};
+  cropBox.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('wm-dm-crop-handle')) return;
+    dragging = true;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    dragStartCrop = { ...cropState };
+    cropBox.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    const rect = stage.getBoundingClientRect();
+    const dx = ((e.clientX - dragStartX) / rect.width) * 100;
+    const dy = ((e.clientY - dragStartY) / rect.height) * 100;
+    cropState.x = Math.max(0, Math.min(100 - cropState.w, dragStartCrop.x + dx));
+    cropState.y = Math.max(0, Math.min(100 - cropState.h, dragStartCrop.y + dy));
+    cropBox.style.left = `${cropState.x}%`;
+    cropBox.style.top = `${cropState.y}%`;
+    updatePreview();
+  });
+  document.addEventListener('mouseup', () => {
+    if (dragging) { dragging = false; cropBox.style.cursor = 'grab'; }
+  });
 
   CROP_PRESETS.forEach((p, i) => {
     const btn = makeEl('button', `wm-dm-preset${i === 0 ? ' active' : ''}`, p.label);
@@ -423,9 +506,22 @@ function openSmartCropPreview(li) {
     qualityRow.appendChild(btn);
   });
 
+  overlay.querySelector('.wm-dm-confirm-btn').addEventListener('click', () => {
+    if (hasExtra('wf')) {
+      overlay.remove();
+      showToast('Crop submitted to Workfront for review — reviewers notified', 4000);
+    } else {
+      overlay.remove();
+      showToast('Rendition uploaded to AEM Assets — available in 30s', 4000);
+    }
+  });
   overlay.querySelector('.wm-dm-close').addEventListener('click', () => overlay.remove());
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) overlay.remove();
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  document.addEventListener('keydown', function dmEsc(e) {
+    if (e.key === 'Escape' && document.querySelector('.wm-dm-overlay')) {
+      overlay.remove();
+      document.removeEventListener('keydown', dmEsc);
+    }
   });
 
   document.body.appendChild(overlay);
@@ -972,6 +1068,7 @@ function enhanceSearch() {
   const tagRow = makeEl('div', 'wm-smart-tags');
   tagRow.appendChild(makeEl('span', 'wm-st-label', 'Smart Tags:'));
   const activeTags = new Set();
+  const clearTagBtn = makeEl('button', 'wm-st-clear', `${ICN.close}`);
   SMART_TAGS.forEach((t) => {
     const btn = makeEl('button', 'wm-st-tag', t.label);
     btn.addEventListener('click', () => {
@@ -982,11 +1079,38 @@ function enhanceSearch() {
         activeTags.add(t.label);
         btn.classList.add('active');
       }
+      clearTagBtn.style.display = activeTags.size > 0 ? 'inline-flex' : 'none';
       applyTagFilter(activeTags);
     });
     tagRow.appendChild(btn);
   });
+  clearTagBtn.title = 'Clear all filters';
+  clearTagBtn.style.display = 'none';
+  clearTagBtn.addEventListener('click', () => {
+    activeTags.clear();
+    tagRow.querySelectorAll('.wm-st-tag').forEach((b) => b.classList.remove('active'));
+    clearTagBtn.style.display = 'none';
+    applyTagFilter(activeTags);
+    /* Also clear color */
+    activeColor = null;
+    colorRow.querySelectorAll('.wm-cp-swatch').forEach((s) => s.classList.remove('active'));
+    clearColorFilter();
+  });
+  tagRow.appendChild(clearTagBtn);
   wrapper.appendChild(tagRow);
+
+  /* Enhance text search to recognize "people" keyword */
+  const origInput = bar.querySelector('input');
+  if (origInput) {
+    origInput.addEventListener('input', () => {
+      const q = origInput.value.trim().toLowerCase();
+      if (q.includes('people') || q.includes('person') || q.includes('faces')) {
+        getImageCards().forEach((li, i) => li.classList.toggle('wm-no-match', !PEOPLE_CARDS.imgCards.includes(i)));
+        getGalleryCards().forEach((li, i) => li.classList.toggle('wm-no-match', !PEOPLE_CARDS.galCards.includes(i)));
+        updateResultCount();
+      }
+    });
+  }
 }
 
 /* ────────── Video Carousel ────────── */
@@ -995,7 +1119,7 @@ function buildVideoCarousel() {
   if (!block) return;
 
   const items = [...block.querySelectorAll('ul > li')];
-  const videos = items.map((li) => {
+  const videos = items.map((li, idx) => {
     const img = li.querySelector('img');
     const link = li.querySelector('a');
     const dur = li.querySelector('.cards-video-duration');
@@ -1005,8 +1129,13 @@ function buildVideoCarousel() {
       const m = link.href.match(/vimeo\.com\/(\d+)/);
       if (m) [, vimeoId] = m;
     }
+    /* Fix broken thumbnails — use Vimeo CDN fallback */
+    let thumb = img?.src || '';
+    if (!thumb || thumb === 'about:error' || thumb.includes('about:error')) {
+      thumb = VIMEO_THUMBS[idx] || '';
+    }
     return {
-      thumb: img?.src || '',
+      thumb,
       alt: img?.alt || '',
       title: titleEl?.textContent || '',
       duration: dur?.textContent || '',
@@ -1114,6 +1243,18 @@ function buildVideoCarousel() {
 function decorateImageCards() {
   const cards = [...document.querySelectorAll('.cards-media > ul > li')];
   cards.forEach((li, i) => {
+    /* Check for broken/missing images and add watermark */
+    const img = li.querySelector('img');
+    if (img && (!img.src || img.src === 'about:error' || img.src.includes('about:error'))) {
+      const imgDiv = li.querySelector('.cards-media-image') || li.querySelector('div:first-child');
+      if (imgDiv) {
+        imgDiv.style.position = 'relative';
+        const watermark = makeEl('div', 'wm-missing-watermark');
+        watermark.innerHTML = '<span>MISSING</span><small>Asset unavailable — 404</small>';
+        imgDiv.appendChild(watermark);
+        imgDiv.style.background = '#f0f0f0';
+      }
+    }
     addAssetToolbar(li, 'media');
     wireToolbarActions(li, i, 'media');
     if (IMG_BADGES[i] !== undefined) addBadge(li, IMG_BADGES[i]);
@@ -1130,6 +1271,273 @@ function decorateGalleryCards() {
     if (GAL_BADGES[i] !== undefined) addBadge(li, GAL_BADGES[i]);
     if (GAL_LOCKS[i]) addLock(li, GAL_LOCKS[i], 'gallery');
   });
+}
+
+/* ────────── Content Fragment Preview (extras=cf) ────────── */
+function openContentFragmentPanel(li) {
+  document.querySelectorAll('.wm-cf-panel').forEach((p) => p.remove());
+  const img = li.querySelector('img');
+  if (!img) return;
+  const panel = makeEl('div', 'wm-cf-panel');
+  panel.innerHTML = `
+    <div class="wm-cf-header">
+      <span>${ICN.fragment} Content Fragment</span>
+      <button class="wm-cf-close">${ICN.close}</button>
+    </div>
+    <div class="wm-cf-model">
+      <span class="wm-cf-model-label">Model: <strong>Media Asset</strong></span>
+      <span class="wm-cf-path">/content/dam/walmart/media/${img.alt.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30)}</span>
+    </div>
+    <div class="wm-cf-fields"></div>
+    <div class="wm-cf-actions">
+      <button class="wm-cf-save">${ICN.check} Save Fragment</button>
+      <button class="wm-cf-publish">Publish</button>
+    </div>
+  `;
+  const fieldsEl = panel.querySelector('.wm-cf-fields');
+  CF_FIELDS.forEach((f) => {
+    const row = makeEl('div', 'wm-cf-field');
+    let input = '';
+    if (f.type === 'text') {
+      let val = '';
+      if (f.label === 'Title' || f.label === 'Alt Text') val = img.alt;
+      input = `<input type="text" value="${val}" />`;
+    } else if (f.type === 'textarea') {
+      input = `<textarea rows="2">${img.alt} — Walmart Corporate Media Library</textarea>`;
+    } else if (f.type === 'select') {
+      input = `<select>${f.options.map((o, i) => `<option${i === 0 ? ' selected' : ''}>${o}</option>`).join('')}</select>`;
+    } else if (f.type === 'date') {
+      input = '<input type="date" value="2026-12-31" />';
+    }
+    row.innerHTML = `<label>${f.label}</label>${input}`;
+    fieldsEl.appendChild(row);
+  });
+  panel.querySelector('.wm-cf-close').addEventListener('click', () => panel.remove());
+  panel.querySelector('.wm-cf-save').addEventListener('click', () => {
+    panel.remove();
+    showToast('Content Fragment saved to AEM Assets', 3000);
+  });
+  panel.querySelector('.wm-cf-publish').addEventListener('click', () => {
+    panel.remove();
+    showToast('Fragment published — references updated on 3 pages', 4000);
+  });
+  document.body.appendChild(panel);
+}
+
+/* ────────── Firefly Generative Fill (extras=ff) ────────── */
+function openFireflyPanel(li) {
+  document.querySelectorAll('.wm-ff-overlay').forEach((o) => o.remove());
+  const img = li.querySelector('img');
+  if (!img) return;
+  const overlay = makeEl('div', 'wm-ff-overlay');
+  overlay.innerHTML = `
+    <div class="wm-ff-dialog">
+      <div class="wm-ff-header">
+        <span>${ICN.firefly} Adobe Firefly — Generative Fill</span>
+        <button class="wm-ff-close">${ICN.close}</button>
+      </div>
+      <div class="wm-ff-body">
+        <div class="wm-ff-source">
+          <img src="${img.src}" alt="${img.alt}" class="wm-ff-src-img" />
+          <div class="wm-ff-selection" title="Drag to select region">
+            <span>Select region to fill</span>
+          </div>
+        </div>
+        <div class="wm-ff-controls">
+          <label>Prompt: <input type="text" class="wm-ff-prompt" value="Extend background naturally" /></label>
+          <div class="wm-ff-modes">
+            <button class="wm-ff-mode active">Generative Fill</button>
+            <button class="wm-ff-mode">Expand Image</button>
+            <button class="wm-ff-mode">Remove Object</button>
+          </div>
+          <button class="wm-ff-generate">${ICN.firefly} Generate 3 Variations</button>
+        </div>
+      </div>
+      <div class="wm-ff-results" hidden>
+        <h4>Generated Variations</h4>
+        <div class="wm-ff-grid">
+          <div class="wm-ff-var"><img src="${img.src}" alt="Variation 1" style="filter:hue-rotate(10deg) brightness(1.05)"/><span>Variation 1</span><button>Use This</button></div>
+          <div class="wm-ff-var"><img src="${img.src}" alt="Variation 2" style="filter:hue-rotate(-5deg) saturate(1.2)"/><span>Variation 2</span><button>Use This</button></div>
+          <div class="wm-ff-var"><img src="${img.src}" alt="Variation 3" style="filter:brightness(1.1) contrast(1.05)"/><span>Variation 3</span><button>Use This</button></div>
+        </div>
+      </div>
+    </div>
+  `;
+  overlay.querySelector('.wm-ff-close').addEventListener('click', () => overlay.remove());
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  overlay.querySelectorAll('.wm-ff-mode').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      overlay.querySelectorAll('.wm-ff-mode').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  overlay.querySelector('.wm-ff-generate').addEventListener('click', () => {
+    const genBtn = overlay.querySelector('.wm-ff-generate');
+    genBtn.textContent = 'Generating...';
+    genBtn.disabled = true;
+    setTimeout(() => {
+      overlay.querySelector('.wm-ff-results').hidden = false;
+      genBtn.textContent = 'Regenerate';
+      genBtn.disabled = false;
+    }, 2000);
+  });
+  overlay.querySelectorAll('.wm-ff-var button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      overlay.remove();
+      showToast('Firefly variation saved to AEM Assets', 3000);
+    });
+  });
+  document.body.appendChild(overlay);
+}
+
+/* ────────── AEM Forms Intake (extras=forms) ────────── */
+function openFormsPanel(li) {
+  document.querySelectorAll('.wm-forms-panel').forEach((p) => p.remove());
+  const img = li.querySelector('img');
+  if (!img) return;
+  const panel = makeEl('div', 'wm-forms-panel');
+  panel.innerHTML = `
+    <div class="wm-forms-header">
+      <span>${ICN.form} AEM Forms — Asset Request</span>
+      <button class="wm-forms-close">${ICN.close}</button>
+    </div>
+    <div class="wm-forms-tabs">
+      <button class="wm-forms-tab active" data-tab="rights">Request Rights</button>
+      <button class="wm-forms-tab" data-tab="brief">Creative Brief</button>
+      <button class="wm-forms-tab" data-tab="issue">Report Issue</button>
+    </div>
+    <div class="wm-forms-body">
+      <div class="wm-forms-asset-info">
+        <img src="${img.src}" alt="${img.alt}" />
+        <div>
+          <strong>${img.alt}</strong>
+          <small>Auto-populated from asset metadata</small>
+        </div>
+      </div>
+      <div class="wm-forms-fields" data-tab="rights">
+        <label>Usage Type <select><option>Digital — Web</option><option>Digital — Social</option><option>Print — Brochure</option><option>Print — Billboard</option><option>Broadcast — TV</option></select></label>
+        <label>Territory <select><option>North America</option><option>Global</option><option>EMEA</option><option>APAC</option><option>LATAM</option></select></label>
+        <label>Duration <select><option>6 months</option><option>1 year</option><option>2 years</option><option>Perpetual</option></select></label>
+        <label>Justification <textarea rows="3" placeholder="Explain why you need extended rights..."></textarea></label>
+      </div>
+      <div class="wm-forms-fields" data-tab="brief" hidden>
+        <label>Campaign Name <input type="text" placeholder="e.g., Back-to-School 2026" /></label>
+        <label>Deliverables <select multiple><option>Hero Banner</option><option>Social Posts</option><option>Email Template</option><option>In-Store Signage</option></select></label>
+        <label>Deadline <input type="date" value="2026-04-15" /></label>
+        <label>Notes <textarea rows="3" placeholder="Additional creative direction..."></textarea></label>
+      </div>
+      <div class="wm-forms-fields" data-tab="issue" hidden>
+        <label>Issue Type <select><option>Incorrect metadata</option><option>Broken link</option><option>Rights expired</option><option>Quality issue</option><option>Duplicate asset</option></select></label>
+        <label>Description <textarea rows="4" placeholder="Describe the issue..."></textarea></label>
+        <label>Priority <select><option>Low</option><option>Medium</option><option selected>High</option><option>Critical</option></select></label>
+      </div>
+      <button class="wm-forms-submit">${ICN.check} Submit Request</button>
+    </div>
+  `;
+  panel.querySelector('.wm-forms-close').addEventListener('click', () => panel.remove());
+  panel.querySelectorAll('.wm-forms-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      panel.querySelectorAll('.wm-forms-tab').forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      panel.querySelectorAll('.wm-forms-fields').forEach((f) => { f.hidden = f.dataset.tab !== tab.dataset.tab; });
+    });
+  });
+  panel.querySelector('.wm-forms-submit').addEventListener('click', () => {
+    const activeTab = panel.querySelector('.wm-forms-tab.active')?.dataset.tab || 'rights';
+    const msgs = { rights: 'Rights request submitted — Workfront task created', brief: 'Creative brief submitted — team notified', issue: 'Issue reported — ticket #WM-4892 created' };
+    panel.remove();
+    showToast(msgs[activeTab], 4000);
+  });
+  document.body.appendChild(panel);
+}
+
+/* ────────── A/B Test Configurator (extras=ab) ────────── */
+function openABConfigurator() {
+  document.querySelectorAll('.wm-ab-overlay').forEach((o) => o.remove());
+  const allImgs = [...document.querySelectorAll('.cards-media > ul > li img')].filter((i) => i.src && i.src !== 'about:error');
+  if (allImgs.length < 2) { showToast('Need at least 2 images for A/B test'); return; }
+  const overlay = makeEl('div', 'wm-ab-overlay');
+  overlay.innerHTML = `
+    <div class="wm-ab-dialog">
+      <div class="wm-ab-header">
+        <span>${ICN.ab} EDS Experiment Configurator</span>
+        <button class="wm-ab-close">${ICN.close}</button>
+      </div>
+      <div class="wm-ab-body">
+        <div class="wm-ab-variants">
+          <div class="wm-ab-variant">
+            <h4>Control (A)</h4>
+            <div class="wm-ab-img-picker" data-slot="a">
+              <img src="${allImgs[0].src}" alt="${allImgs[0].alt}" />
+              <button class="wm-ab-change">Change</button>
+            </div>
+          </div>
+          <div class="wm-ab-vs">VS</div>
+          <div class="wm-ab-variant">
+            <h4>Variant (B)</h4>
+            <div class="wm-ab-img-picker" data-slot="b">
+              <img src="${allImgs[1].src}" alt="${allImgs[1].alt}" />
+              <button class="wm-ab-change">Change</button>
+            </div>
+          </div>
+        </div>
+        <div class="wm-ab-config">
+          <label>Experiment Name <input type="text" value="hero-image-test-${Date.now().toString(36).slice(-4)}" /></label>
+          <label>Page Path <input type="text" value="/about" /></label>
+          <label>Traffic Split
+            <div class="wm-ab-split">
+              <input type="range" min="10" max="90" value="50" class="wm-ab-slider" />
+              <span class="wm-ab-split-label">50% / 50%</span>
+            </div>
+          </label>
+          <label>Audience
+            <select>
+              <option>All Visitors</option>
+              <option>New Visitors</option>
+              <option>Returning Visitors</option>
+              <option>Mobile Users</option>
+              <option>Walmart+ Members</option>
+            </select>
+          </label>
+          <label>Success Metric
+            <select>
+              <option>Click-Through Rate</option>
+              <option>Engagement Time</option>
+              <option>Conversion Rate</option>
+              <option>Bounce Rate (lower is better)</option>
+            </select>
+          </label>
+          <label>Duration <select><option>7 days</option><option selected>14 days</option><option>30 days</option></select></label>
+        </div>
+      </div>
+      <div class="wm-ab-footer">
+        <span class="wm-ab-note">Writes to <code>/.helix/config.xlsx</code> experiments sheet</span>
+        <button class="wm-ab-launch">${ICN.trending} Launch Experiment</button>
+      </div>
+    </div>
+  `;
+  const slider = overlay.querySelector('.wm-ab-slider');
+  const splitLabel = overlay.querySelector('.wm-ab-split-label');
+  slider.addEventListener('input', () => {
+    const v = parseInt(slider.value, 10);
+    splitLabel.textContent = `${v}% / ${100 - v}%`;
+  });
+  overlay.querySelector('.wm-ab-close').addEventListener('click', () => overlay.remove());
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  overlay.querySelector('.wm-ab-launch').addEventListener('click', () => {
+    overlay.remove();
+    showToast('Experiment launched — config.xlsx updated, live in 60s', 4000);
+  });
+  overlay.querySelectorAll('.wm-ab-change').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const picker = btn.closest('.wm-ab-img-picker');
+      const currentSrc = picker.querySelector('img').src;
+      const next = allImgs.find((i) => i.src !== currentSrc) || allImgs[0];
+      picker.querySelector('img').src = next.src;
+      picker.querySelector('img').alt = next.alt;
+    });
+  });
+  document.body.appendChild(overlay);
 }
 
 /* ────────── Init ────────── */
@@ -1159,6 +1567,50 @@ export default function initExtras() {
     }
     if (hasExtra('dm')) {
       document.body.classList.add('wm-extras-dm');
+    }
+    if (hasExtra('cf')) {
+      document.body.classList.add('wm-extras-cf');
+      /* Add CF button to media card toolbars */
+      document.querySelectorAll('.cards-media > ul > li').forEach((li) => {
+        const body = li.querySelector('.cards-media-body') || li.querySelector('div:last-child');
+        if (body) {
+          const cfBtn = makeEl('button', 'wm-cf-open-btn', `${ICN.fragment} Content Fragment`);
+          body.appendChild(cfBtn);
+          cfBtn.addEventListener('click', (e) => { e.stopPropagation(); openContentFragmentPanel(li); });
+        }
+      });
+    }
+    if (hasExtra('ff')) {
+      document.body.classList.add('wm-extras-ff');
+      document.querySelectorAll('.cards-media > ul > li').forEach((li) => {
+        const body = li.querySelector('.cards-media-body') || li.querySelector('div:last-child');
+        if (body) {
+          const ffBtn = makeEl('button', 'wm-ff-open-btn', `${ICN.firefly} Firefly`);
+          body.appendChild(ffBtn);
+          ffBtn.addEventListener('click', (e) => { e.stopPropagation(); openFireflyPanel(li); });
+        }
+      });
+    }
+    if (hasExtra('forms')) {
+      document.body.classList.add('wm-extras-forms');
+      document.querySelectorAll('.cards-media > ul > li').forEach((li) => {
+        const body = li.querySelector('.cards-media-body') || li.querySelector('div:last-child');
+        if (body) {
+          const formBtn = makeEl('button', 'wm-forms-open-btn', `${ICN.form} Request`);
+          body.appendChild(formBtn);
+          formBtn.addEventListener('click', (e) => { e.stopPropagation(); openFormsPanel(li); });
+        }
+      });
+    }
+    if (hasExtra('ab')) {
+      document.body.classList.add('wm-extras-ab');
+      /* Add A/B test button to filter bar */
+      const filterBar = document.querySelector('.wm-filter-tabs');
+      if (filterBar) {
+        const abBtn = makeEl('button', 'wm-ab-toggle', `${ICN.ab} A/B Test`);
+        abBtn.addEventListener('click', openABConfigurator);
+        filterBar.appendChild(abBtn);
+      }
     }
   }
 
