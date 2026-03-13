@@ -54,7 +54,7 @@
   margin: 0 0 12px;
 }
 
-.accordion details .accordion-item-body a {
+.accordion details .accordion-item-body a:not(.button) {
   color: var(--link-color);
 }
 

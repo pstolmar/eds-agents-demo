@@ -3,10 +3,6 @@
   padding: 0;
 }
 
-.hero-container {
-  background-color: var(--dark-color);
-}
-
 .hero {
   position: relative;
   padding: 60px 24px;
@@ -14,6 +10,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
+  background-color: var(--dark-color);
 }
 
 .hero::after {
@@ -62,13 +59,22 @@
 }
 
 /* Video background support */
-.hero video {
+.hero video,
+.hero .hero-video-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.hero .hero-video-bg iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: cover;
+  pointer-events: none;
 }
 
 @media (width >= 900px) {
