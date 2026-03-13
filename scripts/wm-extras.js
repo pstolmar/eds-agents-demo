@@ -29,7 +29,7 @@ const ICN = {
   left: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 4l-8 8 8 8"/></svg>',
   right: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 4l8 8-8 8"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
-  ai: '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2 5h5l-4 3.5 1.5 5L8 10.5 3.5 13.5 5 8.5 1 5h5z"/></svg>',
+  ai: '<svg viewBox="0 0 18 18" fill="currentColor"><path d="M9 1l1.3 3 3 1.3-3 1.3L9 9.6 7.7 6.6l-3-1.3 3-1.3L9 1zM4 10.5l.8 1.7 1.7.8-1.7.8L4 15.5l-.8-1.7-1.7-.8 1.7-.8L4 10.5zM14.5 10l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6.6-1.4z"/></svg>',
   chart: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 17h14M5 13v4M9 9v8M13 5v12M17 1v16"/></svg>',
   users: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="3"/><path d="M1 17c0-3 2.7-5 6-5s6 2 6 5"/><circle cx="14" cy="6" r="2.5"/><path d="M13 12c1-.3 2-.5 3-.5 2.3 0 4 1.3 4 3.5"/></svg>',
   check: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10l4 4 8-8"/></svg>',
@@ -840,8 +840,8 @@ function addAssetToolbar(li, type) {
   const toolbar = makeEl('div', 'wm-asset-toolbar');
   const actions = [
     { icon: ICN.hub, title: 'Open in Content Hub', cls: 'wm-at-hub' },
-    { icon: ICN.pencil, title: 'Edit in Dynamic Media', cls: 'wm-at-dm' },
-    { icon: ICN.wand, title: 'Edit in Adobe Express', cls: 'wm-at-express' },
+    { icon: ICN.crop, title: 'Smart Crop', cls: 'wm-at-dm' },
+    { icon: ICN.pencil, title: 'Edit in Adobe Express', cls: 'wm-at-express' },
     { icon: ICN.similar, title: 'Find Similar', cls: 'wm-at-similar' },
   ];
 
@@ -1041,7 +1041,7 @@ function enhanceSearch() {
   if (input) input.placeholder = 'Search with AI \u2014 try "blue corporate images" or "holiday"...';
 
   /* AI badge */
-  bar.appendChild(makeEl('span', 'wm-search-ai-badge', `${ICN.ai} AI`));
+  bar.appendChild(makeEl('span', 'wm-search-ai-badge', ICN.ai));
 
   /* Wrapper for color picker + smart tags */
   const wrapper = makeEl('div', 'wm-search-enhanced');

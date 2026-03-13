@@ -120,6 +120,11 @@ header nav .nav-hamburger button {
   white-space: initial;
 }
 
+header nav .nav-hamburger button:hover,
+header nav .nav-hamburger button:focus {
+  background-color: transparent;
+}
+
 header nav .nav-hamburger-icon,
 header nav .nav-hamburger-icon::before,
 header nav .nav-hamburger-icon::after {
@@ -476,4 +481,60 @@ header nav .nav-tools .icon-search svg {
   height: 100%;
   background: rgb(0 0 0 / 30%);
   z-index: 1;
+}
+
+/* ── Sub-nav (IIAJ inner nav) ── */
+header .sub-nav-wrapper {
+  background: #0d3c6e;
+  z-index: 99;
+  border-top: 1px solid rgb(255 255 255 / 12%);
+  top: var(--nav-height);
+}
+
+.sub-nav-wrapper nav {
+  height: 48px;
+}
+
+.sub-nav-wrapper nav[aria-expanded='true'] {
+  min-height: auto;
+}
+
+.sub-nav-wrapper .nav-brand {
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+}
+
+.sub-nav-wrapper .nav-brand .icon-walmart-spark {
+  display: none;
+}
+
+.sub-nav-wrapper .nav-sections ul {
+  font-size: var(--body-font-size-xs);
+}
+
+header .sub-nav-wrapper nav .nav-hamburger-icon,
+header .sub-nav-wrapper nav .nav-hamburger-icon::before,
+header .sub-nav-wrapper nav .nav-hamburger-icon::after {
+  width: 16px;
+}
+
+@media (width >= 900px) {
+  .sub-nav-wrapper {
+    position: relative;
+  }
+
+  .sub-nav-wrapper nav {
+    padding: 0 32px;
+  }
+
+  .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > a,
+  .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > p {
+    padding: 14px 8px;
+    font-size: var(--body-font-size-xs);
+  }
+
+  .sub-nav-wrapper .nav-sections .nav-drop::after {
+    width: 5px;
+    height: 5px;
+  }
 }

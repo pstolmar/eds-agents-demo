@@ -82,6 +82,10 @@ header {
   height: var(--nav-height);
 }
 
+header:has(.sub-nav-wrapper) {
+  height: calc(var(--nav-height) + 48px);
+}
+
 header .header,
 footer .footer {
   visibility: hidden;
