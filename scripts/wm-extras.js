@@ -42,6 +42,7 @@ const ICN = {
   ab: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2v16M2 2h7v16H2zM11 2h7v16h-7z"/><path d="M5 8l1.5 4M8 8L6.5 12M5.5 11h2" stroke-width="1.2"/><path d="M14 8v4M14 8h1.5a1.5 1.5 0 010 3H14M14 11h1.5a1.5 1.5 0 010 0" stroke-width="1.2"/></svg>',
   move: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 2v16M2 10h16M10 2l-3 3M10 2l3 3M10 18l-3-3M10 18l3-3M2 10l3-3M2 10l3 3M18 10l-3-3M18 10l-3 3"/></svg>',
   confirm: '<svg viewBox="0 0 20 20" fill="none" stroke="#22c55e" stroke-width="2.5"><path d="M4 10l4 4 8-8"/></svg>',
+  pencil: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 3.5l3 3L7 16H4v-3L13.5 3.5z"/><path d="M11 6l3 3"/></svg>',
 };
 
 /* ────────── Configuration ────────── */
@@ -122,8 +123,9 @@ const VIMEO_THUMBS = [
 ];
 
 /* People search — image/gallery indices containing people */
+/* Only: 0=School/Back-to-School, 1=Kevin, 3=Associates/Store, 4=Chris */
 const PEOPLE_CARDS = {
-  imgCards: [0, 1, 2, 3, 4],
+  imgCards: [0, 1, 3, 4],
   galCards: [0, 2],
 };
 
@@ -838,7 +840,7 @@ function addAssetToolbar(li, type) {
   const toolbar = makeEl('div', 'wm-asset-toolbar');
   const actions = [
     { icon: ICN.hub, title: 'Open in Content Hub', cls: 'wm-at-hub' },
-    { icon: ICN.crop, title: 'Edit in Dynamic Media', cls: 'wm-at-dm' },
+    { icon: ICN.pencil, title: 'Edit in Dynamic Media', cls: 'wm-at-dm' },
     { icon: ICN.wand, title: 'Edit in Adobe Express', cls: 'wm-at-express' },
     { icon: ICN.similar, title: 'Find Similar', cls: 'wm-at-similar' },
   ];
@@ -1049,6 +1051,8 @@ function enhanceSearch() {
   const colorRow = makeEl('div', 'wm-color-picker');
   colorRow.appendChild(makeEl('span', 'wm-cp-label', 'Colors:'));
   let activeColor = null;
+  /* Clear colors X button */
+  const clearColorBtn = makeEl('button', 'wm-cp-clear', `${ICN.close}`);
   COLORS.forEach((c) => {
     const btn = makeEl('button', 'wm-cp-swatch');
     btn.style.background = c.hex;
@@ -1058,15 +1062,26 @@ function enhanceSearch() {
         activeColor = null;
         btn.classList.remove('active');
         clearColorFilter();
+        clearColorBtn.style.display = 'none';
       } else {
         colorRow.querySelectorAll('.wm-cp-swatch').forEach((s) => s.classList.remove('active'));
         activeColor = c.hex;
         btn.classList.add('active');
         applyColorFilter(c);
+        clearColorBtn.style.display = 'inline-flex';
       }
     });
     colorRow.appendChild(btn);
   });
+  clearColorBtn.title = 'Clear color filter';
+  clearColorBtn.style.display = 'none';
+  clearColorBtn.addEventListener('click', () => {
+    activeColor = null;
+    colorRow.querySelectorAll('.wm-cp-swatch').forEach((s) => s.classList.remove('active'));
+    clearColorFilter();
+    clearColorBtn.style.display = 'none';
+  });
+  colorRow.appendChild(clearColorBtn);
   wrapper.appendChild(colorRow);
 
   /* Smart tags */

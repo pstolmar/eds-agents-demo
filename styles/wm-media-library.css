@@ -237,6 +237,15 @@ body.wm-media-library main > .section:first-of-type em {
   color: #999;
 }
 
+.wm-search-bar .wm-search-clear {
+  fill: none;
+  stroke: #666;
+}
+
+.wm-search-bar .wm-search-clear:hover {
+  stroke: #333;
+}
+
 /* ===== FILTER TABS ===== */
 .wm-filter-tabs {
   display: flex;
