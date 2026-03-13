@@ -162,6 +162,13 @@ async function loadLazy(doc) {
   const main = doc.querySelector('main');
   await loadSections(main);
 
+  /* AskWalmart: decorate after sections load so accordions exist */
+  if (pathname.includes('askwalmart')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-askwalmart.css`);
+    const mod = await import('./wm-askwalmart.js');
+    mod.default();
+  }
+
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();

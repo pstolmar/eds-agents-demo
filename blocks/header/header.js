@@ -219,7 +219,14 @@ function buildSearch(nav) {
 export default async function decorate(block) {
   // load nav as fragment
   const navMeta = getMetadata('nav');
-  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
+  let navPath;
+  if (navMeta) {
+    navPath = new URL(navMeta, window.location).pathname;
+  } else if (window.location.pathname.includes('/wm-eds/2/')) {
+    navPath = '/content/wm-eds/2/nav';
+  } else {
+    navPath = '/nav';
+  }
   const fragment = await loadFragment(navPath);
 
   // decorate nav DOM
