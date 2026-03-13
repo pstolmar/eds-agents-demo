@@ -84,6 +84,15 @@ export default function decorateAskWalmart() {
   tabSection.appendChild(tabContainer);
   heroSection.after(tabSection);
 
+  /* ── search filtering ── */
+  function showAllItems() {
+    tabPanels.querySelectorAll('details').forEach((d) => {
+      d.style.display = '';
+    });
+    tabPanels.querySelectorAll('.aw-no-results')
+      .forEach((n) => n.remove());
+  }
+
   /* ── tab switching ── */
   function activateTab(idx) {
     tabs.forEach((t, j) => {
@@ -102,15 +111,6 @@ export default function decorateAskWalmart() {
     searchInput.value = '';
     showAllItems();
   });
-
-  /* ── search filtering ── */
-  function showAllItems() {
-    tabPanels.querySelectorAll('details').forEach((d) => {
-      d.style.display = '';
-    });
-    tabPanels.querySelectorAll('.aw-no-results')
-      .forEach((n) => n.remove());
-  }
 
   function doSearch() {
     const query = searchInput.value.trim().toLowerCase();
