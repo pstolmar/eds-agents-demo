@@ -6,7 +6,7 @@ export default function decorate(block) {
     const li = document.createElement('li');
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
-      if (div.children.length === 1 && div.querySelector('picture')) {
+      if (div.children.length === 1 && (div.querySelector('picture') || div.querySelector('img'))) {
         div.className = 'cards-gallery-image';
       } else {
         div.className = 'cards-gallery-body';
@@ -36,4 +36,16 @@ export default function decorate(block) {
     }
   });
   block.replaceChildren(ul);
+
+  /* Detect broken / missing images */
+  ul.querySelectorAll('.cards-gallery-image').forEach((wrapper) => {
+    const img = wrapper.querySelector('img');
+    if (!img) return;
+    const src = img.getAttribute('src') || '';
+    if (src === 'about:error' || src === '') {
+      wrapper.classList.add('cards-gallery-missing');
+    } else {
+      img.addEventListener('error', () => wrapper.classList.add('cards-gallery-missing'));
+    }
+  });
 }

@@ -31,6 +31,19 @@
   display: block;
 }
 
+/* Missing / broken video thumbnail */
+.cards-video .cards-video-missing {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+}
+
+.cards-video .cards-video-missing img {
+  opacity: 0;
+}
+
 .cards-video .cards-video-play-overlay {
   position: absolute;
   inset: 0;
@@ -40,6 +53,11 @@
   background: rgb(0 0 0 / 30%);
   opacity: 0;
   transition: opacity 0.2s ease;
+}
+
+.cards-video .cards-video-missing .cards-video-play-overlay {
+  opacity: 1;
+  background: rgb(0 0 0 / 20%);
 }
 
 .cards-video > ul > li:hover .cards-video-play-overlay {

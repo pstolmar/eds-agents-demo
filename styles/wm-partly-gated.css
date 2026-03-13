@@ -12,8 +12,15 @@
   cursor: pointer;
 }
 
-.wm-widget-container.wm-widget-blurred {
-  filter: blur(12px) grayscale(40%);
+.wm-widget-container.wm-widget-blurred::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(12px) grayscale(40%);
+  background: rgb(255 255 255 / 20%);
+  z-index: 5;
+  border-radius: 10px;
+  pointer-events: none;
 }
 
 .wm-widget-placeholder {
@@ -318,4 +325,49 @@
   font-size: 0.72rem;
   color: #9ca3af;
   text-align: center;
+}
+
+/* ===== Media Library Gate Overlay ===== */
+.wm-ml-gate-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgb(15 23 42 / 70%);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.wm-ml-gate-overlay.wm-ws-fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wm-ml-gate-dialog {
+  background: #fff;
+  border-radius: 12px;
+  width: min(400px, 90%);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgb(0 0 0 / 25%);
+}
+
+.wm-ml-gate-dismiss {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background: transparent;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.wm-ml-gate-dismiss:hover {
+  background: #f3f4f6;
+  color: #374151;
 }

@@ -1,0 +1,211 @@
+/* ── AskWalmart FAQ page ── */
+
+/* Hero area */
+main > .section:first-of-type .default-content-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+main > .section:first-of-type h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #041f41;
+  margin: 0 0 8px;
+}
+
+main > .section:first-of-type h4 {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #2e2f32;
+  margin: 24px 0 16px;
+  text-align: center;
+}
+
+main > .section:first-of-type picture img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* ── Search bar ── */
+.aw-search-bar {
+  display: flex;
+  gap: 12px;
+  max-width: 460px;
+  margin: 20px auto 8px;
+  align-items: center;
+}
+
+.aw-search-bar input {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 1rem;
+  border: 1px solid #c4c7c5;
+  border-radius: 24px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.aw-search-bar input:focus {
+  border-color: #0071dc;
+}
+
+.aw-search-btn {
+  padding: 10px 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  background: #0071dc;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.aw-search-btn:hover {
+  background: #004f9a;
+}
+
+/* ── Tabs ── */
+.aw-faq-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+  text-align: center;
+}
+
+.aw-tab-bar {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 0;
+}
+
+.aw-tab {
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #74767c;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  margin-bottom: -2px;
+}
+
+.aw-tab:hover {
+  color: #2e2f32;
+}
+
+.aw-tab[aria-selected="true"] {
+  color: #041f41;
+  font-weight: 700;
+  border-bottom-color: #041f41;
+}
+
+/* ── Panels & accordion items ── */
+.aw-tab-panels {
+  text-align: left;
+}
+
+.aw-tab-panel .accordion {
+  border: none;
+}
+
+.aw-tab-panel .accordion details {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.aw-tab-panel .accordion details summary {
+  padding: 18px 40px 18px 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #2e2f32;
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+}
+
+.aw-tab-panel .accordion details summary::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid #74767c;
+  border-bottom: 2px solid #74767c;
+  transform: translateY(-65%) rotate(45deg);
+  transition: transform 0.2s;
+}
+
+.aw-tab-panel .accordion details[open] summary::after {
+  transform: translateY(-35%) rotate(-135deg);
+}
+
+.aw-tab-panel .accordion details summary::-webkit-details-marker {
+  display: none;
+}
+
+.aw-tab-panel .accordion .accordion-item-body {
+  padding: 0 0 18px;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #46474a;
+}
+
+.aw-tab-panel .accordion .accordion-item-body a {
+  color: #0071dc;
+  text-decoration: none;
+}
+
+.aw-tab-panel .accordion .accordion-item-body a:hover {
+  text-decoration: underline;
+}
+
+.aw-tab-panel .accordion .accordion-item-body a.button:any-link {
+  color: #fff;
+  background-color: var(--walmart-blue, #0053e2);
+  text-decoration: none;
+}
+
+.aw-tab-panel .accordion .accordion-item-body a.button:hover {
+  background-color: var(--button-hover-color, #003da5);
+  text-decoration: none;
+}
+
+/* no-results message */
+.aw-no-results {
+  text-align: center;
+  color: #74767c;
+  padding: 40px 0;
+  font-size: 1rem;
+}
+
+/* ── Responsive ── */
+@media (width <= 600px) {
+  .aw-tab-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .aw-tab {
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  .aw-search-bar {
+    flex-direction: column;
+  }
+
+  .aw-search-bar input,
+  .aw-search-btn {
+    width: 100%;
+  }
+}
