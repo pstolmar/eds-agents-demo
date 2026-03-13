@@ -75,7 +75,7 @@ export default function decorate(block) {
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function revealNextRow(animClass) {
+    const revealNextRow = (animClass) => {
       const next = Math.min(visible + CARDS_PER_ROW, allCards.length);
       for (let i = visible; i < next; i += 1) {
         const card = allCards[i];
@@ -87,7 +87,7 @@ export default function decorate(block) {
       }
       visible = next;
       if (visible >= allCards.length) showMore.style.display = 'none';
-    }
+    };
 
     showMore.querySelector('button').addEventListener('click', () => {
       revealNextRow('cards-reveal');

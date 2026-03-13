@@ -254,6 +254,28 @@ main .section.highlight {
   padding: 40px 0;
 }
 
+/* Hide debug/tracking artifacts */
+a[href*="demdex.net"] {
+  display: none !important;
+}
+
+p:has(> a[href*="demdex.net"]:only-child) {
+  display: none !important;
+}
+
+/* Pre-blur demo pages while modules load — prevents flash of sensitive content */
+body.wm-demo-loading main {
+  filter: blur(20px);
+  opacity: 0.4;
+  pointer-events: none;
+  transition: filter 0.4s ease, opacity 0.4s ease;
+}
+
+body.wm-demo-loaded main {
+  filter: none;
+  opacity: 1;
+}
+
 /* Hero Gradient Section */
 .hero-gradient {
   position: relative;

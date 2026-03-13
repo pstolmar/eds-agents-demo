@@ -312,8 +312,9 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  /* wm-eds/2 pages: add the IIAJ sub-nav below the main nav */
-  if (isWmEds2) {
+  /* IIAJ sub-nav: only on supplier/IIAJ pages, not media-library or other wm-eds/2 pages */
+  const needsSubNav = isWmEds2 && window.location.pathname.includes('/suppliers/');
+  if (needsSubNav) {
     let subFrag = await loadFragment('/wm-eds/2/nav');
     if (!subFrag) subFrag = await loadFragment('/content/wm-eds/2/nav');
     if (subFrag) {
