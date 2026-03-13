@@ -434,7 +434,12 @@ function openSmartCropPreview(li) {
   };
 
   function updatePreview() {
-    previewImg.style.objectPosition = `${cropState.x + cropState.w / 2}% ${cropState.y + cropState.h / 2}%`;
+    const cx = cropState.x + cropState.w / 2;
+    const cy = cropState.y + cropState.h / 2;
+    const scale = Math.min(100 / cropState.w, 100 / cropState.h);
+    previewImg.style.objectPosition = `${cx}% ${cy}%`;
+    previewImg.style.transform = `scale(${scale.toFixed(2)})`;
+    previewImg.style.transformOrigin = `${cx}% ${cy}%`;
     const pw = Math.round((cropState.w / 100) * 4000);
     const ph = Math.round((cropState.h / 100) * 3000);
     previewDims.textContent = `${pw} × ${ph}`;
@@ -446,7 +451,7 @@ function openSmartCropPreview(li) {
     if (btn) btn.classList.add('active');
     const [rw, rh] = preset.ratio.split(':').map(Number);
     let boxW; let boxH;
-    if (rw / rh > 1) { boxW = 90; boxH = (90 * rh) / rw; } else { boxH = 85; boxW = (85 * rw) / rh; }
+    if (rw / rh > 1) { boxW = 60; boxH = (60 * rh) / rw; } else { boxH = 55; boxW = (55 * rw) / rh; }
     cropState = {
       x: (100 - boxW) / 2, y: (100 - boxH) / 2, w: boxW, h: boxH,
     };
@@ -1550,7 +1555,7 @@ export default function initExtras() {
   }
 
   function setup() {
-    enhanceSearch();
+    if (hasExtra('search')) enhanceSearch();
     decorateImageCards();
     decorateGalleryCards();
     buildVideoCarousel();

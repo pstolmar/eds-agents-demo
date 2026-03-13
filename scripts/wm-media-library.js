@@ -299,6 +299,7 @@ function wireSearch(searchInput, tabCtrl) {
 
 /* ===== Extras Toggle Panel ===== */
 const EXTRAS_FEATURES = [
+  { key: 'search', label: 'AI Search', desc: 'Smart tags, colors & people search' },
   { key: 'dm', label: 'Dynamic Media', desc: 'Smart crop & renditions' },
   { key: 'wf', label: 'Workfront', desc: 'Review & approval panel' },
   { key: 'analytics', label: 'Analytics', desc: 'Engagement dashboard' },

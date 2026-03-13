@@ -29,12 +29,15 @@ export default function decorate(block) {
   });
   block.replaceChildren(ul);
 
-  /* Detect broken / missing images (about:error from ingestion failures) */
-  ul.querySelectorAll('img').forEach((img) => {
+  /* Detect broken / missing images */
+  ul.querySelectorAll('.cards-media-image').forEach((wrapper) => {
+    const img = wrapper.querySelector('img');
+    if (!img) return;
     const src = img.getAttribute('src') || '';
     if (src === 'about:error' || src === '') {
-      const wrapper = img.closest('.cards-media-image');
-      if (wrapper) wrapper.classList.add('cards-media-missing');
+      wrapper.classList.add('cards-media-missing');
+    } else {
+      img.addEventListener('error', () => wrapper.classList.add('cards-media-missing'));
     }
   });
 

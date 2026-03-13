@@ -1462,6 +1462,7 @@
   border: 1px solid #ddd;
   border-radius: 50%;
   background: #fff;
+  color: #333;
   cursor: pointer;
   padding: 0;
   margin-left: 8px;
@@ -1628,6 +1629,7 @@
   border: 1px solid #d1d5db;
   border-radius: 6px;
   background: #fff;
+  color: #374151;
   font-size: 0.75rem;
   cursor: pointer;
   transition: all 0.15s;

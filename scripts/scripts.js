@@ -140,7 +140,7 @@ async function loadLazy(doc) {
     }
     loadCSS(`${window.hlx.codeBasePath}/styles/${demo.css}`);
     import(demo.js).then((mod) => mod.default());
-  } else if (pathname.includes('wm-media-library')) {
+  } else if (pathname.includes('media-library')) {
     loadCSS(`${window.hlx.codeBasePath}/styles/wm-media-library.css`);
     if (params.has('extras')) {
       loadCSS(`${window.hlx.codeBasePath}/styles/wm-extras.css`);

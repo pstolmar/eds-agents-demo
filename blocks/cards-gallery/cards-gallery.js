@@ -38,11 +38,14 @@ export default function decorate(block) {
   block.replaceChildren(ul);
 
   /* Detect broken / missing images */
-  ul.querySelectorAll('img').forEach((img) => {
+  ul.querySelectorAll('.cards-gallery-image').forEach((wrapper) => {
+    const img = wrapper.querySelector('img');
+    if (!img) return;
     const src = img.getAttribute('src') || '';
     if (src === 'about:error' || src === '') {
-      const wrapper = img.closest('.cards-gallery-image');
-      if (wrapper) wrapper.classList.add('cards-gallery-missing');
+      wrapper.classList.add('cards-gallery-missing');
+    } else {
+      img.addEventListener('error', () => wrapper.classList.add('cards-gallery-missing'));
     }
   });
 }
