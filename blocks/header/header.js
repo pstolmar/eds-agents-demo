@@ -147,7 +147,12 @@ function buildSearch(nav) {
     try {
       const resp = await fetch('/query-index.json');
       const json = await resp.json();
-      queryIndex = (json.data || []).filter((item) => item.path !== '/nav');
+      const isWmEds2 = window.location.pathname.includes('/wm-eds/2/');
+      queryIndex = (json.data || []).filter((item) => {
+        if (item.path === '/nav') return false;
+        if (isWmEds2) return item.path.includes('/wm-eds/2/');
+        return true;
+      });
     } catch {
       queryIndex = [];
     }
@@ -223,7 +228,7 @@ export default async function decorate(block) {
   if (navMeta) {
     navPath = new URL(navMeta, window.location).pathname;
   } else if (window.location.pathname.includes('/wm-eds/2/')) {
-    navPath = '/content/wm-eds/2/nav';
+    navPath = '/wm-eds/2/nav';
   } else {
     navPath = '/nav';
   }

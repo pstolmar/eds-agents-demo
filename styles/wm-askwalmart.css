@@ -74,10 +74,12 @@ main > .section:first-of-type picture img {
   max-width: 800px;
   margin: 0 auto;
   padding: 24px 20px 60px;
+  text-align: center;
 }
 
 .aw-tab-bar {
   display: flex;
+  justify-content: center;
   gap: 0;
   border-bottom: 2px solid #e5e7eb;
   margin-bottom: 0;
@@ -107,6 +109,10 @@ main > .section:first-of-type picture img {
 }
 
 /* ── Panels & accordion items ── */
+.aw-tab-panels {
+  text-align: left;
+}
+
 .aw-tab-panel .accordion {
   border: none;
 }
@@ -160,6 +166,17 @@ main > .section:first-of-type picture img {
 
 .aw-tab-panel .accordion .accordion-item-body a:hover {
   text-decoration: underline;
+}
+
+.aw-tab-panel .accordion .accordion-item-body a.button:any-link {
+  color: #fff;
+  background-color: var(--walmart-blue, #0053e2);
+  text-decoration: none;
+}
+
+.aw-tab-panel .accordion .accordion-item-body a.button:hover {
+  background-color: var(--button-hover-color, #003da5);
+  text-decoration: none;
 }
 
 /* no-results message */

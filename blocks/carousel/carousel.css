@@ -77,10 +77,14 @@
 
 .carousel-slide-content a.button:any-link {
   background-color: var(--walmart-blue);
+  color: #fff;
   border-radius: 24px;
   padding: 8px 20px;
   font-size: 13px;
   font-weight: 600;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
 }
 
 .carousel-navigation-buttons {

@@ -88,6 +88,7 @@ export default function decorateAskWalmart() {
   function showAllItems() {
     tabPanels.querySelectorAll('details').forEach((d) => {
       d.style.display = '';
+      d.open = false;
     });
     tabPanels.querySelectorAll('.aw-no-results')
       .forEach((n) => n.remove());
@@ -135,7 +136,12 @@ export default function decorateAskWalmart() {
         const text = d.textContent.toLowerCase();
         const match = text.includes(query);
         d.style.display = match ? '' : 'none';
-        if (match) panelMatches += 1;
+        if (match) {
+          panelMatches += 1;
+          d.open = true;
+        } else {
+          d.open = false;
+        }
       });
       totalMatches += panelMatches;
       if (panelMatches === 0) panel.style.display = 'none';
