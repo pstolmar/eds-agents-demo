@@ -5,8 +5,8 @@ header .nav-wrapper {
   position: fixed;
   top: 0;
   left: 0;
-  background: white;
-  border-bottom: 1px solid #eaeaea;
+  background: #0053e2;
+  border-bottom: none;
 }
 
 header nav {
@@ -57,13 +57,13 @@ header nav p {
 }
 
 header nav a:any-link {
-  color: var(--text-color);
+  color: #fff;
   font-weight: 500;
   transition: color 0.2s ease;
 }
 
 header nav a:any-link:hover {
-  color: #eb1000;
+  color: #ffc220;
 }
 
 /* brand */
@@ -76,13 +76,33 @@ header nav .nav-brand {
 }
 
 header nav .nav-brand a:any-link {
-  color: #eb1000;
+  color: #fff;
   text-decoration: none;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 header nav .nav-brand a:any-link:hover {
-  color: #c00;
+  color: #fff;
+}
+
+/* brand image */
+header nav .nav-brand img {
+  width: 128px;
+  height: auto;
+}
+
+header nav .nav-brand .icon-walmart-spark {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+}
+
+header nav .nav-brand .icon-walmart-spark img {
+  width: 28px;
+  height: 28px;
 }
 
 /* hamburger */
@@ -100,10 +120,15 @@ header nav .nav-hamburger button {
   border-radius: 0;
   padding: 0;
   background-color: transparent;
-  color: inherit;
+  color: #fff;
   overflow: initial;
   text-overflow: initial;
   white-space: initial;
+}
+
+header nav .nav-hamburger button:hover,
+header nav .nav-hamburger button:focus {
+  background-color: transparent;
 }
 
 header nav .nav-hamburger-icon,
@@ -166,12 +191,6 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   }
 }
 
-/* brand image */
-header nav .nav-brand img {
-  width: 128px;
-  height: auto;
-}
-
 /* sections */
 header nav .nav-sections {
   grid-area: sections;
@@ -194,6 +213,7 @@ header nav .nav-sections ul {
 
 header nav .nav-sections ul > li {
   font-weight: 500;
+  color: #fff;
 }
 
 header nav .nav-sections ul > li > ul {
@@ -230,7 +250,7 @@ header nav .nav-sections ul > li > ul > li {
     transform: rotate(135deg);
     width: 6px;
     height: 6px;
-    border: 2px solid currentcolor;
+    border: 2px solid #fff;
     border-radius: 0 1px 0 0;
     border-width: 2px 2px 0 0;
   }
@@ -260,6 +280,29 @@ header nav .nav-sections ul > li > ul > li {
     padding: 20px 8px;
     margin: 0;
     line-height: 1.2;
+    position: relative;
+  }
+
+  /* Thick underline on hover/active for main nav items */
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li > a::after,
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li > p::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 8px;
+    right: 8px;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li:hover > a::after,
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li:hover > p::after,
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > a::after,
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > p::after {
+    transform: scaleX(1);
   }
 
   /* Dropdown panel — click only, no hover trigger */
@@ -301,13 +344,13 @@ header nav .nav-sections ul > li > ul > li {
   header nav .nav-sections .default-content-wrapper > ul > li > ul > li a {
     display: block;
     padding: 10px 20px;
-    color: var(--text-color);
+    color: #2e2f32;
     transition: background-color 0.15s ease;
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li > ul > li a:hover {
     background-color: #f5f5f5;
-    color: #eb1000;
+    color: #0071dc;
   }
 }
 
@@ -332,7 +375,7 @@ header nav .nav-tools .nav-search-btn {
 }
 
 header nav .nav-tools .nav-search-btn:hover {
-  background-color: #f5f5f5;
+  background-color: rgb(255 255 255 / 15%);
 }
 
 header nav .nav-tools .icon-search {
@@ -341,10 +384,24 @@ header nav .nav-tools .icon-search {
   height: 20px;
 }
 
-header nav .nav-tools .icon-search svg {
+header nav .nav-tools .icon-search img {
   width: 20px;
   height: 20px;
-  fill: var(--text-color);
+  filter: brightness(0) invert(1);
+}
+
+/* Shop link in nav tools */
+header nav .nav-tools .nav-shop-link {
+  color: #fff;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+header nav .nav-tools .nav-shop-link:hover {
+  color: #ffc220;
 }
 
 /* search overlay */
@@ -461,4 +518,184 @@ header nav .nav-tools .icon-search svg {
   height: 100%;
   background: rgb(0 0 0 / 30%);
   z-index: 1;
+}
+
+/* ── Sub-nav (IIAJ inner nav) ── */
+header .sub-nav-wrapper {
+  background: white;
+  z-index: 99;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.sub-nav-wrapper nav {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 0 16px;
+  padding: 0 16px;
+}
+
+/* Mobile: horizontal scrollable bar — no hamburger, no brand */
+.sub-nav-wrapper .nav-hamburger {
+  display: none !important;
+}
+
+.sub-nav-wrapper .nav-brand {
+  display: none;
+}
+
+.sub-nav-wrapper .nav-tools {
+  display: none;
+}
+
+header .sub-nav-wrapper nav .nav-sections {
+  display: block !important;
+  visibility: visible !important;
+  overflow: auto hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+header .sub-nav-wrapper nav .nav-sections::-webkit-scrollbar {
+  display: none;
+}
+
+header .sub-nav-wrapper nav .nav-sections ul {
+  font-size: var(--body-font-size-xs);
+}
+
+.sub-nav-wrapper .nav-sections .default-content-wrapper > ul {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  list-style: none;
+}
+
+.sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li {
+  flex: 0 0 auto;
+}
+
+/* Sub-nav link colors — base, brand, layout, then hover (ascending specificity) */
+header .sub-nav-wrapper nav .nav-sections a:any-link {
+  color: #777;
+  font-weight: 400;
+}
+
+header .sub-nav-wrapper nav .nav-brand a:any-link {
+  color: #0053e2;
+  font-weight: 600;
+}
+
+header .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > a,
+header .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > p {
+  display: block;
+  padding: 14px 12px;
+  font-size: var(--body-font-size-xs);
+  font-weight: 500;
+  color: #777;
+  margin: 0;
+  line-height: 1.2;
+}
+
+header .sub-nav-wrapper nav .nav-sections a:any-link:hover {
+  color: #0053e2;
+}
+
+header .sub-nav-wrapper nav .nav-brand a:any-link:hover {
+  color: #003da5;
+}
+
+/* Mobile: hide dropdown sub-menus — touch-scroll the top-level items only */
+.sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > ul {
+  display: none;
+}
+
+/* Desktop: show dropdowns on click */
+@media (width >= 900px) {
+  .sub-nav-wrapper {
+    position: relative;
+  }
+
+  .sub-nav-wrapper nav {
+    padding: 0 32px;
+    max-width: 1264px;
+    margin: 0 auto;
+  }
+
+  .sub-nav-wrapper .nav-brand {
+    display: block;
+    font-size: var(--body-font-size-xs);
+    font-weight: 600;
+    flex-basis: auto;
+  }
+
+  .sub-nav-wrapper .nav-brand .icon-walmart-spark {
+    display: none;
+  }
+
+  header .sub-nav-wrapper nav .nav-sections {
+    overflow: visible;
+  }
+
+  header .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > a,
+  header .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > p {
+    padding: 14px 8px;
+  }
+
+  .sub-nav-wrapper .nav-sections .nav-drop {
+    position: relative;
+    padding-right: 16px;
+    cursor: pointer;
+  }
+
+  .sub-nav-wrapper .nav-sections .nav-drop::after {
+    width: 5px;
+    height: 5px;
+    border-color: #777;
+  }
+
+  /* Show dropdown panels on desktop click */
+  .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: absolute;
+    left: -16px;
+    width: 240px;
+    top: 100%;
+    margin-top: 0;
+    padding: 8px 0;
+    background: white;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+    white-space: initial;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+  }
+
+  .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > ul > li a {
+    display: block;
+    padding: 10px 20px;
+    color: #2e2f32;
+    transition: background-color 0.15s ease;
+  }
+
+  .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > ul > li a:hover {
+    background-color: #f5f5f5;
+    color: #0071dc;
+  }
 }

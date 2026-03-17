@@ -36,6 +36,21 @@
           ]
         }
       ]
+    },
+    {
+      "name": "supplier-development",
+      "urls": [
+        "https://corporate.walmart.com/suppliers/supplier-development"
+      ],
+      "description": "Supplier development page with tabbed content sections for various supplier programs and resources",
+      "blocks": [
+        {
+          "name": "embed",
+          "instances": [
+            ".video-2\\.0"
+          ]
+        }
+      ]
     }
   ]
 }

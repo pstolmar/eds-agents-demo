@@ -45,6 +45,80 @@ async function loadFonts() {
 }
 
 /**
+ * Reconstruct carousel and embed blocks on open-call-2026 page.
+ * The AEM content pipeline flattens carousel block tables into
+ * p > a[href="/"] > picture elements with counter text.
+ * This reconstructs proper block tables before decoration.
+ */
+function fixOpenCallContent(main) {
+  if (!window.location.pathname.includes('open-call-2026')) return;
+
+  const section = main.querySelector(':scope > div');
+  if (!section) return;
+
+  // 1. Find flattened carousel images: p > a[href="/"] > picture
+  const carouselParagraphs = [...section.querySelectorAll('p')]
+    .filter((p) => p.querySelector('a[href="/"] > picture'));
+
+  if (carouselParagraphs.length > 0) {
+    const seenSrcs = new Set();
+    const uniqueImgs = [];
+    carouselParagraphs.forEach((p) => {
+      const img = p.querySelector('img');
+      const src = img?.getAttribute('src') || '';
+      if (src && !seenSrcs.has(src)) {
+        seenSrcs.add(src);
+        uniqueImgs.push(p.querySelector('picture'));
+      }
+    });
+
+    // Build carousel block table
+    const carousel = document.createElement('div');
+    carousel.className = 'carousel';
+    uniqueImgs.forEach((pic) => {
+      const row = document.createElement('div');
+      const imgCell = document.createElement('div');
+      const contentCell = document.createElement('div');
+      imgCell.appendChild(pic.cloneNode(true));
+      row.appendChild(imgCell);
+      row.appendChild(contentCell);
+      carousel.appendChild(row);
+    });
+
+    // Remove flattened carousel elements
+    carouselParagraphs.forEach((p) => p.remove());
+    [...section.querySelectorAll('p')].forEach((p) => {
+      if (/^\d+ of \d+$/.test(p.textContent.trim())) p.remove();
+    });
+
+    // Insert carousel after the tour stops list
+    const tourList = section.querySelector('ul');
+    if (tourList) tourList.after(carousel);
+  }
+
+  // 2. Add embed block for AEM registration form
+  const applyP = [...section.querySelectorAll('p')]
+    .find((p) => p.textContent.includes('apply today'));
+  if (applyP) {
+    const embed = document.createElement('div');
+    embed.className = 'embed';
+    const row = document.createElement('div');
+    const cell = document.createElement('div');
+    cell.textContent = 'https://corporate.walmart.com/content/corporate/en_us/suppliers/investing-in-american-jobs/events/annual-open-call/open-call-2026/jcr:content/root/main_container/container/block_container_copy/block-container-par/aemform.iframe.en_us.html';
+    row.appendChild(cell);
+    embed.appendChild(row);
+    applyP.after(embed);
+  }
+
+  // 3. Fix "Learn More opens in a new tab"
+  [...main.querySelectorAll('a')].forEach((a) => {
+    if (a.textContent.trim() === 'Learn More opens in a new tab') {
+      a.textContent = 'Learn More';
+    }
+  });
+}
+
+/**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
@@ -81,6 +155,8 @@ function buildAutoBlocks(main) {
  */
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
+  // Fix content before decoration (pipeline workarounds)
+  fixOpenCallContent(main);
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
@@ -96,6 +172,34 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+
+  /* Prevent indexing of demo wm-eds pages */
+  if (window.location.pathname.includes('/wm-eds/')) {
+    const robots = document.createElement('meta');
+    robots.name = 'robots';
+    robots.content = 'noindex, nofollow';
+    document.head.appendChild(robots);
+  }
+
+  /* Early demo-mode detection: block sensitive content BEFORE body appears */
+  const eagerParams = new URLSearchParams(window.location.search);
+  const eagerDemo = eagerParams.get('demo');
+  if (eagerDemo && ['gated', 'partly-gated', 'personalized'].includes(eagerDemo)) {
+    const blocker = document.createElement('div');
+    blocker.id = 'wm-demo-blocker';
+    blocker.setAttribute(
+      'style',
+      'position:fixed;inset:0;z-index:9999;background:#041f41;display:flex;align-items:center;justify-content:center;',
+    );
+    blocker.innerHTML = '<div style="color:#fff;font-family:Helvetica Neue,sans-serif;text-align:center">'
+      + '<div style="width:48px;height:48px;border:3px solid rgba(255,255,255,.2);border-top-color:#ffc220;border-radius:50%;animation:wm-spin 0.8s linear infinite;margin:0 auto 16px"></div>'
+      + '<div style="font-size:14px;opacity:0.7">Loading secure content\u2026</div></div>';
+    const spinStyle = document.createElement('style');
+    spinStyle.textContent = '@keyframes wm-spin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(spinStyle);
+    document.body.appendChild(blocker);
+  }
+
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
@@ -118,19 +222,86 @@ async function loadEager(doc) {
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
-  /* page-specific: Walmart media library */
-  if (window.location.pathname.includes('wm-media-library')) {
+  /* page-specific modules */
+  const { pathname } = window.location;
+  const params = new URLSearchParams(window.location.search);
+
+  /* Demo mode: ?demo=gated|partly-gated|personalized works on ANY page */
+  const demoMode = params.get('demo');
+  const demoContent = {
+    gated: { css: 'wm-gated.css', js: './wm-gated.js', sections: ['<h1>Walmart Associate Resource Portal</h1><p>This page contains restricted content that requires Single Sign-On authentication to access.</p>', '<h2>Quarterly Business Review — Q1 2026</h2><p>Revenue growth across all segments exceeded projections by 3.2%. E-commerce GMV reached $24.8B.</p><h3>Key Metrics</h3><ul><li>Comparable store sales: +5.1%</li><li>E-commerce growth: +22% YoY</li><li>Walmart+ subscribers: 38M</li></ul>', '<h2>Strategic Initiatives Pipeline</h2><p>Marketplace expansion continues with 420 new sellers onboarded in Q1.</p>', '<h3>Confidential: M&amp;A Pipeline</h3><p>Three active targets in advanced due diligence. Combined estimated deal value: $8.2B.</p>'] },
+    'partly-gated': { css: 'wm-partly-gated.css', js: './wm-partly-gated.js', sections: ['<h1>Walmart Operations Dashboard</h1><p>Real-time operational tools for authorized store managers and pricing analysts.</p>', '<h2>Inventory Status</h2><p>Widget: Inventory Tracker | Access Group: Store Managers</p>', '<h2>Price Management</h2><p>Widget: AEM Screens Price Updater | Access Group: Pricing Analysts</p>'] },
+    personalized: { css: 'wm-personalized.css', js: './wm-personalized.js', sections: ['<h1>Welcome to Walmart</h1><p>Discover what\'s new at your local store and online.</p>', '<h2>Recommended for You</h2><p>Based on your browsing history and purchase patterns.</p>', '<h2>Your Store</h2><p>Find everything you need at your neighborhood Walmart.</p>', '<h2>Trending in Your Area</h2><p>See what other shoppers near you are buying right now.</p>'] },
+  };
+
+  if (demoMode && demoContent[demoMode] && !pathname.includes('media-library')) {
+    const demo = demoContent[demoMode];
+    const m = doc.querySelector('main');
+    if (m) {
+      m.innerHTML = demo.sections.map((s) => `<div>${s}</div>`).join('');
+      decorateSections(m);
+      decorateBlocks(m);
+    }
+    loadCSS(`${window.hlx.codeBasePath}/styles/${demo.css}`);
+    import(demo.js).then((mod) => {
+      mod.default();
+      /* Remove the blocking overlay after module initializes */
+      const blocker = document.getElementById('wm-demo-blocker');
+      if (blocker) {
+        blocker.style.transition = 'opacity 0.3s ease';
+        blocker.style.opacity = '0';
+        setTimeout(() => blocker.remove(), 300);
+      }
+    });
+  } else if (pathname.includes('media-library')) {
     loadCSS(`${window.hlx.codeBasePath}/styles/wm-media-library.css`);
-    if (new URLSearchParams(window.location.search).has('extras')) {
+    if (params.has('extras')) {
       loadCSS(`${window.hlx.codeBasePath}/styles/wm-extras.css`);
     }
     import('./wm-media-library.js').then((mod) => mod.default());
+    /* Media library + partly-gated: overlay SSO that toggles viewer/admin modes */
+    if (demoMode === 'partly-gated') {
+      loadCSS(`${window.hlx.codeBasePath}/styles/wm-partly-gated.css`);
+      import('./wm-partly-gated.js').then((mod) => {
+        if (mod.initMediaLibraryGate) mod.initMediaLibraryGate();
+        /* Remove the early blocker — the SSO gate overlay takes over */
+        const blocker = document.getElementById('wm-demo-blocker');
+        if (blocker) {
+          blocker.style.transition = 'opacity 0.3s ease';
+          blocker.style.opacity = '0';
+          setTimeout(() => blocker.remove(), 300);
+        }
+      });
+    }
+  } else if (pathname.includes('/partly-gated')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-partly-gated.css`);
+    import('./wm-partly-gated.js').then((mod) => mod.default());
+  } else if (pathname.includes('/gated')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-gated.css`);
+    import('./wm-gated.js').then((mod) => mod.default());
+  } else if (pathname.includes('/personalized')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-personalized.css`);
+    import('./wm-personalized.js').then((mod) => mod.default());
   }
 
   loadHeader(doc.querySelector('header'));
 
   const main = doc.querySelector('main');
   await loadSections(main);
+
+  /* AskWalmart: decorate after sections load so accordions exist */
+  if (pathname.includes('askwalmart')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-askwalmart.css`);
+    const mod = await import('./wm-askwalmart.js');
+    mod.default();
+  }
+
+  /* Open Call 2026: fun extras gated behind ?extras=true */
+  if (pathname.includes('open-call-2026') && params.has('extras')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-open-call-extras.css`);
+    const extMod = await import('./wm-open-call-extras.js');
+    extMod.default();
+  }
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;

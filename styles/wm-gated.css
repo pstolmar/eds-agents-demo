@@ -1,0 +1,162 @@
+/* stylelint-disable no-descending-specificity */
+
+/* ===== Gated Page — SAML SSO Simulation ===== */
+
+.wm-sso-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgb(15 23 42 / 90%);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+}
+
+.wm-sso-overlay.wm-sso-fade-out {
+  opacity: 0;
+}
+
+.wm-sso-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  width: min(420px, 90vw);
+  text-align: center;
+  box-shadow: 0 24px 64px rgb(0 0 0 / 30%);
+}
+
+.wm-sso-logo {
+  margin-bottom: 16px;
+}
+
+.wm-sso-modal h2 {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+  color: #041f41;
+}
+
+.wm-sso-subtitle {
+  color: #6b7280;
+  font-size: 0.88rem;
+  margin: 0 0 20px;
+}
+
+.wm-sso-provider {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #475569;
+  margin-bottom: 24px;
+}
+
+.wm-sso-lock-icon {
+  display: flex;
+  color: #64748b;
+}
+
+.wm-sso-lock-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.wm-sso-form {
+  text-align: left;
+}
+
+.wm-sso-field {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.wm-sso-field span {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.wm-sso-field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.wm-sso-field input:focus {
+  border-color: #0053e2;
+  box-shadow: 0 0 0 3px rgb(0 83 226 / 12%);
+}
+
+.wm-sso-submit {
+  width: 100%;
+  padding: 12px;
+  background: #041f41;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 6px;
+}
+
+.wm-sso-submit:hover {
+  background: #0a2d5c;
+}
+
+.wm-sso-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  font-size: 0.72rem;
+  color: #9ca3af;
+}
+
+/* Session bar */
+.wm-session-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #041f41, #0a2d5c);
+  color: #e2e8f0;
+  font-size: 0.78rem;
+  flex-wrap: wrap;
+}
+
+.wm-sb-lock {
+  font-size: 1rem;
+}
+
+.wm-sb-session {
+  margin-left: auto;
+  color: #94a3b8;
+  font-size: 0.72rem;
+}
+
+.wm-sb-logout {
+  padding: 4px 12px;
+  background: rgb(255 255 255 / 12%);
+  border: none;
+  color: #e2e8f0;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.wm-sb-logout:hover {
+  background: rgb(255 255 255 / 22%);
+}

@@ -20,8 +20,9 @@
  * Content cell: h2 title + p description + optional CTA link
  */
 export default function parse(element, { document }) {
-  const items = element.querySelectorAll('.carousel-item-wrapper-3');
+  const items = element.querySelectorAll('.carousel-item-wrapper-3:not(.slick-cloned)');
   const cells = [];
+  const seenSrcs = new Set();
 
   items.forEach((item) => {
     const link = item.querySelector('a.carousel-item-link-3, a[href]');
@@ -29,14 +30,16 @@ export default function parse(element, { document }) {
     const titleEl = item.querySelector('h5.item-title, h5');
     const descEl = item.querySelector('.item-description-3, [class*="description"]');
 
-    // Image cell
+    // Image cell — deduplicate by src (handles carousels without .slick-cloned)
     const imageCell = [];
     if (img) {
-      const newImg = document.createElement('img');
       let src = img.getAttribute('src') || img.getAttribute('data-src') || '';
       if (src.startsWith('/')) {
         src = `https://corporate.walmart.com${src}`;
       }
+      if (seenSrcs.has(src)) return; // skip duplicate
+      seenSrcs.add(src);
+      const newImg = document.createElement('img');
       newImg.src = src;
       newImg.alt = img.getAttribute('alt') || '';
       imageCell.push(newImg);

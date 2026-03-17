@@ -23,6 +23,16 @@ export default function transform(hookName, element, payload) {
 
     // Remove whitespace spacer components (empty divs used for spacing)
     element.querySelectorAll('.whitespace').forEach((el) => el.remove());
+
+    // Remove "opens in a new tab" screen-reader-only spans (inline with link text)
+    element.querySelectorAll('.cmp-link__screen-reader-only').forEach((el) => el.remove());
+
+    // Remove Adobe ID Syncing iframes and demdex tracking
+    element.querySelectorAll('iframe[src*="demdex"], a[href*="demdex"]').forEach((el) => {
+      const parent = el.parentElement;
+      el.remove();
+      if (parent && parent.tagName === 'P' && !parent.textContent.trim()) parent.remove();
+    });
   }
 
   if (hookName === H.after) {
