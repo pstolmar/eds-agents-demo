@@ -1,0 +1,173 @@
+/* wm-page-extras.css — Styles for 7 fun extras on wm-eds/2 pages */
+
+/* ── 2. Form floating labels ── */
+.extras-float-field {
+  position: relative;
+}
+
+.extras-float-field label {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #888;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background: #fff;
+  padding: 0 4px;
+  z-index: 1;
+}
+
+.extras-float-field textarea + label,
+.extras-float-field:has(textarea) label {
+  top: 20px;
+}
+
+.extras-float-field.extras-focused label,
+.extras-float-field.extras-filled label {
+  top: -2px;
+  font-size: 11px;
+  color: #0053e2;
+}
+
+/* Confetti */
+.extras-confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  animation: extras-confetti-burst 1s ease-out forwards;
+}
+
+@keyframes extras-confetti-burst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* ── 3. Scroll progress bar ── */
+.extras-scroll-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, #0053e2, #ffc220);
+  z-index: 10001;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* ── 6. Konami code ── */
+.extras-konami-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 80%);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+}
+
+.extras-konami-content {
+  text-align: center;
+  position: relative;
+}
+
+.extras-konami-spark {
+  font-size: 80px;
+  animation: extras-konami-bounce 0.6s ease;
+}
+
+@keyframes extras-konami-bounce {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.extras-konami-text {
+  color: #ffc220;
+  font-size: 36px;
+  font-weight: 700;
+  margin-top: 16px;
+  animation: extras-konami-fade 0.8s ease 0.3s both;
+}
+
+.extras-konami-sub {
+  color: #fff;
+  font-size: 18px;
+  margin-top: 8px;
+  opacity: 0.7;
+  animation: extras-konami-fade 0.8s ease 0.6s both;
+}
+
+@keyframes extras-konami-fade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.extras-konami-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  animation: extras-konami-explode 1s ease-out forwards;
+}
+
+@keyframes extras-konami-explode {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* ── 7. Reading time badge ── */
+.extras-reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f4ff;
+  color: #0053e2;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  animation: extras-reading-fade 0.5s ease;
+}
+
+@keyframes extras-reading-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

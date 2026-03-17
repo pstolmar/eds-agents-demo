@@ -1,135 +1,7 @@
 /* ===== Walmart Media Library — page controller ===== */
 /* Loaded ONLY on /content/wm-media-library-eds        */
 
-const WM_NAV_LINKS = [
-  {
-    label: 'About',
-    href: '#',
-    children: [
-      { label: 'Our Story', href: '#' },
-      { label: 'Leadership', href: '#' },
-      { label: 'Location Facts', href: '#' },
-    ],
-  },
-  {
-    label: 'News',
-    href: '#',
-    children: [
-      { label: 'Media Library', href: '#' },
-      { label: 'Newsroom', href: '#' },
-      { label: 'Views & Perspectives', href: '#' },
-    ],
-  },
-  { label: 'Purpose', href: '#' },
-  { label: 'Investors', href: '#' },
-  { label: 'Suppliers', href: '#' },
-  { label: 'Careers', href: '#' },
-  { label: 'Ask Walmart', href: '#' },
-];
-
-/* Walmart spark SVG — 6-pointed burst */
-const SPARK_SVG = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <g fill="#FFC220">
-    <polygon points="16,0 18.5,11.5 16,8 13.5,11.5"/>
-    <polygon points="16,32 13.5,20.5 16,24 18.5,20.5"/>
-    <polygon points="0,16 11.5,13.5 8,16 11.5,18.5"/>
-    <polygon points="32,16 20.5,18.5 24,16 20.5,13.5"/>
-    <polygon points="2.3,2.3 12.5,10.5 7.5,10 10.5,12.5"/>
-    <polygon points="29.7,29.7 19.5,21.5 24.5,22 21.5,19.5"/>
-    <polygon points="29.7,2.3 21.5,12.5 22,7.5 19.5,10.5"/>
-    <polygon points="2.3,29.7 10.5,19.5 10,24.5 12.5,21.5"/>
-  </g>
-</svg>`;
-
-/**
- * Override the existing header with Walmart branding
- */
-function overrideNav() {
-  const header = document.querySelector('header');
-  if (!header) return;
-
-  /* Poll until nav is loaded — more reliable than MutationObserver for timing */
-  const poll = setInterval(() => {
-    const navWrapper = header.querySelector('.nav-wrapper');
-    if (!navWrapper) return;
-    clearInterval(poll);
-
-    /* Small delay to let header.js finish setting up */
-    setTimeout(() => {
-      const nav = navWrapper.querySelector('nav');
-      if (!nav) return;
-
-      /* --- Brand --- */
-      const brand = nav.querySelector('.nav-brand');
-      if (brand) {
-        const brandLink = brand.querySelector('a') || brand.querySelector('p');
-        if (brandLink) {
-          brandLink.innerHTML = `<span class="wm-spark">${SPARK_SVG}</span> Walmart`;
-        }
-      }
-
-      /* --- Sections (replace with Walmart links) --- */
-      const sections = nav.querySelector('.nav-sections');
-      if (sections) {
-        const wrapper = sections.querySelector('.default-content-wrapper') || sections;
-        const ul = document.createElement('ul');
-
-        WM_NAV_LINKS.forEach((item) => {
-          const li = document.createElement('li');
-          li.setAttribute('aria-expanded', 'false');
-
-          if (item.children) {
-            li.classList.add('nav-drop');
-            const p = document.createElement('p');
-            p.textContent = item.label;
-            li.appendChild(p);
-
-            const subUl = document.createElement('ul');
-            item.children.forEach((child) => {
-              const subLi = document.createElement('li');
-              subLi.innerHTML = `<a href="${child.href}">${child.label}</a>`;
-              subUl.appendChild(subLi);
-            });
-            li.appendChild(subUl);
-
-            /* Hover open/close (desktop) — uses class for CSS control */
-            li.addEventListener('mouseenter', () => {
-              if (window.innerWidth >= 900) {
-                ul.querySelectorAll('.nav-drop').forEach((d) => {
-                  d.classList.remove('wm-dropdown-open');
-                  d.setAttribute('aria-expanded', 'false');
-                });
-                li.classList.add('wm-dropdown-open');
-                li.setAttribute('aria-expanded', 'true');
-              }
-            });
-            li.addEventListener('mouseleave', () => {
-              if (window.innerWidth >= 900) {
-                li.classList.remove('wm-dropdown-open');
-                li.setAttribute('aria-expanded', 'false');
-              }
-            });
-            /* prevent the original header.js click handler from toggling */
-            li.addEventListener('click', (e) => {
-              e.stopPropagation();
-            }, true);
-          } else {
-            li.innerHTML = `<a href="${item.href}">${item.label}</a>`;
-          }
-          ul.appendChild(li);
-        });
-
-        /* Replace existing content */
-        const oldUl = wrapper.querySelector('ul');
-        if (oldUl) {
-          oldUl.replaceWith(ul);
-        } else {
-          wrapper.appendChild(ul);
-        }
-      }
-    }, 150);
-  }, 50);
-}
+/* Nav is now handled by the standard header.js using main-nav fragment */
 
 /* Image card indices: 0=Back-to-School, 1=Kevin, 2=St Bernard,
    3=Associates/Store, 4=Chris, 5=Sam's Club */
@@ -418,7 +290,6 @@ function buildExtrasToggle(params) {
  */
 export default function init() {
   document.body.classList.add('wm-media-library');
-  overrideNav();
 
   const main = document.querySelector('main');
   if (!main) return;
