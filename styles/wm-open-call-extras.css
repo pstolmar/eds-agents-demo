@@ -13,13 +13,13 @@
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 24px;
-  box-shadow: 0 8px 32px rgba(0, 83, 226, 0.3);
+  box-shadow: 0 8px 32px rgb(0 83 226 / 30%);
   animation: wm-countdown-glow 3s ease-in-out infinite alternate;
 }
 
 @keyframes wm-countdown-glow {
-  from { box-shadow: 0 8px 32px rgba(0, 83, 226, 0.3); }
-  to { box-shadow: 0 8px 48px rgba(0, 83, 226, 0.5); }
+  from { box-shadow: 0 8px 32px rgb(0 83 226 / 30%); }
+  to { box-shadow: 0 8px 48px rgb(0 83 226 / 50%); }
 }
 
 .wm-cd-label {
@@ -42,7 +42,7 @@
   font-weight: 700;
   line-height: 1;
   min-width: 56px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
   border-radius: 8px;
   padding: 8px 12px;
 }
@@ -63,7 +63,7 @@
   border-radius: 12px;
   padding: 24px;
   margin: 24px 0;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 6%);
 }
 
 .wm-tour-map h3 {
@@ -113,7 +113,7 @@
   background: #0053e2;
   border: 2px solid #fff;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0, 83, 226, 0.4);
+  box-shadow: 0 2px 8px rgb(0 83 226 / 40%);
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -126,7 +126,7 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid rgba(0, 83, 226, 0.3);
+  border: 2px solid rgb(0 83 226 / 30%);
   transform: translate(-50%, -50%);
   animation: wm-pin-pulse 2s ease-out infinite;
 }
@@ -156,7 +156,7 @@
   font-size: 10px;
   font-weight: 600;
   color: #041f41;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255 255 255 / 90%);
   padding: 2px 6px;
   border-radius: 4px;
   margin-top: 4px;
@@ -175,7 +175,7 @@
   top: 80px;
   right: 16px;
   z-index: 10000;
-  background: rgba(4, 31, 65, 0.92);
+  background: rgb(4 31 65 / 92%);
   color: #fff;
   border-radius: 10px;
   padding: 12px 16px;
@@ -183,7 +183,7 @@
   font-size: 12px;
   min-width: 140px;
   backdrop-filter: blur(8px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 24px rgb(0 0 0 / 30%);
 }
 
 .wm-hud-title {
@@ -284,7 +284,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgb(0 0 0 / 10%);
   transition: background 0.3s, border-color 0.3s;
 }
 
@@ -373,12 +373,12 @@ body.wm-dark .wm-reading-time {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 83, 226, 0.4);
+  box-shadow: 0 4px 16px rgb(0 83 226 / 40%);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
 }
 
 .wm-fab-main:hover {
-  box-shadow: 0 6px 24px rgba(0, 83, 226, 0.5);
+  box-shadow: 0 6px 24px rgb(0 83 226 / 50%);
 }
 
 .wm-fab-main svg {
@@ -412,13 +412,13 @@ body.wm-dark .wm-reading-time {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .wm-fab-actions button:hover {
   transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
 }
 
 .wm-fab-actions button svg {
@@ -442,7 +442,7 @@ body.wm-dark .wm-reading-time {
 }
 
 /* ──────────── Mobile Adjustments ──────────── */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .wm-countdown {
     flex-direction: column;
     text-align: center;

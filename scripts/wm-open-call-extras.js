@@ -30,8 +30,6 @@ function initScrollReveal() {
 function initCounters() {
   const main = document.querySelector('main');
   if (!main) return;
-  const text = main.textContent;
-
   const targets = [
     { find: '$350 billion', display: '$350B', value: 350 },
     { find: '750,000', display: '750,000', value: 750000 },
@@ -164,7 +162,7 @@ function initPerfHUD() {
     frames += 1;
     const now = performance.now();
     if (now - lastTime >= 1000) {
-      fps = Math.round(frames * 1000 / (now - lastTime));
+      fps = Math.round((frames * 1000) / (now - lastTime));
       frames = 0;
       lastTime = now;
     }
@@ -179,7 +177,7 @@ function initPerfHUD() {
     const mem = performance.memory ? `${Math.round(performance.memory.usedJSHeapSize / 1048576)}MB` : 'N/A';
 
     hud.querySelector('.wm-hud-content').innerHTML = `
-      <div><span>FPS</span><strong style="color:${fps >= 50 ? '#22c55e' : fps >= 30 ? '#f59e0b' : '#ef4444'}">${fps}</strong></div>
+      <div><span>FPS</span><strong style="color:${(() => { if (fps >= 50) return '#22c55e'; return fps >= 30 ? '#f59e0b' : '#ef4444'; })()}">${fps}</strong></div>
       <div><span>DOM</span><strong>${domNodes}</strong></div>
       <div><span>FCP</span><strong>${fcp ? `${Math.round(fcp.startTime)}ms` : '—'}</strong></div>
       <div><span>Heap</span><strong>${mem}</strong></div>
@@ -215,20 +213,6 @@ function initReadingTime() {
 }
 
 /* ──────────── 8. Confetti Burst ──────────── */
-function initConfetti() {
-  const carousel = document.querySelector('.carousel-wrapper');
-  if (!carousel) return;
-
-  let fired = false;
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && !fired) {
-      fired = true;
-      fireConfetti();
-    }
-  }, { threshold: 0.3 });
-  observer.observe(carousel);
-}
-
 function fireConfetti() {
   const colors = ['#0053e2', '#ffc220', '#76c043', '#e8491d', '#fff'];
   const container = document.createElement('div');
@@ -249,6 +233,20 @@ function fireConfetti() {
     container.appendChild(piece);
   }
   setTimeout(() => container.remove(), 4000);
+}
+
+function initConfetti() {
+  const carousel = document.querySelector('.carousel-wrapper');
+  if (!carousel) return;
+
+  let fired = false;
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting && !fired) {
+      fired = true;
+      fireConfetti();
+    }
+  }, { threshold: 0.3 });
+  observer.observe(carousel);
 }
 
 /* ──────────── 9. Parallax Hero ──────────── */
@@ -327,7 +325,7 @@ function initParticles() {
   hero.prepend(canvas);
 
   const ctx = canvas.getContext('2d');
-  let particles = [];
+  const particles = [];
   let w; let h;
 
   function resize() {
