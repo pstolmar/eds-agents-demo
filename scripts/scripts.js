@@ -45,6 +45,80 @@ async function loadFonts() {
 }
 
 /**
+ * Reconstruct carousel and embed blocks on open-call-2026 page.
+ * The AEM content pipeline flattens carousel block tables into
+ * p > a[href="/"] > picture elements with counter text.
+ * This reconstructs proper block tables before decoration.
+ */
+function fixOpenCallContent(main) {
+  if (!window.location.pathname.includes('open-call-2026')) return;
+
+  const section = main.querySelector(':scope > div');
+  if (!section) return;
+
+  // 1. Find flattened carousel images: p > a[href="/"] > picture
+  const carouselParagraphs = [...section.querySelectorAll('p')]
+    .filter((p) => p.querySelector('a[href="/"] > picture'));
+
+  if (carouselParagraphs.length > 0) {
+    const seenSrcs = new Set();
+    const uniqueImgs = [];
+    carouselParagraphs.forEach((p) => {
+      const img = p.querySelector('img');
+      const src = img?.getAttribute('src') || '';
+      if (src && !seenSrcs.has(src)) {
+        seenSrcs.add(src);
+        uniqueImgs.push(p.querySelector('picture'));
+      }
+    });
+
+    // Build carousel block table
+    const carousel = document.createElement('div');
+    carousel.className = 'carousel';
+    uniqueImgs.forEach((pic) => {
+      const row = document.createElement('div');
+      const imgCell = document.createElement('div');
+      const contentCell = document.createElement('div');
+      imgCell.appendChild(pic.cloneNode(true));
+      row.appendChild(imgCell);
+      row.appendChild(contentCell);
+      carousel.appendChild(row);
+    });
+
+    // Remove flattened carousel elements
+    carouselParagraphs.forEach((p) => p.remove());
+    [...section.querySelectorAll('p')].forEach((p) => {
+      if (/^\d+ of \d+$/.test(p.textContent.trim())) p.remove();
+    });
+
+    // Insert carousel after the tour stops list
+    const tourList = section.querySelector('ul');
+    if (tourList) tourList.after(carousel);
+  }
+
+  // 2. Add embed block for AEM registration form
+  const applyP = [...section.querySelectorAll('p')]
+    .find((p) => p.textContent.includes('apply today'));
+  if (applyP) {
+    const embed = document.createElement('div');
+    embed.className = 'embed';
+    const row = document.createElement('div');
+    const cell = document.createElement('div');
+    cell.textContent = 'https://corporate.walmart.com/content/corporate/en_us/suppliers/investing-in-american-jobs/events/annual-open-call/open-call-2026/jcr:content/root/main_container/container/block_container_copy/block-container-par/aemform.iframe.en_us.html';
+    row.appendChild(cell);
+    embed.appendChild(row);
+    applyP.after(embed);
+  }
+
+  // 3. Fix "Learn More opens in a new tab"
+  [...main.querySelectorAll('a')].forEach((a) => {
+    if (a.textContent.trim() === 'Learn More opens in a new tab') {
+      a.textContent = 'Learn More';
+    }
+  });
+}
+
+/**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
@@ -81,6 +155,8 @@ function buildAutoBlocks(main) {
  */
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
+  // Fix content before decoration (pipeline workarounds)
+  fixOpenCallContent(main);
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
@@ -96,6 +172,14 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+
+  /* Prevent indexing of demo wm-eds pages */
+  if (window.location.pathname.includes('/wm-eds/')) {
+    const robots = document.createElement('meta');
+    robots.name = 'robots';
+    robots.content = 'noindex, nofollow';
+    document.head.appendChild(robots);
+  }
 
   /* Early demo-mode detection: block sensitive content BEFORE body appears */
   const eagerParams = new URLSearchParams(window.location.search);
@@ -210,6 +294,13 @@ async function loadLazy(doc) {
     loadCSS(`${window.hlx.codeBasePath}/styles/wm-askwalmart.css`);
     const mod = await import('./wm-askwalmart.js');
     mod.default();
+  }
+
+  /* Open Call 2026: fun extras gated behind ?extras=true */
+  if (pathname.includes('open-call-2026') && params.has('extras')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-open-call-extras.css`);
+    const extMod = await import('./wm-open-call-extras.js');
+    extMod.default();
   }
 
   const { hash } = window.location;

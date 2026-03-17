@@ -5,7 +5,7 @@ header .nav-wrapper {
   position: fixed;
   top: 0;
   left: 0;
-  background: #041f41;
+  background: #0053e2;
   border-bottom: none;
 }
 
@@ -88,13 +88,19 @@ header nav .nav-brand a:any-link:hover {
   color: #fff;
 }
 
+/* brand image */
+header nav .nav-brand img {
+  width: 128px;
+  height: auto;
+}
+
 header nav .nav-brand .icon-walmart-spark {
   display: inline-flex;
   width: 28px;
   height: 28px;
 }
 
-header nav .nav-brand .icon-walmart-spark svg {
+header nav .nav-brand .icon-walmart-spark img {
   width: 28px;
   height: 28px;
 }
@@ -183,12 +189,6 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     display: none;
     visibility: hidden;
   }
-}
-
-/* brand image */
-header nav .nav-brand img {
-  width: 128px;
-  height: auto;
 }
 
 /* sections */
@@ -280,6 +280,29 @@ header nav .nav-sections ul > li > ul > li {
     padding: 20px 8px;
     margin: 0;
     line-height: 1.2;
+    position: relative;
+  }
+
+  /* Thick underline on hover/active for main nav items */
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li > a::after,
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li > p::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 8px;
+    right: 8px;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li:hover > a::after,
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li:hover > p::after,
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > a::after,
+  header .nav-wrapper:not(.sub-nav-wrapper) nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > p::after {
+    transform: scaleX(1);
   }
 
   /* Dropdown panel — click only, no hover trigger */
@@ -361,10 +384,24 @@ header nav .nav-tools .icon-search {
   height: 20px;
 }
 
-header nav .nav-tools .icon-search svg {
+header nav .nav-tools .icon-search img {
   width: 20px;
   height: 20px;
-  fill: #fff;
+  filter: brightness(0) invert(1);
+}
+
+/* Shop link in nav tools */
+header nav .nav-tools .nav-shop-link {
+  color: #fff;
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+header nav .nav-tools .nav-shop-link:hover {
+  color: #ffc220;
 }
 
 /* search overlay */
@@ -485,10 +522,9 @@ header nav .nav-tools .icon-search svg {
 
 /* ── Sub-nav (IIAJ inner nav) ── */
 header .sub-nav-wrapper {
-  background: #0d3c6e;
+  background: white;
   z-index: 99;
-  border-top: 1px solid rgb(255 255 255 / 12%);
-  top: var(--nav-height);
+  border-bottom: 1px solid #eaeaea;
 }
 
 .sub-nav-wrapper nav {
@@ -505,6 +541,10 @@ header .sub-nav-wrapper {
 }
 
 .sub-nav-wrapper .nav-brand {
+  display: none;
+}
+
+.sub-nav-wrapper .nav-tools {
   display: none;
 }
 
@@ -538,14 +578,34 @@ header .sub-nav-wrapper nav .nav-sections ul {
   flex: 0 0 auto;
 }
 
-.sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > a,
-.sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > p {
+/* Sub-nav link colors — base, brand, layout, then hover (ascending specificity) */
+header .sub-nav-wrapper nav .nav-sections a:any-link {
+  color: #777;
+  font-weight: 400;
+}
+
+header .sub-nav-wrapper nav .nav-brand a:any-link {
+  color: #0053e2;
+  font-weight: 600;
+}
+
+header .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > a,
+header .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > p {
   display: block;
   padding: 14px 12px;
   font-size: var(--body-font-size-xs);
   font-weight: 500;
+  color: #777;
   margin: 0;
   line-height: 1.2;
+}
+
+header .sub-nav-wrapper nav .nav-sections a:any-link:hover {
+  color: #0053e2;
+}
+
+header .sub-nav-wrapper nav .nav-brand a:any-link:hover {
+  color: #003da5;
 }
 
 /* Mobile: hide dropdown sub-menus — touch-scroll the top-level items only */
@@ -576,12 +636,12 @@ header .sub-nav-wrapper nav .nav-sections ul {
     display: none;
   }
 
-  .sub-nav-wrapper .nav-sections {
+  header .sub-nav-wrapper nav .nav-sections {
     overflow: visible;
   }
 
-  .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > a,
-  .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > p {
+  header .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > a,
+  header .sub-nav-wrapper .nav-sections .default-content-wrapper > ul > li > p {
     padding: 14px 8px;
   }
 
@@ -594,6 +654,7 @@ header .sub-nav-wrapper nav .nav-sections ul {
   .sub-nav-wrapper .nav-sections .nav-drop::after {
     width: 5px;
     height: 5px;
+    border-color: #777;
   }
 
   /* Show dropdown panels on desktop click */

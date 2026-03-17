@@ -32,9 +32,11 @@ export default function decorateAskWalmart() {
   const searchBar = document.createElement('div');
   searchBar.className = 'aw-search-bar';
   searchBar.innerHTML = '<input type="text" placeholder="Search..." />'
+    + '<button class="aw-search-clear" aria-label="Clear search" style="display:none">\u00d7</button>'
     + '<button class="aw-search-btn">Search FAQs</button>';
   wrapper.appendChild(searchBar);
   const searchInput = searchBar.querySelector('input');
+  const clearBtn = searchBar.querySelector('.aw-search-clear');
 
   /* ── build tab container ── */
   const tabContainer = document.createElement('div');
@@ -156,8 +158,17 @@ export default function decorateAskWalmart() {
   }
 
   searchInput.addEventListener('input', () => {
+    clearBtn.style.display = searchInput.value.trim() ? '' : 'none';
     clearTimeout(searchInput.debounce);
     searchInput.debounce = setTimeout(doSearch, 250);
+  });
+
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearBtn.style.display = 'none';
+    showAllItems();
+    activateTab(0);
+    searchInput.focus();
   });
   const searchBtn = searchBar.querySelector('.aw-search-btn');
   searchBtn.addEventListener('click', doSearch);

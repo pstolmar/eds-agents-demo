@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "url": "https://corporate.walmart.com/suppliers/investing-in-american-jobs",
+  "path": "suppliers/investing-in-american-jobs",
+  "timestamp": "2026-03-13T02:42:14.570Z",
+  "title": "Investing In American Jobs",
+  "template": "supplier-landing",
+  "blocks": [
+    "hero",
+    "columns",
+    "columns",
+    "columns",
+    "carousel",
+    "cards"
+  ]
+}

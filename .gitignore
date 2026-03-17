@@ -7,3 +7,7 @@ helix-importer-ui
 .DS_Store
 *.bak
 .idea
+
+# Large binary media assets (use DAM / Git LFS for production)
+media/*.mp4
+media/*.webm

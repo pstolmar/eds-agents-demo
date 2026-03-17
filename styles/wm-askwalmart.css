@@ -22,11 +22,24 @@ main > .section:first-of-type h4 {
   text-align: center;
 }
 
+/* Horizontal rule above image */
+main > .section:first-of-type p:has(picture) {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 24px;
+  margin-top: 16px;
+}
+
+main > .section:first-of-type picture {
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 main > .section:first-of-type picture img {
   width: 100%;
   max-height: 300px;
   object-fit: cover;
-  border-radius: 8px;
+  display: block;
 }
 
 /* ── Search bar ── */
@@ -36,6 +49,7 @@ main > .section:first-of-type picture img {
   max-width: 460px;
   margin: 20px auto 8px;
   align-items: center;
+  position: relative;
 }
 
 .aw-search-bar input {
@@ -50,6 +64,24 @@ main > .section:first-of-type picture img {
 
 .aw-search-bar input:focus {
   border-color: #0071dc;
+}
+
+.aw-search-clear {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #74767c;
+  cursor: pointer;
+  padding: 2px 8px;
+  line-height: 1;
+  border-radius: 50%;
+  transition: color 0.15s, background-color 0.15s;
+  flex-shrink: 0;
+}
+
+.aw-search-clear:hover {
+  color: #2e2f32;
+  background-color: #f0f0f0;
 }
 
 .aw-search-btn {
@@ -168,15 +200,25 @@ main > .section:first-of-type picture img {
   text-decoration: underline;
 }
 
+/* Strip pill-button styling from FAQ answer links — render as plain text links */
 .aw-tab-panel .accordion .accordion-item-body a.button:any-link {
-  color: #fff;
-  background-color: var(--walmart-blue, #0053e2);
-  text-decoration: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: #0071dc;
+  font-weight: inherit;
+  white-space: normal;
+  text-align: left;
+  text-decoration: underline;
 }
 
 .aw-tab-panel .accordion .accordion-item-body a.button:hover {
-  background-color: var(--button-hover-color, #003da5);
-  text-decoration: none;
+  background: none;
+  color: #004f9a;
+  text-decoration: underline;
 }
 
 /* no-results message */

@@ -235,12 +235,18 @@ function decorateNav(fragment, id) {
     if (section) section.classList.add(`nav-${c}`);
   });
 
-  const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand ? navBrand.querySelector('.button') : null;
-  if (brandLink) {
-    brandLink.className = '';
-    brandLink.closest('.button-container').className = '';
-  }
+  /* Strip all pill-button styling from nav links */
+  nav.querySelectorAll('.button').forEach((btn) => {
+    btn.classList.remove('button', 'primary');
+  });
+  nav.querySelectorAll('.button-container').forEach((bc) => {
+    bc.classList.remove('button-container');
+  });
+
+  /* Normalise internal hrefs: strip /content prefix so links work on publish */
+  nav.querySelectorAll('a[href^="/content/"]').forEach((a) => {
+    a.setAttribute('href', a.getAttribute('href').replace('/content/', '/'));
+  });
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
@@ -250,14 +256,31 @@ function decorateNav(fragment, id) {
         if (navSection.querySelector('ul')) {
           navSection.classList.add('nav-drop');
         }
+        /* Hover-to-open on desktop */
+        navSection.addEventListener('mouseenter', () => {
+          if (isDesktop.matches) {
+            toggleAllNavSections(navSections);
+            navSections.querySelectorAll('.nav-drop').forEach((d) => delete d.dataset.locked);
+            navSection.setAttribute('aria-expanded', 'true');
+          }
+        });
+        navSection.addEventListener('mouseleave', () => {
+          if (isDesktop.matches && navSection.dataset.locked !== 'true') {
+            navSection.setAttribute('aria-expanded', 'false');
+          }
+        });
+        /* Click-to-lock on desktop */
         navSection.addEventListener('click', () => {
           if (isDesktop.matches) {
-            const expanded = navSection.getAttribute('aria-expanded') === 'true';
-            toggleAllNavSections(navSections);
-            navSection.setAttribute(
-              'aria-expanded',
-              expanded ? 'false' : 'true',
-            );
+            const isLocked = navSection.dataset.locked === 'true';
+            navSections.querySelectorAll('.nav-drop').forEach((d) => delete d.dataset.locked);
+            if (isLocked) {
+              navSection.setAttribute('aria-expanded', 'false');
+            } else {
+              toggleAllNavSections(navSections);
+              navSection.setAttribute('aria-expanded', 'true');
+              navSection.dataset.locked = 'true';
+            }
           }
         });
       });
@@ -266,6 +289,7 @@ function decorateNav(fragment, id) {
   document.addEventListener('click', (e) => {
     if (isDesktop.matches && !nav.contains(e.target)) {
       toggleAllNavSections(navSections, false);
+      navSections.querySelectorAll('.nav-drop').forEach((d) => delete d.dataset.locked);
     }
   });
 
@@ -294,18 +318,35 @@ export default async function decorate(block) {
   if (navMeta) {
     navPath = new URL(navMeta, window.location).pathname;
   } else if (isWmEds2) {
-    navPath = '/wm-eds/2/main-nav';
+    navPath = '/content/wm-eds/2/main-nav';
   } else {
     navPath = '/nav';
   }
 
   let fragment = await loadFragment(navPath);
-  // Fallback: local dev may need /content/ prefix for unpublished fragments
-  if (!fragment) fragment = await loadFragment(`/content${navPath}`);
+  // Fallback: try with/without /content/ prefix
+  if (!fragment) {
+    const altPath = navPath.startsWith('/content/')
+      ? navPath.replace('/content/', '/')
+      : `/content${navPath}`;
+    fragment = await loadFragment(altPath);
+  }
   block.textContent = '';
 
   const nav = decorateNav(fragment, 'nav');
   buildSearch(nav);
+
+  /* Add Shop link next to search (matches source nav) */
+  const mainTools = nav.querySelector('.nav-tools');
+  if (mainTools) {
+    const shopLink = document.createElement('a');
+    shopLink.href = 'https://www.walmart.com/';
+    shopLink.target = '_blank';
+    shopLink.rel = 'noopener';
+    shopLink.className = 'nav-shop-link';
+    shopLink.textContent = 'Shop';
+    mainTools.append(shopLink);
+  }
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
@@ -315,8 +356,8 @@ export default async function decorate(block) {
   /* IIAJ sub-nav: only on supplier/IIAJ pages, not media-library or other wm-eds/2 pages */
   const needsSubNav = isWmEds2 && window.location.pathname.includes('/suppliers/');
   if (needsSubNav) {
-    let subFrag = await loadFragment('/wm-eds/2/nav');
-    if (!subFrag) subFrag = await loadFragment('/content/wm-eds/2/nav');
+    let subFrag = await loadFragment('/content/wm-eds/2/nav');
+    if (!subFrag) subFrag = await loadFragment('/wm-eds/2/nav');
     if (subFrag) {
       const subNav = decorateNav(subFrag, 'sub-nav');
       const subWrapper = document.createElement('div');
