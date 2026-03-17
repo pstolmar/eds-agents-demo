@@ -1,39 +1,92 @@
 {
   "templates": [
     {
-      "name": "blog-topic-listing",
+      "name": "supplier-landing",
       "urls": [
-        "https://blog.adobe.com/en/topics/digital-transformation",
-        "https://blog.adobe.com/en/topics/news"
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs"
       ],
-      "description": "Blog topic listing page with featured article card and article feed grid",
+      "description": "Main landing page for Investing in American Jobs with hero video, CTA banners, partner carousel, and news feed",
       "blocks": [
         {
-          "name": "cards-featured",
-          "instances": [
-            ".featured-article"
-          ]
+          "name": "hero",
+          "instances": [".media-hero-2-0"]
         },
         {
-          "name": "cards-article",
-          "instances": [
-            ".article-feed .article-cards"
-          ]
+          "name": "columns",
+          "instances": [".block-fifty-fifty-v3"]
+        },
+        {
+          "name": "carousel",
+          "instances": [".carousel-3\\.0"]
+        },
+        {
+          "name": "cards",
+          "instances": [".article-list-3-0"]
         }
       ]
     },
     {
-      "name": "Blog Page",
+      "name": "supplier-content",
       "urls": [
-        "https://blog.adobe.com/en/publish/2024/04/15/choice-generative-ai-models-advances-firefly"
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/about-us-manufacturing-initiative",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/manufacturing-resources/site-selection-guide",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/manufacturing-resources/economic-development-contacts",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/manufacturing-resources/walmart-external-resources-reshoring-initiative",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/manufacturing-resources/non-governmental-resources",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/manufacturing-resources/state-and-federal-government-resources",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/manufacturing-resources/financing-resources",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/manufacturing-resources/supply-chain-resources",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/packaging/packaging",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/packaging/product-certification",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/events/annual-open-call/open-call-2026",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/events/annual-open-call",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/become-a-supplier"
       ],
-      "description": "Blog article page with author byline, hero image, body content, inline images, CTA section, and recommended articles grid",
+      "description": "Content page with secondary navigation, breadcrumbs, body content with headings, lists, links, and optional embedded resources",
       "blocks": [
         {
-          "name": "cards-article",
-          "instances": [
-            ".recommended-articles .recommended-articles-cards"
-          ]
+          "name": "cards",
+          "instances": [".article-list-3-0"]
+        },
+        {
+          "name": "columns",
+          "instances": [".block-fifty-fifty-v3"]
+        }
+      ]
+    },
+    {
+      "name": "partner-story",
+      "urls": [
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/naterra-international",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/fischer-and-wieser-farmstead",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/milos",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/Ferrero",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/athletic-brewing",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/pholicious",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/freshpet",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/proud-source",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/igloo",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/grind-goods",
+        "https://corporate.walmart.com/suppliers/investing-in-american-jobs/partners-in-change/nordic-ware"
+      ],
+      "description": "Partner story page with hero image/video, company details, impact statistics, and embedded media about supplier partnerships",
+      "blocks": [
+        {
+          "name": "embed",
+          "instances": [".video-2\\.0"]
+        }
+      ]
+    },
+    {
+      "name": "askwalmart",
+      "urls": [
+        "https://corporate.walmart.com/askwalmart"
+      ],
+      "description": "FAQ page with tabbed accordion sections for Customers, Purpose, Suppliers, and General categories",
+      "blocks": [
+        {
+          "name": "accordion",
+          "instances": [".tabs-3-component"]
         }
       ]
     }

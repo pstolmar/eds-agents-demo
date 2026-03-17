@@ -1,10 +1,12 @@
 .columns > div {
   display: flex;
   flex-direction: column;
+  gap: 24px;
 }
 
 .columns img {
   width: 100%;
+  border-radius: 8px;
 }
 
 .columns > div > div {
@@ -19,15 +21,44 @@
   display: block;
 }
 
+.columns h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0 0 12px;
+}
+
+.columns p {
+  color: #555;
+  line-height: 1.6;
+}
+
+.columns a.button:any-link {
+  background-color: var(--walmart-blue);
+  color: #fff;
+  border-radius: 24px;
+  padding: 10px 28px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.columns a.button:hover {
+  background-color: var(--button-hover-color);
+}
+
 @media (width >= 900px) {
   .columns > div {
     align-items: center;
     flex-direction: unset;
-    gap: 24px;
+    gap: 40px;
   }
 
   .columns > div > div {
     flex: 1;
     order: unset;
+  }
+
+  .columns h2 {
+    font-size: 28px;
   }
 }

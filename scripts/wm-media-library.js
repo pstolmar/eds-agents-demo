@@ -131,6 +131,10 @@ function overrideNav() {
   }, 50);
 }
 
+/* Image card indices: 0=Back-to-School, 1=Kevin, 2=St Bernard,
+   3=Associates/Store, 4=Chris, 5=Sam's Club */
+const PEOPLE_SEARCH_CARDS = [0, 1, 3, 4]; /* School, Kevin, Store, Chris */
+
 /**
  * Build the search bar UI
  */
@@ -143,16 +147,37 @@ function buildSearchBar() {
 
   const searchBar = document.createElement('div');
   searchBar.className = 'wm-search-bar';
-  searchBar.innerHTML = `
-    <svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="11" cy="11" r="8"/>
-      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-    </svg>
-    <input type="text" placeholder="Search media library..." />
-  `;
+
+  const searchSvg = '<svg class="wm-search-icon" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+    + '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+  const clearSvg = '<svg class="wm-search-clear" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;cursor:pointer;">'
+    + '<path d="M18 6L6 18M6 6l12 12"/></svg>';
+
+  searchBar.innerHTML = `${searchSvg}${clearSvg}<input type="text" placeholder="Search media library..." />`;
 
   wrapper.appendChild(searchBar);
-  return searchBar.querySelector('input');
+
+  const input = searchBar.querySelector('input');
+  const searchIcon = searchBar.querySelector('.wm-search-icon');
+  const clearIcon = searchBar.querySelector('.wm-search-clear');
+
+  /* Toggle search/clear icons */
+  input.addEventListener('input', () => {
+    const hasText = input.value.trim().length > 0;
+    searchIcon.style.display = hasText ? 'none' : '';
+    clearIcon.style.display = hasText ? '' : 'none';
+  });
+
+  /* Clear button resets search */
+  clearIcon.addEventListener('click', () => {
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    searchIcon.style.display = '';
+    clearIcon.style.display = 'none';
+    input.focus();
+  });
+
+  return input;
 }
 
 /**
@@ -271,6 +296,21 @@ function wireSearch(searchInput, tabCtrl) {
     debounce = setTimeout(() => {
       const query = searchInput.value.trim().toLowerCase();
       const main = document.querySelector('main');
+      const isPeopleQuery = query.includes('people') || query.includes('person') || query.includes('faces');
+
+      /* People search — show only School, Kevin, Store, Chris image cards */
+      if (isPeopleQuery) {
+        const imgCards = [...main.querySelectorAll('.cards-media > ul > li')];
+        imgCards.forEach((li, i) => {
+          li.classList.toggle('wm-no-match', !PEOPLE_SEARCH_CARDS.includes(i));
+        });
+        /* Hide gallery and video cards for people search */
+        main.querySelectorAll('.cards-gallery > ul > li, .cards-video > ul > li').forEach((li) => {
+          li.classList.add('wm-no-match');
+        });
+        if (tabCtrl) tabCtrl.updateResultCount();
+        return;
+      }
 
       main.querySelectorAll(
         '.cards-media > ul > li, .cards-gallery > ul > li, .cards-video > ul > li',
@@ -297,6 +337,82 @@ function wireSearch(searchInput, tabCtrl) {
   });
 }
 
+/* ===== Extras Toggle Panel ===== */
+const EXTRAS_FEATURES = [
+  { key: 'search', label: 'AI Search', desc: 'Smart tags, colors & people search' },
+  { key: 'dm', label: 'Dynamic Media', desc: 'Smart crop & renditions' },
+  { key: 'wf', label: 'Workfront', desc: 'Review & approval panel' },
+  { key: 'analytics', label: 'Analytics', desc: 'Engagement dashboard' },
+  { key: 'cf', label: 'Content Fragment', desc: 'CF model editor' },
+  { key: 'ff', label: 'Firefly', desc: 'Generative fill overlay' },
+  { key: 'forms', label: 'AEM Forms', desc: 'Asset request forms' },
+  { key: 'ab', label: 'A/B Test', desc: 'Experiment configurator' },
+];
+
+function buildExtrasToggle(params) {
+  const active = new Set((params.get('extras') || '').split(',').map((s) => s.trim()).filter(Boolean));
+
+  /* Floating toggle button */
+  const toggle = document.createElement('button');
+  toggle.className = 'wm-extras-toggle';
+  toggle.title = 'Configure AEM Features';
+  toggle.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">'
+    + '<circle cx="10" cy="10" r="3"/>'
+    + '<path d="M10 1v3M10 16v3M1 10h3M16 10h3M3.5 3.5l2 2M14.5 14.5l2 2M3.5 16.5l2-2M14.5 5.5l2-2"/>'
+    + '</svg>';
+
+  /* Panel */
+  const panel = document.createElement('div');
+  panel.className = 'wm-extras-panel';
+  panel.innerHTML = '<div class="wm-extras-panel-header">'
+    + '<strong>AEM Feature Toggles</strong>'
+    + '<small>Select features to preview</small>'
+    + '</div>'
+    + '<div class="wm-extras-panel-body"></div>'
+    + '<div class="wm-extras-panel-footer">'
+    + '<button class="wm-extras-apply">Apply</button>'
+    + '<button class="wm-extras-clear">Clear All</button>'
+    + '</div>';
+
+  const body = panel.querySelector('.wm-extras-panel-body');
+  EXTRAS_FEATURES.forEach((f) => {
+    const row = document.createElement('label');
+    row.className = 'wm-extras-feature';
+    row.innerHTML = `<input type="checkbox" value="${f.key}" ${active.has(f.key) ? 'checked' : ''}>
+      <span class="wm-extras-feature-info">
+        <span class="wm-extras-feature-name">${f.label}</span>
+        <span class="wm-extras-feature-desc">${f.desc}</span>
+      </span>`;
+    body.appendChild(row);
+  });
+
+  /* Toggle panel open/close */
+  toggle.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    toggle.classList.toggle('active');
+  });
+
+  /* Apply button — reload with selected extras */
+  panel.querySelector('.wm-extras-apply').addEventListener('click', () => {
+    const checked = [...body.querySelectorAll('input:checked')].map((cb) => cb.value);
+    const url = new URL(window.location.href);
+    if (checked.length > 0) {
+      url.searchParams.set('extras', checked.join(','));
+    } else {
+      url.searchParams.delete('extras');
+    }
+    window.location.href = url.toString();
+  });
+
+  /* Clear all */
+  panel.querySelector('.wm-extras-clear').addEventListener('click', () => {
+    body.querySelectorAll('input').forEach((cb) => { cb.checked = false; });
+  });
+
+  document.body.appendChild(toggle);
+  document.body.appendChild(panel);
+}
+
 /**
  * Initialize everything
  */
@@ -317,10 +433,14 @@ export default function init() {
     wireSearch(searchInput, tabCtrl);
 
     /* Load extras mode when ?extras is present */
-    if (new URLSearchParams(window.location.search).has('extras')) {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('extras')) {
       document.body.classList.add('wm-extras');
       import('./wm-extras.js').then((mod) => mod.default());
     }
+
+    /* Extras toggle panel */
+    buildExtrasToggle(params);
 
     return true;
   }

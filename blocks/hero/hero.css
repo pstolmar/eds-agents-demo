@@ -5,23 +5,51 @@
 
 .hero {
   position: relative;
-  padding: 40px 24px;
-  min-height: 150px;
+  padding: 60px 24px;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--dark-color);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgb(0 46 93 / 75%) 0%, rgb(0 20 50 / 60%) 100%);
+  z-index: 1;
+}
+
+.hero > div {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .hero h1 {
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  color: var(--background-color);
+  color: #fff;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 16px;
+  max-width: 600px;
+}
+
+.hero p {
+  color: rgb(255 255 255 / 90%);
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 500px;
+  margin: 0 0 8px;
 }
 
 .hero picture {
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   inset: 0;
-  object-fit: cover;
-  box-sizing: border-box;
 }
 
 .hero img {
@@ -30,8 +58,36 @@
   height: 100%;
 }
 
+/* Video background support */
+.hero video,
+.hero .hero-video-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero .hero-video-bg iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  object-fit: cover;
+  pointer-events: none;
+}
+
 @media (width >= 900px) {
   .hero {
-    padding: 40px 32px;
+    padding: 80px 32px;
+    min-height: 400px;
+  }
+
+  .hero h1 {
+    font-size: 44px;
+  }
+
+  .hero p {
+    font-size: 18px;
   }
 }

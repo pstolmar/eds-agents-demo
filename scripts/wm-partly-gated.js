@@ -236,6 +236,94 @@ function setupBlurBehavior(widget, group, level, buildFn) {
   });
 }
 
+/* ─── Media Library Gate: dismissible SSO that toggles viewer / admin mode ─── */
+// eslint-disable-next-line import/prefer-default-export
+export function initMediaLibraryGate() {
+  const adminFeatures = [
+    '.wm-extras-lock', '.wm-extras-badge-expired', '.wm-extras-badge-expiring',
+    '.wm-extras-cr-btn', '.wm-extras-action-edit', '.wm-extras-action-delete',
+    '.wm-extras-action-upload', '.wm-extras-wf-btn', '.wm-extras-forms-btn',
+    '.wm-extras-ab-btn', '.wm-extras-ff-btn', '.wm-extras-cf-btn',
+    '.wm-extras-use-btn',
+  ];
+
+  const overlay = makeEl('div', 'wm-ml-gate-overlay');
+  overlay.innerHTML = `
+    <div class="wm-ml-gate-dialog">
+      <div class="wm-ws-header">
+        <svg viewBox="0 0 16 16" fill="#FFC220" width="20" height="20"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" fill="none" stroke="#FFC220" stroke-width="1.5"/></svg>
+        <span>Media Library — Admin Access</span>
+      </div>
+      <div class="wm-ws-body">
+        <p><strong>Sign in to enable:</strong> asset locks, expiration management, editing tools, approval workflows, and upload capabilities.</p>
+        <p style="font-size:0.75rem;color:#6b7280">Without signing in you can still browse, preview, smart crop, and zoom assets.</p>
+        <button class="wm-ws-auth-btn">Sign In with SSO</button>
+        <button class="wm-ml-gate-dismiss">Continue as Viewer</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const hideAdmin = () => {
+    document.body.classList.add('wm-ml-viewer-mode');
+    document.body.classList.remove('wm-ml-admin-mode');
+  };
+
+  const showAdmin = () => {
+    document.body.classList.add('wm-ml-admin-mode');
+    document.body.classList.remove('wm-ml-viewer-mode');
+  };
+
+  const removeOverlay = () => {
+    overlay.classList.add('wm-ws-fade-out');
+    setTimeout(() => overlay.remove(), 300);
+  };
+
+  /* Dismiss → viewer mode */
+  overlay.querySelector('.wm-ml-gate-dismiss').addEventListener('click', () => {
+    hideAdmin();
+    removeOverlay();
+  });
+
+  /* Authenticate → admin mode */
+  overlay.querySelector('.wm-ws-auth-btn').addEventListener('click', () => {
+    const btn = overlay.querySelector('.wm-ws-auth-btn');
+    btn.textContent = 'Verifying...';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = 'Authorized ✓';
+      btn.style.background = '#22c55e';
+    }, 800);
+    setTimeout(() => {
+      showAdmin();
+      removeOverlay();
+    }, 1200);
+  });
+
+  /* Start in blurred/gate state — admin hidden by default until decision */
+  hideAdmin();
+
+  /* Periodically apply admin-feature hiding (extras load async) */
+  let attempts = 0;
+  const enforceViewerMode = setInterval(() => {
+    if (document.body.classList.contains('wm-ml-viewer-mode')) {
+      adminFeatures.forEach((sel) => {
+        document.querySelectorAll(sel).forEach((el) => { el.style.display = 'none'; });
+      });
+    }
+    attempts += 1;
+    if (attempts > 20 || document.body.classList.contains('wm-ml-admin-mode')) {
+      clearInterval(enforceViewerMode);
+      /* If admin mode, re-show everything */
+      if (document.body.classList.contains('wm-ml-admin-mode')) {
+        adminFeatures.forEach((sel) => {
+          document.querySelectorAll(sel).forEach((el) => { el.style.display = ''; });
+        });
+      }
+    }
+  }, 500);
+}
+
 export default function init() {
   document.body.classList.add('wm-partly-gated-page');
 

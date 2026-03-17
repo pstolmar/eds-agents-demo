@@ -6,7 +6,7 @@ export default function decorate(block) {
     const li = document.createElement('li');
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
-      if (div.children.length === 1 && div.querySelector('picture')) {
+      if (div.children.length === 1 && (div.querySelector('picture') || div.querySelector('img'))) {
         div.className = 'cards-media-image';
       } else {
         div.className = 'cards-media-body';
@@ -28,4 +28,27 @@ export default function decorate(block) {
     }
   });
   block.replaceChildren(ul);
+
+  /* Detect broken / missing images */
+  ul.querySelectorAll('.cards-media-image').forEach((wrapper) => {
+    const img = wrapper.querySelector('img');
+    if (!img) return;
+    const src = img.getAttribute('src') || '';
+    if (src === 'about:error' || src === '') {
+      wrapper.classList.add('cards-media-missing');
+    } else {
+      img.addEventListener('error', () => wrapper.classList.add('cards-media-missing'));
+    }
+  });
+
+  /* Undo EDS button decoration on links inside card bodies */
+  ul.querySelectorAll('.cards-media-body .button-container').forEach((bc) => {
+    const a = bc.querySelector('a');
+    if (a) {
+      a.classList.remove('button', 'primary', 'secondary');
+      const p = document.createElement('p');
+      p.appendChild(a);
+      bc.replaceWith(p);
+    }
+  });
 }

@@ -147,7 +147,12 @@ function buildSearch(nav) {
     try {
       const resp = await fetch('/query-index.json');
       const json = await resp.json();
-      queryIndex = (json.data || []).filter((item) => item.path !== '/nav');
+      const isWmEds2 = window.location.pathname.includes('/wm-eds/2/');
+      queryIndex = (json.data || []).filter((item) => {
+        if (item.path === '/nav') return false;
+        if (isWmEds2) return item.path.includes('/wm-eds/2/');
+        return true;
+      });
     } catch {
       queryIndex = [];
     }
@@ -216,16 +221,12 @@ function buildSearch(nav) {
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
-export default async function decorate(block) {
-  // load nav as fragment
-  const navMeta = getMetadata('nav');
-  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  const fragment = await loadFragment(navPath);
-
-  // decorate nav DOM
-  block.textContent = '';
+/**
+ * Decorates a nav element from a fragment
+ */
+function decorateNav(fragment, id) {
   const nav = document.createElement('nav');
-  nav.id = 'nav';
+  nav.id = id;
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
   const classes = ['brand', 'sections', 'tools'];
@@ -235,7 +236,7 @@ export default async function decorate(block) {
   });
 
   const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
+  const brandLink = navBrand ? navBrand.querySelector('.button') : null;
   if (brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container').className = '';
@@ -243,43 +244,85 @@ export default async function decorate(block) {
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
-    navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
-      if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-      navSection.addEventListener('click', () => {
-        if (isDesktop.matches) {
-          const expanded = navSection.getAttribute('aria-expanded') === 'true';
-          toggleAllNavSections(navSections);
-          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    navSections
+      .querySelectorAll(':scope .default-content-wrapper > ul > li')
+      .forEach((navSection) => {
+        if (navSection.querySelector('ul')) {
+          navSection.classList.add('nav-drop');
         }
+        navSection.addEventListener('click', () => {
+          if (isDesktop.matches) {
+            const expanded = navSection.getAttribute('aria-expanded') === 'true';
+            toggleAllNavSections(navSections);
+            navSection.setAttribute(
+              'aria-expanded',
+              expanded ? 'false' : 'true',
+            );
+          }
+        });
       });
-    });
   }
 
-  // Close dropdowns when clicking outside the nav
   document.addEventListener('click', (e) => {
     if (isDesktop.matches && !nav.contains(e.target)) {
       toggleAllNavSections(navSections, false);
     }
   });
 
-  // hamburger for mobile
   const hamburger = document.createElement('div');
   hamburger.classList.add('nav-hamburger');
-  hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
+  hamburger.innerHTML = `<button type="button" aria-controls="${id}"
+    aria-label="Open navigation">
       <span class="nav-hamburger-icon"></span>
     </button>`;
   hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
-  // prevent mobile nav behavior on window resize
   toggleMenu(nav, navSections, isDesktop.matches);
-  isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+  isDesktop.addEventListener('change', () => {
+    toggleMenu(nav, navSections, isDesktop.matches);
+  });
 
-  // build search overlay
+  return nav;
+}
+
+export default async function decorate(block) {
+  const navMeta = getMetadata('nav');
+  const isWmEds2 = window.location.pathname.includes('/wm-eds/2/');
+
+  let navPath;
+  if (navMeta) {
+    navPath = new URL(navMeta, window.location).pathname;
+  } else if (isWmEds2) {
+    navPath = '/wm-eds/2/main-nav';
+  } else {
+    navPath = '/nav';
+  }
+
+  let fragment = await loadFragment(navPath);
+  // Fallback: local dev may need /content/ prefix for unpublished fragments
+  if (!fragment) fragment = await loadFragment(`/content${navPath}`);
+  block.textContent = '';
+
+  const nav = decorateNav(fragment, 'nav');
   buildSearch(nav);
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  /* IIAJ sub-nav: only on supplier/IIAJ pages, not media-library or other wm-eds/2 pages */
+  const needsSubNav = isWmEds2 && window.location.pathname.includes('/suppliers/');
+  if (needsSubNav) {
+    let subFrag = await loadFragment('/wm-eds/2/nav');
+    if (!subFrag) subFrag = await loadFragment('/content/wm-eds/2/nav');
+    if (subFrag) {
+      const subNav = decorateNav(subFrag, 'sub-nav');
+      const subWrapper = document.createElement('div');
+      subWrapper.className = 'nav-wrapper sub-nav-wrapper';
+      subWrapper.append(subNav);
+      block.append(subWrapper);
+    }
+  }
 }
