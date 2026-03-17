@@ -1,0 +1,11 @@
+{
+  "status": "success",
+  "url": "https://corporate.walmart.com/suppliers/investing-in-american-jobs/about-us-manufacturing-initiative",
+  "path": "suppliers/investing-in-american-jobs/about-us-manufacturing-initiative",
+  "timestamp": "2026-03-13T01:31:45.252Z",
+  "title": "Overview",
+  "template": "supplier-content",
+  "blocks": [
+    "cards"
+  ]
+}
