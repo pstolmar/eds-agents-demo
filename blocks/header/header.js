@@ -312,7 +312,8 @@ function decorateNav(fragment, id) {
 
 export default async function decorate(block) {
   const navMeta = getMetadata('nav');
-  const isWmEds2 = window.location.pathname.includes('/wm-eds/2/');
+  const { pathname } = window.location;
+  const isWmEds2 = pathname.includes('/wm-eds/2/') || pathname.includes('media-library');
 
   let navPath;
   if (navMeta) {

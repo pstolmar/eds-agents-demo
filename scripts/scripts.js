@@ -116,6 +116,12 @@ function fixOpenCallContent(main) {
       a.textContent = 'Learn More';
     }
   });
+
+  // 4. Add card styling class to the columns block container
+  const columnsDiv = section.querySelector('.columns');
+  if (columnsDiv) {
+    columnsDiv.classList.add('columns-card');
+  }
 }
 
 /**
@@ -202,6 +208,11 @@ async function loadEager(doc) {
 
   const main = doc.querySelector('main');
   if (main) {
+    // Inject content for custom pages that don't exist on CDN
+    if (window.isErrorPage && window.location.pathname.includes('/wm-eds/2/')) {
+      const { default: injectPageContent } = await import('./wm-page-builder.js');
+      injectPageContent();
+    }
     decorateMain(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);
@@ -301,6 +312,13 @@ async function loadLazy(doc) {
     loadCSS(`${window.hlx.codeBasePath}/styles/wm-open-call-extras.css`);
     const extMod = await import('./wm-open-call-extras.js');
     extMod.default();
+  }
+
+  /* wm-eds/2 page extras: 7 fun features gated behind ?extras=true */
+  if (pathname.includes('/wm-eds/2/') && !pathname.includes('open-call-2026') && params.has('extras')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-page-extras.css`);
+    const pageMod = await import('./wm-page-extras.js');
+    pageMod.default();
   }
 
   const { hash } = window.location;
