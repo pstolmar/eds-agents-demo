@@ -159,3 +159,117 @@
     animation: none;
   }
 }
+
+/* ── Resource Cards variant — 3-col grid with contained logos ── */
+.cards.resource > ul {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+@media (width >= 900px) {
+  .cards.resource > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.cards.resource > ul > li img {
+  aspect-ratio: 3 / 2;
+  object-fit: contain;
+  padding: 16px;
+  background: #f8f8f8;
+}
+
+.cards.resource .cards-card-body h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #2e2f32;
+}
+
+.cards.resource .cards-card-body p {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* Show the View link as a styled text link (override global .button) */
+.cards.resource .cards-card-body a:any-link {
+  display: inline;
+  color: #0053e2;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  background: none;
+}
+
+.cards.resource .cards-card-body a:hover {
+  text-decoration: underline;
+}
+
+/* ── Horizontal Cards variant — article teasers with image left, text right ── */
+.cards.horizontal > ul {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.cards.horizontal > ul > li {
+  border-radius: 0;
+  box-shadow: none;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.cards.horizontal > ul > li:last-child {
+  border-bottom: none;
+}
+
+.cards.horizontal > ul > li:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+.cards.horizontal .cards-card-link {
+  flex-direction: row;
+  gap: 20px;
+  padding: 16px 0;
+}
+
+.cards.horizontal .cards-card-image {
+  flex: 0 0 120px;
+  max-width: 120px;
+}
+
+.cards.horizontal > ul > li img {
+  width: 120px;
+  height: 80px;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cards.horizontal .cards-card-body {
+  padding: 0;
+  flex: 1;
+}
+
+.cards.horizontal .cards-card-body p:first-child strong,
+.cards.horizontal .cards-card-body h6 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2e2f32;
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.cards.horizontal .cards-card-body p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Hide the link paragraph — whole card is clickable */
+.cards.horizontal .cards-card-body a.button:any-link {
+  display: none;
+}

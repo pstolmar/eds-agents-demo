@@ -23,9 +23,11 @@ export default function decorate(block) {
     });
 
     /* If card body has a link, make whole card clickable and extract date */
+    /* Resource variant: keep links inline, don't wrap whole card */
+    const isResource = block.classList.contains('resource');
     const body = li.querySelector('.cards-card-body');
     const bodyLink = body?.querySelector('a');
-    if (bodyLink) {
+    if (bodyLink && !isResource) {
       const href = bodyLink.getAttribute('href');
 
       /* Extract date from news-style URL */
@@ -60,9 +62,9 @@ export default function decorate(block) {
 
   block.replaceChildren(ul);
 
-  /* Show More — only when there are more cards than one row */
+  /* Show More — only when there are more cards than one row (skip for resource variant) */
   const allCards = [...ul.querySelectorAll('li')];
-  if (allCards.length > CARDS_PER_ROW) {
+  if (allCards.length > CARDS_PER_ROW && !block.classList.contains('resource')) {
     let visible = CARDS_PER_ROW;
     allCards.forEach((card, i) => {
       if (i >= CARDS_PER_ROW) card.classList.add('cards-hidden');
