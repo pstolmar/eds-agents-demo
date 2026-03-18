@@ -1,0 +1,99 @@
+/* wm-timing.css — CWV Performance overlay */
+
+.wm-timing-panel {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 99999;
+  width: 240px;
+  background: #1a1a2e;
+  color: #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgb(0 0 0 / 40%);
+  font-family: "SF Mono", "Fira Code", Consolas, monospace;
+  font-size: 12px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.wm-timing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #16213e;
+  cursor: grab;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+.wm-timing-title {
+  font-weight: 700;
+  font-size: 12px;
+  color: #a0c4ff;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.wm-timing-minimize {
+  background: none;
+  border: none;
+  color: #a0c4ff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.wm-timing-minimize:hover {
+  color: #fff;
+}
+
+.wm-timing-body {
+  padding: 8px 14px 12px;
+}
+
+.wm-timing-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.wm-timing-label {
+  font-size: 11px;
+  color: #8892a4;
+  font-weight: 500;
+}
+
+.wm-timing-value {
+  font-weight: 600;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wm-timing-divider {
+  height: 1px;
+  background: rgb(255 255 255 / 8%);
+  margin: 6px 0;
+}
+
+/* ── Grade colors ── */
+.wm-timing-good {
+  color: #4ade80;
+}
+
+.wm-timing-warn {
+  color: #fbbf24;
+}
+
+.wm-timing-poor {
+  color: #f87171;
+}
+
+.wm-timing-neutral {
+  color: #94a3b8;
+}
+
+.wm-timing-pending {
+  color: #64748b;
+}

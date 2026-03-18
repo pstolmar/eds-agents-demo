@@ -30,6 +30,23 @@ const FORM_TEMPLATES = {
     ],
     submitText: 'Submit Inquiry',
   },
+  'open-call-registration': {
+    fields: [
+      {
+        name: 'first-name', label: 'First Name', type: 'text', required: true,
+      },
+      {
+        name: 'last-name', label: 'Last Name', type: 'text', required: true,
+      },
+      {
+        name: 'company-name', label: 'Company Name', type: 'text', required: true,
+      },
+      {
+        name: 'email', label: 'Email address', type: 'email', required: true,
+      },
+    ],
+    submitText: 'Submit',
+  },
 };
 
 function createField(field) {

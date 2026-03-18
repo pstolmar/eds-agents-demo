@@ -1,4 +1,4 @@
-/* wm-page-extras.css — Styles for 7 fun extras on wm-eds/2 pages */
+/* wm-page-extras.css — Styles for 7 professional extras on wm-eds/2 pages */
 
 /* ── 2. Form floating labels ── */
 .extras-float-field {
@@ -29,29 +29,6 @@
   top: -2px;
   font-size: 11px;
   color: #0053e2;
-}
-
-/* Confetti */
-.extras-confetti {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10000;
-  animation: extras-confetti-burst 1s ease-out forwards;
-}
-
-@keyframes extras-confetti-burst {
-  0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translate(var(--dx), var(--dy)) scale(0);
-    opacity: 0;
-  }
 }
 
 /* ── 3. Scroll progress bar ── */
@@ -142,6 +119,39 @@
   100% {
     transform: translate(var(--tx), var(--ty)) scale(0);
     opacity: 0;
+  }
+}
+
+/* ── 5. Smooth section reveal ── */
+.extras-section-hidden {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.extras-section-reveal {
+  animation: extras-section-in 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes extras-section-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .extras-section-hidden {
+    opacity: 1;
+    transform: none;
+  }
+
+  .extras-section-reveal {
+    animation: none;
   }
 }
 

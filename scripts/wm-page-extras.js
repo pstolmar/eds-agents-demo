@@ -1,15 +1,26 @@
 /* eslint-disable max-len */
 /**
- * wm-page-extras.js — 7 fun extras for wm-eds/2 pages (homepage, news, events, forms).
+ * wm-page-extras.js — 7 professional extras for wm-eds/2 pages.
  * ONLY loads when ?extras=true is present. Zero impact otherwise.
+ *
+ * 1. Card 3D Tilt Hover — perspective tilt on card mousemove
+ * 2. Form Floating Labels — material-style labels that float on focus
+ * 3. Scroll Progress Bar — gradient bar at top of viewport
+ * 4. Typing Search Placeholder — animated typewriter in search input
+ * 5. Smooth Section Reveal — sections fade/slide in on scroll
+ * 6. Konami Code Easter Egg — ↑↑↓↓←→←→BA triggers spark overlay
+ * 7. Smart Reading Time — word-count reading time badge
  */
 
 /* ──────────── 1. Card 3D Tilt Hover ──────────── */
 function initCardTilt() {
-  const cards = document.querySelectorAll('.cards li, .cards > div > div');
+  const cards = document.querySelectorAll('.cards li');
+  if (!cards.length) return;
+
   cards.forEach((card) => {
-    card.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+    card.style.transition = 'transform 0.25s ease-out, box-shadow 0.25s ease-out';
     card.style.willChange = 'transform';
+    card.style.transformStyle = 'preserve-3d';
 
     card.addEventListener('mousemove', (e) => {
       const rect = card.getBoundingClientRect();
@@ -17,10 +28,10 @@ function initCardTilt() {
       const y = e.clientY - rect.top;
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -8;
-      const rotateY = ((x - centerX) / centerX) * 8;
-      card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-      card.style.boxShadow = '0 12px 30px rgb(0 0 0 / 15%)';
+      const rotateX = ((y - centerY) / centerY) * -6;
+      const rotateY = ((x - centerX) / centerX) * 6;
+      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(8px)`;
+      card.style.boxShadow = '0 20px 40px rgb(0 0 0 / 12%), 0 4px 12px rgb(0 0 0 / 8%)';
     });
 
     card.addEventListener('mouseleave', () => {
@@ -30,30 +41,7 @@ function initCardTilt() {
   });
 }
 
-/* ──────────── 2. Form Field Magic (floating labels + submit confetti) ──────────── */
-function burstConfetti(anchor) {
-  const rect = anchor.getBoundingClientRect();
-  const cx = rect.left + (rect.width / 2);
-  const cy = rect.top;
-  const colors = ['#ffc220', '#0053e2', '#22c55e', '#e2004f', '#ff8c00'];
-
-  for (let i = 0; i < 40; i += 1) {
-    const dot = document.createElement('div');
-    dot.className = 'extras-confetti';
-    dot.style.left = `${cx}px`;
-    dot.style.top = `${cy}px`;
-    dot.style.backgroundColor = colors[i % colors.length];
-    const angle = (Math.random() * Math.PI * 2);
-    const velocity = 80 + (Math.random() * 120);
-    const dx = Math.cos(angle) * velocity;
-    const dy = Math.sin(angle) * velocity - 60;
-    dot.style.setProperty('--dx', `${dx}px`);
-    dot.style.setProperty('--dy', `${dy}px`);
-    document.body.appendChild(dot);
-    dot.addEventListener('animationend', () => dot.remove());
-  }
-}
-
+/* ──────────── 2. Form Floating Labels ──────────── */
 function initFormMagic() {
   const formFields = document.querySelectorAll('.form-field');
   formFields.forEach((field) => {
@@ -69,24 +57,6 @@ function initFormMagic() {
       else field.classList.remove('extras-filled');
     });
     if (input.value) field.classList.add('extras-filled');
-  });
-
-  /* Confetti burst on successful form submit */
-  const forms = document.querySelectorAll('.form-container');
-  forms.forEach((form) => {
-    const btn = form.querySelector('.form-submit');
-    if (!btn) return;
-
-    const formEl = btn.closest('form');
-    if (!formEl) return;
-
-    formEl.addEventListener('submit', () => {
-      setTimeout(() => {
-        if (btn.disabled && btn.classList.contains('form-btn-success')) {
-          burstConfetti(btn);
-        }
-      }, 100);
-    });
   });
 }
 
@@ -161,22 +131,30 @@ function initTypingPlaceholder() {
   tick();
 }
 
-/* ──────────── 5. Hero Parallax Depth ──────────── */
-function initHeroParallax() {
-  const hero = document.querySelector('.hero-video-wrapper');
-  if (!hero) return;
+/* ──────────── 5. Smooth Section Reveal ──────────── */
+function initSectionReveal() {
+  const sections = document.querySelectorAll('.section');
+  if (!sections.length) return;
 
-  const content = hero.querySelector('.hero-video-content');
-  if (!content) return;
+  /* Apply initial hidden state */
+  sections.forEach((section, i) => {
+    if (i === 0) return; /* Keep first section visible */
+    section.classList.add('extras-section-hidden');
+  });
 
-  window.addEventListener('scroll', () => {
-    const { scrollY } = window;
-    const maxScroll = hero.offsetHeight;
-    if (scrollY > maxScroll) return;
-    const ratio = scrollY / maxScroll;
-    content.style.transform = `translateY(${ratio * 40}px)`;
-    content.style.opacity = `${1 - (ratio * 0.6)}`;
-  }, { passive: true });
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('extras-section-hidden');
+        entry.target.classList.add('extras-section-reveal');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  sections.forEach((section, i) => {
+    if (i > 0) observer.observe(section);
+  });
 }
 
 /* ──────────── 6. Konami Code Easter Egg ──────────── */
@@ -185,7 +163,7 @@ function triggerSparkBurst() {
   overlay.className = 'extras-konami-overlay';
   overlay.innerHTML = `
     <div class="extras-konami-content">
-      <div class="extras-konami-spark">✨</div>
+      <div class="extras-konami-spark">\u2728</div>
       <div class="extras-konami-text">You found the secret!</div>
       <div class="extras-konami-sub">Always Low Prices. Always.</div>
     </div>
@@ -240,7 +218,7 @@ function initReadingTime() {
 
   const badge = document.createElement('div');
   badge.className = 'extras-reading-time';
-  badge.innerHTML = `<span>📖</span> ${minutes} min read`;
+  badge.textContent = `\u{1F4D6} ${minutes} min read`;
 
   const firstSection = main.querySelector('.section');
   if (firstSection) {
@@ -256,7 +234,7 @@ export default function initPageExtras() {
   initCardTilt();
   initFormMagic();
   initTypingPlaceholder();
-  initHeroParallax();
+  initSectionReveal();
   initKonamiCode();
   initReadingTime();
 }

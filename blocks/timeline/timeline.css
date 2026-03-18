@@ -1,0 +1,172 @@
+/* Timeline Block — Animated vertical milestone timeline */
+
+.timeline-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.timeline-rail {
+  position: relative;
+  padding: 24px 0;
+}
+
+/* Vertical line through center */
+.timeline-rail::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #0053e2 0%, #ffc220 100%);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+/* Each milestone item */
+.timeline-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 48px;
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Left-aligned items slide from left */
+.timeline-left {
+  justify-content: flex-start;
+  padding-right: calc(50% + 28px);
+  transform: translateX(-30px);
+}
+
+/* Right-aligned items slide from right */
+.timeline-right {
+  justify-content: flex-end;
+  padding-left: calc(50% + 28px);
+  transform: translateX(30px);
+}
+
+/* Visible state */
+.timeline-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Center dot on the rail */
+.timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 16px;
+  height: 16px;
+  background: #0053e2;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 3px #0053e2;
+  z-index: 1;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.timeline-visible .timeline-dot {
+  animation: timeline-dot-pop 0.4s ease 0.3s both;
+}
+
+@keyframes timeline-dot-pop {
+  0% {
+    transform: translateX(-50%) scale(0);
+  }
+
+  60% {
+    transform: translateX(-50%) scale(1.3);
+  }
+
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Card content */
+.timeline-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px 24px;
+  box-shadow: 0 2px 12px rgb(0 0 0 / 8%);
+  border: 1px solid #e8e8e8;
+  max-width: 100%;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.timeline-card:hover {
+  box-shadow: 0 6px 24px rgb(0 0 0 / 12%);
+  transform: translateY(-2px);
+}
+
+.timeline-date {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0053e2;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.timeline-body {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.timeline-body p {
+  margin: 0 0 8px;
+}
+
+.timeline-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Mobile: single-column layout */
+@media (width < 768px) {
+  .timeline-rail::before {
+    left: 16px;
+  }
+
+  .timeline-item {
+    padding-right: 0;
+    padding-left: 48px;
+    justify-content: flex-start;
+  }
+
+  .timeline-left,
+  .timeline-right {
+    padding-left: 48px;
+    padding-right: 0;
+    transform: translateY(20px);
+  }
+
+  .timeline-visible {
+    transform: translateY(0);
+  }
+
+  .timeline-dot {
+    left: 16px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .timeline-item {
+    opacity: 1;
+    transform: none;
+  }
+
+  .timeline-visible .timeline-dot {
+    animation: none;
+  }
+}

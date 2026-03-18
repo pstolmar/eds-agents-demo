@@ -96,18 +96,18 @@ function fixOpenCallContent(main) {
     if (tourList) tourList.after(carousel);
   }
 
-  // 2. Add embed block for AEM registration form
+  // 2. Add native form block for Open Call registration
   const applyP = [...section.querySelectorAll('p')]
     .find((p) => p.textContent.includes('apply today'));
   if (applyP) {
-    const embed = document.createElement('div');
-    embed.className = 'embed';
+    const formBlock = document.createElement('div');
+    formBlock.className = 'form';
     const row = document.createElement('div');
     const cell = document.createElement('div');
-    cell.textContent = 'https://corporate.walmart.com/content/corporate/en_us/suppliers/investing-in-american-jobs/events/annual-open-call/open-call-2026/jcr:content/root/main_container/container/block_container_copy/block-container-par/aemform.iframe.en_us.html';
+    cell.textContent = 'open-call-registration';
     row.appendChild(cell);
-    embed.appendChild(row);
-    applyP.after(embed);
+    formBlock.appendChild(row);
+    applyP.after(formBlock);
   }
 
   // 3. Fix "Learn More opens in a new tab"
@@ -122,6 +122,157 @@ function fixOpenCallContent(main) {
   if (columnsDiv) {
     columnsDiv.classList.add('columns-card');
   }
+}
+
+/**
+ * Auto-detect flat "resource grid" content pattern (logo img, h4, description, view link)
+ * and restructure into a cards block with resource variant for 3-column grid display.
+ * Works on supply-chain-resources and any page with the same content structure.
+ */
+function autoResourceGrid(main) {
+  /* Look in raw section divs (runs before decorateSections) */
+  const section = main.querySelector(':scope > div');
+  if (!section) return;
+
+  /* Detect resource pattern: p with img followed by h4, repeating 3+ times */
+  const h4s = [...section.querySelectorAll('h4')];
+  if (h4s.length < 3) return;
+
+  /* Count how many h4s are preceded by an img paragraph */
+  const matching = h4s.filter((h4) => {
+    const prev = h4.previousElementSibling;
+    return prev?.tagName === 'P' && (prev.querySelector('img') || prev.querySelector('picture'));
+  });
+  if (matching.length < 3) return;
+
+  /* Build cards block from the repeating pattern */
+  const cardsBlock = document.createElement('div');
+  cardsBlock.className = 'cards resource';
+
+  matching.forEach((h4) => {
+    const imgP = h4.previousElementSibling;
+    const descP = h4.nextElementSibling;
+    const viewP = descP?.nextElementSibling;
+
+    const row = document.createElement('div');
+    const imgCell = document.createElement('div');
+    const bodyCell = document.createElement('div');
+
+    const img = imgP.querySelector('img');
+    if (img) {
+      const pic = document.createElement('picture');
+      pic.appendChild(img.cloneNode(true));
+      imgCell.appendChild(pic);
+    }
+
+    bodyCell.appendChild(h4.cloneNode(true));
+    if (descP?.tagName === 'P') bodyCell.appendChild(descP.cloneNode(true));
+    if (viewP?.tagName === 'P' && viewP.querySelector('a')) bodyCell.appendChild(viewP.cloneNode(true));
+
+    row.appendChild(imgCell);
+    row.appendChild(bodyCell);
+    cardsBlock.appendChild(row);
+
+    /* Remove originals */
+    imgP.remove();
+    h4.remove();
+    if (descP?.tagName === 'P') descP.remove();
+    if (viewP?.tagName === 'P' && viewP.querySelector('a')) viewP.remove();
+  });
+
+  /* Insert cards block after h1 if present, else at start */
+  const h1 = section.querySelector('h1');
+  if (h1) h1.after(cardsBlock);
+  else section.prepend(cardsBlock);
+}
+
+/**
+ * Auto-detect article listing pattern (p>a>img + p>a date + h6>a title + p>a desc)
+ * and restructure into a horizontal cards block. Works on about-us-manufacturing-initiative
+ * and any page with linked article teasers.
+ */
+function autoArticleListing(main) {
+  const sections = [...main.querySelectorAll(':scope > div')];
+  sections.forEach((section) => {
+    /* Find h6 elements that contain a link — these are article titles */
+    const h6s = [...section.querySelectorAll('h6')];
+    const articles = h6s.filter((h6) => {
+      const link = h6.querySelector('a');
+      if (!link) return false;
+      /* Check preceding siblings: should have p with img (image) and p>a (date) */
+      const dateP = h6.previousElementSibling;
+      const imgP = dateP?.previousElementSibling;
+      /* Use 'img' not 'a > img' since EDS wraps imgs in <picture> elements */
+      return dateP?.tagName === 'P' && dateP.querySelector('a')
+        && imgP?.tagName === 'P' && imgP.querySelector('img');
+    });
+    if (articles.length < 1) return;
+
+    /* Build cards block with horizontal variant */
+    const cardsBlock = document.createElement('div');
+    cardsBlock.className = 'cards horizontal';
+
+    articles.forEach((h6) => {
+      const dateP = h6.previousElementSibling;
+      const imgP = dateP.previousElementSibling;
+      const descP = h6.nextElementSibling;
+      const href = h6.querySelector('a')?.getAttribute('href') || '';
+
+      const row = document.createElement('div');
+      const imgCell = document.createElement('div');
+      const bodyCell = document.createElement('div');
+
+      /* Image cell */
+      const img = imgP.querySelector('img');
+      if (img) {
+        const pic = document.createElement('picture');
+        pic.appendChild(img.cloneNode(true));
+        imgCell.appendChild(pic);
+      }
+
+      /* Body cell: title + description (skip date, the original doesn't show it) */
+      const titleEl = document.createElement('h6');
+      titleEl.textContent = h6.textContent;
+      bodyCell.appendChild(titleEl);
+      if (descP?.tagName === 'P' && descP.querySelector('a[href]')) {
+        const desc = document.createElement('p');
+        desc.textContent = descP.textContent;
+        bodyCell.appendChild(desc);
+      }
+
+      /* Add a link for the whole card */
+      if (href) {
+        const linkEl = document.createElement('p');
+        const a = document.createElement('a');
+        a.href = href;
+        a.textContent = href;
+        linkEl.appendChild(a);
+        bodyCell.appendChild(linkEl);
+      }
+
+      row.appendChild(imgCell);
+      row.appendChild(bodyCell);
+      cardsBlock.appendChild(row);
+
+      /* Remove originals */
+      imgP.remove();
+      dateP.remove();
+      h6.remove();
+      if (descP?.tagName === 'P' && descP.querySelector('a[href]')) descP.remove();
+    });
+
+    /* Insert where the first article was */
+    const remaining = section.querySelector('h2');
+    if (remaining) {
+      /* Find the h2 that comes after where articles were */
+      const allH2s = [...section.querySelectorAll('h2')];
+      const ecosystemH2 = allH2s.find((h) => h.textContent.includes('Ecosystem'));
+      if (ecosystemH2) ecosystemH2.before(cardsBlock);
+      else section.appendChild(cardsBlock);
+    } else {
+      section.appendChild(cardsBlock);
+    }
+  });
 }
 
 /**
@@ -163,6 +314,8 @@ function buildAutoBlocks(main) {
 export function decorateMain(main) {
   // Fix content before decoration (pipeline workarounds)
   fixOpenCallContent(main);
+  autoResourceGrid(main);
+  autoArticleListing(main);
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
@@ -211,7 +364,7 @@ async function loadEager(doc) {
     // Inject content for custom pages that don't exist on CDN
     if (window.isErrorPage && window.location.pathname.includes('/wm-eds/2/')) {
       const { default: injectPageContent } = await import('./wm-page-builder.js');
-      injectPageContent();
+      await injectPageContent();
     }
     decorateMain(main);
     document.body.classList.add('appear');
@@ -319,6 +472,13 @@ async function loadLazy(doc) {
     loadCSS(`${window.hlx.codeBasePath}/styles/wm-page-extras.css`);
     const pageMod = await import('./wm-page-extras.js');
     pageMod.default();
+  }
+
+  /* CWV timing overlay: ?timing=true on any wm-eds/2 page */
+  if (pathname.includes('/wm-eds/2/') && params.get('timing') === 'true') {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wm-timing.css`);
+    const timingMod = await import('./wm-timing.js');
+    timingMod.default();
   }
 
   const { hash } = window.location;

@@ -60,7 +60,7 @@ function buildHomepage() {
     </div>
     <div>
       <div><picture><img src="https://corporate.walmart.com/content/dam/corporate/images/homepage/link-list/our-suppliers.jpg" alt="Our Suppliers" loading="lazy"></picture></div>
-      <div><p><strong>Our Suppliers</strong></p><p><a href="/suppliers">Learn more</a></p></div>
+      <div><p><strong>Our Suppliers</strong></p><p><a href="/wm-eds/2/suppliers">Learn more</a></p></div>
     </div>
   </div>
 </div>
@@ -202,24 +202,63 @@ const PAGES = [
 ];
 
 /**
- * Check if current page is a known custom page.
+ * Try to fetch a .plain.html content file for the current path.
+ * Falls back to hardcoded PAGES if no content file exists.
+ */
+async function fetchContentFile(cleanPath) {
+  const contentPath = `/content${cleanPath}.plain.html`;
+  try {
+    const resp = await fetch(contentPath);
+    if (!resp.ok) return null;
+    const html = await resp.text();
+    if (!html.trim()) return null;
+    /* Parse, extract title, and strip the metadata block */
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    const metaBlock = tmp.querySelector('.metadata');
+    const titleDiv = metaBlock?.querySelector('div:first-child div:last-child');
+    const h1 = tmp.querySelector('h1');
+    const title = titleDiv?.textContent?.trim() || h1?.textContent?.trim() || 'Walmart Corporate';
+    /* Remove the metadata wrapper (parent div that contains .metadata) */
+    if (metaBlock?.parentElement) metaBlock.parentElement.remove();
+    return { html: tmp.innerHTML, title };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Check if current page is a known custom page or has a content file.
  * If so, inject content into main and update title.
  * Returns true if content was injected.
  */
-export default function injectPageContent() {
+export default async function injectPageContent() {
   if (!window.isErrorPage) return false;
 
   const { pathname } = window.location;
   const clean = pathname.replace(/\.html$/, '').replace(/\/$/, '');
-  const page = PAGES.find((p) => clean === p.match || clean.endsWith(p.match));
-  if (!page) return false;
-
   const main = document.querySelector('main');
   if (!main) return false;
 
-  document.title = page.title;
-  main.innerHTML = page.builder();
-  main.classList.remove('error');
-  window.isErrorPage = false;
-  return true;
+  /* 1. Check hardcoded pages first */
+  const page = PAGES.find((p) => clean === p.match || clean.endsWith(p.match));
+  if (page) {
+    document.title = page.title;
+    main.innerHTML = page.builder();
+    main.classList.remove('error');
+    window.isErrorPage = false;
+    return true;
+  }
+
+  /* 2. Try fetching a .plain.html content file */
+  const content = await fetchContentFile(clean);
+  if (content) {
+    document.title = content.title;
+    main.innerHTML = content.html;
+    main.classList.remove('error');
+    window.isErrorPage = false;
+    return true;
+  }
+
+  return false;
 }
