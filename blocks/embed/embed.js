@@ -58,6 +58,49 @@ const embedTwitter = (url) => {
   return embedHTML;
 };
 
+/**
+ * Initialize DASH video playback using dash.js
+ * Plays .mpd manifests as full-bleed background video
+ */
+const embedDashVideo = (block, mpdUrl) => {
+  block.textContent = '';
+  block.classList.add('embed-dash-video', 'embed-is-loaded');
+
+  const video = document.createElement('video');
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.setAttribute('playsinline', '');
+  block.appendChild(video);
+
+  /* Play/pause on visibility via IntersectionObserver */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        video.play().catch(() => { /* autoplay blocked — silent */ });
+      } else {
+        video.pause();
+      }
+    });
+  }, { threshold: 0.15 });
+
+  loadScript(
+    'https://cdn.dashjs.org/latest/dash.all.min.js',
+    () => {
+      /* eslint-disable-next-line no-undef */
+      const player = dashjs.MediaPlayer().create();
+      player.updateSettings({
+        streaming: {
+          buffer: { fastSwitchEnabled: true },
+          abr: { autoSwitchBitrate: { video: true } },
+        },
+      });
+      player.initialize(video, mpdUrl, false); /* false = no autoplay until visible */
+      observer.observe(block);
+    },
+  );
+};
+
 const loadEmbed = (block, link, autoplay) => {
   if (block.classList.contains('embed-is-loaded')) {
     return;
@@ -95,6 +138,20 @@ export default function decorate(block) {
   block.textContent = '';
 
   if (!link) return;
+
+  /* MPEG-DASH .mpd — use dash.js for full-bleed video background */
+  if (link.endsWith('.mpd')) {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        observer.disconnect();
+        embedDashVideo(block, link);
+      }
+    });
+    observer.observe(block);
+    /* Add class immediately so CSS can size the container */
+    block.classList.add('embed-dash-video');
+    return;
+  }
 
   if (placeholder) {
     const wrapper = document.createElement('div');

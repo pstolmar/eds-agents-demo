@@ -6,7 +6,7 @@
 
 .columns img {
   width: 100%;
-  border-radius: 8px;
+  border-radius: 0;
 }
 
 .columns > div > div {
@@ -22,28 +22,28 @@
 }
 
 .columns h2 {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 300;
   color: var(--text-color);
   margin: 0 0 12px;
 }
 
 .columns p {
-  color: #555;
-  line-height: 1.6;
+  color: var(--text-color);
+  line-height: 1.75;
 }
 
 .columns a.button:any-link {
-  border-radius: 24px;
-  padding: 10px 28px;
+  border-radius: 0;
+  padding: 12px 24px;
   font-weight: 600;
   font-size: 14px;
 }
 
-/* Card variant — elevated card with shadow and rounded corners */
+/* Card variant */
 .columns.columns-card {
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+  border-radius: 0;
+  box-shadow: none;
   overflow: hidden;
   max-width: 900px;
   margin: 32px auto;
@@ -71,27 +71,28 @@
 
 .columns.columns-card h2 {
   font-size: 22px;
-  color: #000;
+  color: var(--text-color);
 }
 
 .columns.columns-card p {
   font-size: 15px;
-  color: #000;
-  line-height: 1.5;
+  color: var(--text-color);
+  line-height: 1.75;
 }
 
 .columns.columns-card a.button:any-link {
-  background: #fff;
-  color: #2e2f32;
-  border: 1px solid #2e2f32;
-  border-radius: 30px;
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+  border-radius: 0;
   padding: 6px 24px;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .columns.columns-card a.button:any-link:hover {
-  background: #f0f0f0;
+  background: var(--text-color);
+  color: var(--background-color);
 }
 
 /* Card variant goes side-by-side earlier at 600px */

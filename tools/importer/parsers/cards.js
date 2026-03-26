@@ -3,46 +3,64 @@
 
 /**
  * Parser for cards block.
- * Base: cards. Source: corporate.walmart.com/suppliers/investing-in-american-jobs
- * Source selector: .article-list-3-0
- *
+ * Base: cards. Source: deloitte.com/us/en.html
+ * Source selector: .cmp-promo-container--single-row-multi-columns
  * Source DOM structure:
- *   .article-list-3-0
- *     .card-layout
- *       .card-item
+ *   .cmp-promo-container--single-row-multi-columns
+ *     .cmp-title > .cmp-title__text (h3 "The latest from Deloitte")
+ *     .cmp-promo-container__content
+ *       .cmp-promo-container__content-item (per card)
  *         a[href]
- *           .card-item-container
- *             .card-item-image > img.lazy-image[data-src]
- *             .card-item-content
- *               .card-item-text-date > .formatted-date
- *               .card-item-text-title > h6
- *               .card-item-text-body > p
+ *           .cmp-promo__content
+ *             .cmp-promo__content__title (h3 title)
+ *             .cmp-promo__content__desc (p description)
+ *             .cmp-promo__content-type__read-time (tag e.g. "Perspective", "Article")
+ *           img (card image)
  *
  * Block library structure (cards):
  * Each row = 1 card with 2 cells: [image, content]
- * Content cell: p strong title + p description + optional CTA link
+ * Content cell: strong title + p description + optional CTA link
  */
 export default function parse(element, { document }) {
-  const cardItems = element.querySelectorAll('.card-item');
+  const cardItems = element.querySelectorAll('.cmp-promo-container__content-item, .cmp-promo--featured-primary, .cmp-promo--standard');
   const cells = [];
+
+  // Deduplicate cards by href, preferring items that have images
+  const cardMap = new Map();
+  const cardOrder = [];
 
   cardItems.forEach((item) => {
     const link = item.querySelector('a[href]');
+    const href = link ? link.getAttribute('href') : null;
     const img = item.querySelector('img');
-    const titleEl = item.querySelector('h6, .card-item-text-title');
-    const bodyEl = item.querySelector('.card-item-text-body p, .card-item-text-body');
+
+    if (href && cardMap.has(href)) {
+      // Replace with this version if it has an image and the existing one doesn't
+      if (img && !cardMap.get(href).querySelector('img')) {
+        cardMap.set(href, item);
+      }
+      return;
+    }
+
+    const key = href || `item-${cardMap.size}`;
+    cardMap.set(key, item);
+    cardOrder.push(key);
+  });
+
+  cardOrder.forEach((key) => {
+    const item = cardMap.get(key);
+    if (!item) return;
+
+    const link = item.querySelector('a[href]');
+    const img = item.querySelector('img.fluidimage, img.js-image-rendition, img:not(.cmp-co-branding-img)');
+    const titleEl = item.querySelector('.cmp-promo__content__title, h3');
+    const descEl = item.querySelector('.cmp-promo__content__desc, .cmp-promo__content__description, p');
+    const tagEl = item.querySelector('.cmp-promo__content-type__read-time, .cmp-promo__content-type');
 
     // Image cell
     const imageCell = [];
     if (img) {
-      const newImg = document.createElement('img');
-      let src = img.getAttribute('data-src') || img.getAttribute('src') || '';
-      if (src.startsWith('/')) {
-        src = `https://corporate.walmart.com${src}`;
-      }
-      newImg.src = src;
-      newImg.alt = img.getAttribute('alt') || '';
-      imageCell.push(newImg);
+      imageCell.push(img);
     }
 
     // Content cell
@@ -56,16 +74,16 @@ export default function parse(element, { document }) {
       contentCell.push(titleP);
     }
 
-    if (bodyEl && bodyEl.textContent.trim()) {
+    if (descEl && descEl.textContent.trim()) {
       const p = document.createElement('p');
-      p.textContent = bodyEl.textContent.trim();
+      p.textContent = descEl.textContent.trim();
       contentCell.push(p);
     }
 
     if (link && link.getAttribute('href')) {
       const a = document.createElement('a');
       a.href = link.getAttribute('href');
-      a.textContent = titleEl ? titleEl.textContent.trim() : 'Read More';
+      a.textContent = titleEl ? titleEl.textContent.trim() : 'Read more';
       contentCell.push(a);
     }
 

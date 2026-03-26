@@ -1,4 +1,9 @@
 /* stylelint-disable max-line-length */
+
+/* Open Sans - Deloitte primary font */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+/* Roboto fallback for existing pages */
 @font-face {
   font-family: roboto-condensed;
   font-style: normal;
