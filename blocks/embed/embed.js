@@ -134,7 +134,10 @@ const loadEmbed = (block, link, autoplay) => {
 
 export default function decorate(block) {
   const placeholder = block.querySelector('picture');
-  const link = block.querySelector('a')?.href;
+  const anchor = block.querySelector('a');
+  /* Prefer textContent — AEM CDN rewrites href but preserves display text */
+  const rawText = anchor?.textContent?.trim();
+  const link = (rawText && /^https?:\/\//.test(rawText)) ? rawText : anchor?.href;
   block.textContent = '';
 
   if (!link) return;

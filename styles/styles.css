@@ -323,9 +323,13 @@ main .section.hero-container .hero-wrapper {
   padding: 0;
 }
 
-main .section.embed-container {
+main .section.hero-container ~ .section {
   position: relative;
   z-index: 1;
+  background: var(--background-color);
+}
+
+main .section.embed-container {
   padding: 0;
 }
 

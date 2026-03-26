@@ -1,75 +1,40 @@
-function updateActiveSlide(slide) {
-  const block = slide.closest('.carousel');
-  const slideIndex = parseInt(slide.dataset.slideIndex, 10);
-
-  block.dataset.activeSlide = slideIndex;
-
+function updateActiveSlide(block, slideIndex) {
   const slides = block.querySelectorAll('.carousel-slide');
+  const total = slides.length;
+  let idx = slideIndex;
 
-  slides.forEach((aSlide, idx) => {
-    aSlide.setAttribute('aria-hidden', idx !== slideIndex);
-    aSlide.querySelectorAll('a').forEach((link) => {
-      if (idx !== slideIndex) {
-        link.setAttribute('tabindex', '-1');
-      } else {
-        link.removeAttribute('tabindex');
-      }
+  if (idx < 0) idx = total - 1;
+  else if (idx >= total) idx = 0;
+
+  block.dataset.activeSlide = idx;
+
+  slides.forEach((slide, i) => {
+    const isActive = i === idx;
+    slide.setAttribute('aria-hidden', !isActive);
+    slide.querySelectorAll('a').forEach((link) => {
+      if (!isActive) link.setAttribute('tabindex', '-1');
+      else link.removeAttribute('tabindex');
     });
   });
 
-  const indicators = block.querySelectorAll('.carousel-slide-indicator');
-  indicators.forEach((indicator, idx) => {
-    if (idx !== slideIndex) {
-      indicator.querySelector('button').removeAttribute('disabled');
-    } else {
-      indicator.querySelector('button').setAttribute('disabled', 'true');
-    }
-  });
-}
+  /* Update fraction pagination */
+  const fraction = block.querySelector('.carousel-fraction');
+  if (fraction) fraction.textContent = `${idx + 1} / ${total}`;
 
-function showSlide(block, slideIndex) {
-  const slides = block.querySelectorAll('.carousel-slide');
-  let realSlideIndex = slideIndex;
-  if (slideIndex < 0) {
-    realSlideIndex = slides.length - 1;
-  } else if (slideIndex >= slides.length) {
-    realSlideIndex = 0;
-  }
-  const activeSlide = slides[realSlideIndex];
-  activeSlide.querySelectorAll('a').forEach((link) => link.removeAttribute('tabindex'));
-  block.querySelector('.carousel-slides').scrollTo({
-    top: 0,
-    left: activeSlide.offsetLeft,
-    behavior: 'smooth',
-  });
+  /* Update scrollbar progress */
+  const drag = block.querySelector('.carousel-scrollbar-drag');
+  if (drag) drag.style.width = `${((idx + 1) / total) * 100}%`;
 }
 
 function bindEvents(block) {
-  const slideIndicators = block.querySelector('.carousel-slide-indicators');
-  if (!slideIndicators) return;
-
-  slideIndicators.querySelectorAll('button').forEach((button) => {
-    button.addEventListener('click', (e) => {
-      const slideIndicator = e.currentTarget.parentElement;
-      showSlide(block, parseInt(slideIndicator.dataset.targetSlide, 10));
-    });
+  block.querySelector('.slide-prev')?.addEventListener('click', () => {
+    const current = parseInt(block.dataset.activeSlide, 10);
+    updateActiveSlide(block, current - 1);
   });
 
-  block.querySelector('.slide-prev').addEventListener('click', () => {
-    showSlide(block, parseInt(block.dataset.activeSlide, 10) - 1);
-  });
-  block.querySelector('.slide-next').addEventListener('click', () => {
-    showSlide(block, parseInt(block.dataset.activeSlide, 10) + 1);
-  });
-
-  const slideObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) updateActiveSlide(entry.target);
-    });
-  }, { threshold: 0.5 });
-
-  block.querySelectorAll('.carousel-slide').forEach((slide) => {
-    slideObserver.observe(slide);
+  block.querySelector('.slide-next')?.addEventListener('click', () => {
+    const current = parseInt(block.dataset.activeSlide, 10);
+    updateActiveSlide(block, current + 1);
   });
 }
 
@@ -100,9 +65,6 @@ export default async function decorate(block) {
   const rows = block.querySelectorAll(':scope > div');
   const isSingleSlide = rows.length < 2;
 
-  const placeholderPrev = 'Previous';
-  const placeholderNext = 'Next';
-
   block.setAttribute('role', 'region');
   block.setAttribute('aria-roledescription', 'Carousel');
 
@@ -111,37 +73,10 @@ export default async function decorate(block) {
 
   const slidesWrapper = document.createElement('ul');
   slidesWrapper.classList.add('carousel-slides');
-  block.prepend(slidesWrapper);
-
-  let slideIndicators;
-  if (!isSingleSlide) {
-    const slideIndicatorsNav = document.createElement('nav');
-    slideIndicatorsNav.setAttribute('aria-label', 'Carousel Slide Controls');
-    slideIndicators = document.createElement('ol');
-    slideIndicators.classList.add('carousel-slide-indicators');
-    slideIndicatorsNav.append(slideIndicators);
-    block.append(slideIndicatorsNav);
-
-    const slideNavButtons = document.createElement('div');
-    slideNavButtons.classList.add('carousel-navigation-buttons');
-    slideNavButtons.innerHTML = `
-      <button type="button" class="slide-prev" aria-label="${placeholderPrev}"></button>
-      <button type="button" class="slide-next" aria-label="${placeholderNext}"></button>
-    `;
-    container.append(slideNavButtons);
-  }
 
   rows.forEach((row, idx) => {
     const slide = createSlide(row, idx, carouselId);
     slidesWrapper.append(slide);
-
-    if (slideIndicators) {
-      const indicator = document.createElement('li');
-      indicator.classList.add('carousel-slide-indicator');
-      indicator.dataset.targetSlide = idx;
-      indicator.innerHTML = `<button type="button"><span>Show Slide ${idx + 1} of ${rows.length}</span></button>`;
-      slideIndicators.append(indicator);
-    }
     row.remove();
   });
 
@@ -149,6 +84,35 @@ export default async function decorate(block) {
   block.prepend(container);
 
   if (!isSingleSlide) {
+    /* Build modern controls bar: scrollbar + prev/next + fraction */
+    const controls = document.createElement('div');
+    controls.classList.add('carousel-controls');
+
+    const scrollbar = document.createElement('div');
+    scrollbar.classList.add('carousel-scrollbar');
+    const drag = document.createElement('div');
+    drag.classList.add('carousel-scrollbar-drag');
+    scrollbar.append(drag);
+
+    const prevBtn = document.createElement('button');
+    prevBtn.type = 'button';
+    prevBtn.classList.add('slide-prev');
+    prevBtn.setAttribute('aria-label', 'Previous');
+
+    const fraction = document.createElement('span');
+    fraction.classList.add('carousel-fraction');
+
+    const nextBtn = document.createElement('button');
+    nextBtn.type = 'button';
+    nextBtn.classList.add('slide-next');
+    nextBtn.setAttribute('aria-label', 'Next');
+
+    controls.append(scrollbar, prevBtn, fraction, nextBtn);
+    block.append(controls);
+
     bindEvents(block);
   }
+
+  /* Set first slide as active */
+  updateActiveSlide(block, 0);
 }

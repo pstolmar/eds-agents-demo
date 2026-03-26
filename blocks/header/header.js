@@ -218,9 +218,192 @@ function buildSearch(nav) {
 }
 
 /**
- * loads and decorates the header, mainly the nav
- * @param {Element} block The header block element
+ * Rebuilds nav DOM with Deloitte structure (brand, sections, tools)
  */
+function rebuildDeloitteNav(nav) {
+  const brand = nav.querySelector('.nav-brand');
+  const sections = nav.querySelector('.nav-sections');
+  const tools = nav.querySelector('.nav-tools');
+
+  /* Brand: Deloitte SVG logo */
+  if (brand) {
+    brand.innerHTML = '<p><a href="/test/deloitte/us/en/">Deloitte</a></p>';
+  }
+
+  /* Sections: primary nav items with sub-links */
+  if (sections) {
+    sections.innerHTML = `<div class="default-content-wrapper"><ul>
+      <li><p>Who we are</p><ul>
+        <li><a href="#">About Deloitte</a></li>
+        <li><a href="#">Our shared values</a></li>
+        <li><a href="#">Facts &amp; figures</a></li>
+        <li><a href="#">Governance</a></li>
+        <li><a href="#">Newsroom</a></li>
+        <li><a href="#">Contact us</a></li>
+      </ul></li>
+      <li><p>What we do</p><ul>
+        <li><a href="#">AI &amp; Engineering</a></li>
+        <li><a href="#">Audit &amp; Assurance</a></li>
+        <li><a href="#">Consulting</a></li>
+        <li><a href="#">Financial Advisory</a></li>
+        <li><a href="#">Risk Advisory</a></li>
+        <li><a href="#">Tax &amp; Legal</a></li>
+        <li><a href="#">Case Studies</a></li>
+        <li><a href="#">All Services</a></li>
+      </ul></li>
+      <li><p>Our Thinking</p><ul>
+        <li><a href="#">Deloitte Insights</a></li>
+        <li><a href="#">Industry research</a></li>
+        <li><a href="#">Dbriefs webcasts</a></li>
+        <li><a href="#">Tech Trends 2026</a></li>
+        <li><a href="#">TMT Predictions</a></li>
+        <li><a href="#">CFO Insights</a></li>
+      </ul></li>
+      <li><p>Careers</p><ul>
+        <li><a href="#">Job search</a></li>
+        <li><a href="#">Students &amp; early careers</a></li>
+        <li><a href="#">Experienced professionals</a></li>
+        <li><a href="#">Life at Deloitte</a></li>
+        <li><a href="#">Alumni</a></li>
+      </ul></li>
+    </ul></div>`;
+
+    /* Re-apply nav-drop + event listeners */
+    sections.querySelectorAll('.default-content-wrapper > ul > li').forEach((item) => {
+      if (item.querySelector('ul')) {
+        item.classList.add('nav-drop');
+        item.setAttribute('aria-expanded', 'false');
+        item.addEventListener('mouseenter', () => {
+          if (isDesktop.matches) {
+            sections.querySelectorAll('.nav-drop').forEach((d) => {
+              d.setAttribute('aria-expanded', 'false');
+              delete d.dataset.locked;
+            });
+            item.setAttribute('aria-expanded', 'true');
+          }
+        });
+        item.addEventListener('mouseleave', () => {
+          if (isDesktop.matches && item.dataset.locked !== 'true') {
+            item.setAttribute('aria-expanded', 'false');
+          }
+        });
+        item.addEventListener('click', () => {
+          if (isDesktop.matches) {
+            const isLocked = item.dataset.locked === 'true';
+            sections.querySelectorAll('.nav-drop').forEach((d) => delete d.dataset.locked);
+            if (isLocked) {
+              item.setAttribute('aria-expanded', 'false');
+            } else {
+              sections.querySelectorAll('.nav-drop').forEach((d) => d.setAttribute('aria-expanded', 'false'));
+              item.setAttribute('aria-expanded', 'true');
+              item.dataset.locked = 'true';
+            }
+          }
+        });
+      }
+    });
+  }
+
+  /* Tools: placeholder for icons (built by decorateDeloitteNav) */
+  if (tools) {
+    tools.innerHTML = '';
+  }
+
+  /* Close dropdowns when clicking outside */
+  document.addEventListener('click', (e) => {
+    if (isDesktop.matches && !nav.contains(e.target)) {
+      sections?.querySelectorAll('.nav-drop').forEach((d) => {
+        d.setAttribute('aria-expanded', 'false');
+        delete d.dataset.locked;
+      });
+    }
+  });
+}
+
+/**
+ * Decorates the Deloitte-specific nav with logo, mega-menu, and toolbar icons
+ */
+function decorateDeloitteNav(nav) {
+  /* Replace brand text with SVG logo */
+  const brand = nav.querySelector('.nav-brand');
+  if (brand) {
+    const brandLink = brand.querySelector('a');
+    if (brandLink) {
+      const img = document.createElement('img');
+      img.src = '/icons/deloitte-logo.svg';
+      img.alt = 'Deloitte';
+      img.width = 100;
+      img.height = 19;
+      img.loading = 'eager';
+      brandLink.textContent = '';
+      brandLink.appendChild(img);
+    }
+  }
+
+  /* Build Deloitte toolbar icons */
+  const tools = nav.querySelector('.nav-tools');
+  if (tools) {
+    tools.innerHTML = '';
+
+    const icons = [
+      { label: 'Search', cls: 'dt-search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10.5" cy="10.5" r="7"/><path d="m15.5 15.5 5 5"/></svg>' },
+      { label: 'US - EN', cls: 'dt-globe', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><ellipse cx="12" cy="12" rx="4" ry="10"/></svg>' },
+      { label: 'Contact', cls: 'dt-contact', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>' },
+      { label: 'My Deloitte', cls: 'dt-profile', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>' },
+    ];
+
+    icons.forEach(({ label, cls, svg }) => {
+      const btn = document.createElement('button');
+      btn.className = `dt-tool-btn ${cls}`;
+      btn.setAttribute('aria-label', label);
+      btn.innerHTML = svg;
+      if (cls === 'dt-globe') {
+        const span = document.createElement('span');
+        span.className = 'dt-locale-label';
+        span.textContent = 'US';
+        btn.appendChild(span);
+      }
+      tools.appendChild(btn);
+    });
+  }
+
+  /* Wire up mega-menu panel animation */
+  const navSections = nav.querySelector('.nav-sections');
+  if (navSections) {
+    const items = navSections.querySelectorAll('.default-content-wrapper > ul > li');
+    items.forEach((item) => {
+      const subUl = item.querySelector('ul');
+      if (!subUl) return;
+
+      /* Wrap sub-ul in a mega-menu panel for animation */
+      const panel = document.createElement('div');
+      panel.className = 'dt-mega-panel';
+      /* Organise links into columns */
+      const links = subUl.querySelectorAll('a');
+      const colWrap = document.createElement('div');
+      colWrap.className = 'dt-mega-links';
+      links.forEach((a) => {
+        const linkItem = document.createElement('a');
+        linkItem.href = a.href;
+        linkItem.textContent = a.textContent;
+        colWrap.appendChild(linkItem);
+      });
+      panel.appendChild(colWrap);
+
+      subUl.replaceWith(panel);
+
+      /* Add chevron icon */
+      const trigger = item.querySelector('p') || item.querySelector('a');
+      if (trigger && !trigger.querySelector('.dt-chevron')) {
+        const chevron = document.createElement('span');
+        chevron.className = 'dt-chevron';
+        chevron.innerHTML = '<svg viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m1 1.5 5 5 5-5"/></svg>';
+        trigger.appendChild(chevron);
+      }
+    });
+  }
+}
+
 /**
  * Decorates a nav element from a fragment
  */
@@ -315,6 +498,8 @@ export default async function decorate(block) {
   const { pathname } = window.location;
   const isWmEds2 = pathname.includes('/wm-eds/2/') || pathname.includes('media-library');
 
+  const isDeloitte = pathname.includes('/test/deloitte/');
+
   let navPath;
   if (navMeta) {
     navPath = new URL(navMeta, window.location).pathname;
@@ -335,22 +520,29 @@ export default async function decorate(block) {
   block.textContent = '';
 
   const nav = decorateNav(fragment, 'nav');
-  buildSearch(nav);
-
-  /* Add Shop link next to search (matches source nav) */
-  const mainTools = nav.querySelector('.nav-tools');
-  if (mainTools) {
-    const shopLink = document.createElement('a');
-    shopLink.href = 'https://www.walmart.com/';
-    shopLink.target = '_blank';
-    shopLink.rel = 'noopener';
-    shopLink.className = 'nav-shop-link';
-    shopLink.textContent = 'Shop';
-    mainTools.append(shopLink);
-  }
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
+
+  if (isDeloitte) {
+    navWrapper.classList.add('deloitte-nav');
+    rebuildDeloitteNav(nav);
+    decorateDeloitteNav(nav);
+  } else {
+    buildSearch(nav);
+    /* Add Shop link next to search (matches source nav) */
+    const mainTools = nav.querySelector('.nav-tools');
+    if (mainTools) {
+      const shopLink = document.createElement('a');
+      shopLink.href = 'https://www.walmart.com/';
+      shopLink.target = '_blank';
+      shopLink.rel = 'noopener';
+      shopLink.className = 'nav-shop-link';
+      shopLink.textContent = 'Shop';
+      mainTools.append(shopLink);
+    }
+  }
+
   navWrapper.append(nav);
   block.append(navWrapper);
 

@@ -701,3 +701,227 @@ header .sub-nav-wrapper nav .nav-brand a:any-link:hover {
     color: #0071dc;
   }
 }
+
+/* ── Deloitte Nav ── */
+.deloitte-nav {
+  background: #000;
+}
+
+.deloitte-nav nav {
+  background: #000;
+  max-width: 1400px;
+  padding: 0 56px;
+}
+
+/* Brand — SVG logo */
+header .deloitte-nav .nav-brand {
+  flex-basis: auto;
+}
+
+/* stylelint-disable-next-line no-descending-specificity -- scoped to .deloitte-nav, never matches .nav-brand:hover */
+header .deloitte-nav .nav-brand a:any-link {
+  display: flex;
+  align-items: center;
+}
+
+/* stylelint-disable-next-line no-descending-specificity -- scoped to .deloitte-nav, never matches .icon-walmart-spark img */
+header .deloitte-nav .nav-brand img {
+  width: 100px;
+  height: auto;
+}
+
+/* stylelint-disable no-descending-specificity -- Deloitte nav is scoped to .deloitte-nav, never matches .sub-nav or .nav-wrapper selectors */
+
+/* Primary nav links */
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > a,
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > p {
+  color: #d0d0ce;
+  font-size: 14px;
+  font-weight: 400;
+  position: relative;
+}
+
+/* Green underline animation on hover */
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > p::after,
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: #43b02a;
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li:hover > p::after,
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li:hover > a::after,
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > p::after,
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > a::after {
+  transform: scaleX(1);
+}
+
+/* Active state — green text */
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > p,
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > a {
+  color: #86bc25;
+}
+
+/* Chevron icon */
+.dt-chevron {
+  display: inline-flex;
+  width: 12px;
+  height: 8px;
+  margin-left: 6px;
+  vertical-align: middle;
+  transition: transform 0.3s ease;
+}
+
+.dt-chevron svg {
+  width: 100%;
+  height: 100%;
+}
+
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] .dt-chevron {
+  transform: rotate(-180deg);
+  color: #86bc25;
+}
+
+/* Mega-menu panel — slides down from header */
+@media (width >= 900px) {
+  header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-mega-panel {
+    position: fixed;
+    left: 0;
+    top: var(--nav-height);
+    width: 100vw;
+    background: #121212;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 8px 32px rgb(0 0 0 / 40%);
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    visibility: hidden;
+    transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > .dt-mega-panel {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  /* Links column layout inside the panel */
+  .dt-mega-links {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 56px;
+    display: flex;
+    flex-flow: column wrap;
+    max-height: 320px;
+    gap: 0 48px;
+  }
+
+  .dt-mega-links a {
+    display: block;
+    padding: 10px 0;
+    color: #d0d0ce;
+    font-size: 16px;
+    font-weight: 300;
+    text-decoration: none;
+    background-image: linear-gradient(#43b02a, #43b02a);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition: background-size 0.4s ease, color 0.2s ease;
+  }
+
+  .dt-mega-links a:hover {
+    color: #fff;
+    background-size: 100% 1px;
+  }
+}
+
+/* Deloitte toolbar icons */
+.deloitte-nav .nav-tools {
+  gap: 4px;
+}
+
+.dt-tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #d0d0ce;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dt-tool-btn:hover {
+  background: rgb(255 255 255 / 12%);
+  color: #fff;
+}
+
+.dt-tool-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.dt-globe {
+  width: auto;
+  padding: 0 8px;
+  border-radius: 16px;
+}
+
+.dt-locale-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Hide boilerplate chevron — Deloitte uses its own .dt-chevron */
+header .deloitte-nav nav .nav-sections .nav-drop::after {
+  display: none;
+}
+
+/* Hamburger & sections color in Deloitte nav */
+header .deloitte-nav nav .nav-hamburger button {
+  color: #d0d0ce;
+}
+
+header .deloitte-nav nav .nav-sections ul > li {
+  color: #d0d0ce;
+}
+
+/* Mobile dropdown override */
+header .deloitte-nav nav[aria-expanded='true'] .nav-sections {
+  background: #121212;
+}
+
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-mega-panel {
+  background: #1a1a1a;
+  padding: 12px 0;
+}
+
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-mega-panel a {
+  display: block;
+  padding: 8px 16px;
+  color: #d0d0ce;
+  font-size: 14px;
+  font-weight: 300;
+  text-decoration: none;
+}
+
+header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-mega-panel a:hover {
+  color: #86bc25;
+}
