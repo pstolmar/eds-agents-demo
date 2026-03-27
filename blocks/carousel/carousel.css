@@ -60,7 +60,7 @@
 .carousel-slide-content {
   padding: 16px 0;
   text-align: left;
-  color: var(--text-color);
+  color: inherit;
 }
 
 .carousel-slide-content h1,
@@ -113,7 +113,7 @@
   flex: 1;
   height: 4px;
   border-radius: 10px;
-  background: rgb(0 0 0 / 10%);
+  background: rgb(255 255 255 / 15%);
   overflow: hidden;
 }
 
@@ -135,7 +135,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-color);
+  color: inherit;
   position: relative;
   transition: color 0.2s ease;
 }
@@ -180,7 +180,7 @@
 .carousel-fraction {
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-color);
+  color: inherit;
   min-width: 40px;
   text-align: center;
   opacity: 0.7;

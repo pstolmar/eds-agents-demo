@@ -9,6 +9,11 @@ export default function decorate(block) {
     block.prepend(picture);
   }
 
+  /* Light variant when no background image or video is present */
+  if (!block.querySelector('img') && !block.querySelector('video')) {
+    block.classList.add('hero-light');
+  }
+
   const links = block.querySelectorAll('a');
   links.forEach((link) => {
     const { href } = link;

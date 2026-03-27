@@ -95,7 +95,7 @@ const embedDashVideo = (block, mpdUrl) => {
           abr: { autoSwitchBitrate: { video: true } },
         },
       });
-      player.initialize(video, mpdUrl, false); /* false = no autoplay until visible */
+      player.initialize(video, mpdUrl, true); /* autoplay — muted video plays immediately */
       observer.observe(block);
     },
   );
@@ -144,15 +144,9 @@ export default function decorate(block) {
 
   /* MPEG-DASH .mpd — use dash.js for full-bleed video background */
   if (link.endsWith('.mpd')) {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        observer.disconnect();
-        embedDashVideo(block, link);
-      }
-    });
-    observer.observe(block);
-    /* Add class immediately so CSS can size the container */
     block.classList.add('embed-dash-video');
+    /* Load eagerly — hero-adjacent videos should buffer immediately */
+    embedDashVideo(block, link);
     return;
   }
 
