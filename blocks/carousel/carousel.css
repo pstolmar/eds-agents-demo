@@ -156,7 +156,9 @@
 
 .carousel-controls button svg {
   width: 20px;
+  min-width: 20px;
   height: 20px;
+  flex-shrink: 0;
   position: relative;
   z-index: 1;
   pointer-events: none;

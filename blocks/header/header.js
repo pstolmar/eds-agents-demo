@@ -391,6 +391,37 @@ function decorateDeloitteNav(nav) {
       });
       panel.appendChild(colWrap);
 
+      /* Add featured right-side content for select panels */
+      const label = (item.querySelector('p') || item.querySelector('a'))?.textContent?.trim();
+      const featured = document.createElement('div');
+      featured.className = 'dt-mega-featured';
+      if (label === 'What we do') {
+        featured.innerHTML = `<div class="dt-featured-card">
+          <h4>Industries</h4>
+          <a href="#">Consumer</a><a href="#">Energy, Resources &amp; Industrials</a>
+          <a href="#">Financial Services</a><a href="#">Government &amp; Public Services</a>
+          <a href="#">Life Sciences &amp; Health Care</a><a href="#">Technology, Media &amp; Telecom</a>
+        </div>`;
+        panel.appendChild(featured);
+      } else if (label === 'Our Thinking') {
+        featured.innerHTML = `<div class="dt-featured-card">
+          <h4>Featured</h4>
+          <a href="/content/test/deloitte/us/en/insights/index">2026 Global Human Capital Trends</a>
+          <a href="/content/test/deloitte/us/en/insights/index">Tech Trends 2026</a>
+          <a href="/content/test/deloitte/us/en/insights/index">2026 Industry Outlooks</a>
+          <a href="/content/test/deloitte/us/en/dbriefs-webcasts/upcoming-webcasts/index">Upcoming Dbriefs</a>
+        </div>`;
+        panel.appendChild(featured);
+      } else if (label === 'Careers') {
+        featured.innerHTML = `<div class="dt-featured-card">
+          <h4>Explore</h4>
+          <a href="#">Why Deloitte</a>
+          <a href="#">Benefits &amp; Well-being</a>
+          <a href="#">Inclusion &amp; Diversity</a>
+        </div>`;
+        panel.appendChild(featured);
+      }
+
       subUl.replaceWith(panel);
 
       /* Add chevron icon */

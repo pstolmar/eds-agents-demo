@@ -855,6 +855,49 @@ header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-e
     color: #fff;
     background-size: 100% 1px;
   }
+
+  /* Featured right-side panel inside mega-menu */
+  .dt-mega-featured {
+    border-left: 1px solid rgb(255 255 255 / 10%);
+    padding: 40px 48px;
+    min-width: 260px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+  }
+
+  header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] .dt-mega-featured {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .dt-mega-panel {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .dt-featured-card h4 {
+    color: #86bc25;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 16px;
+  }
+
+  .dt-featured-card a {
+    display: block;
+    padding: 6px 0;
+    color: #d0d0ce;
+    font-size: 14px;
+    font-weight: 300;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .dt-featured-card a:hover {
+    color: #fff;
+  }
 }
 
 /* Deloitte toolbar icons */

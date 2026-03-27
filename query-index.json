@@ -203,8 +203,29 @@
       "date": "",
       "description": "This page contains restricted content that requires Single Sign-On authentication to access. Only authorized Walmart associates with valid SAML credentials can view this information.",
       "image": ""
+    },
+    {
+      "path": "/test/deloitte/us/en/",
+      "title": "Deloitte US | Together Makes Progress",
+      "date": "",
+      "description": "Discover industry insights and audit, tax, and consulting services that drive impact from Deloitte's global network of member firms.",
+      "image": "/images/deloitte/deloitte-og.jpg"
+    },
+    {
+      "path": "/test/deloitte/us/en/insights/",
+      "title": "Deloitte Insights",
+      "date": "",
+      "description": "Helping future-focused leaders navigate what's next. Deloitte Insights and our research centers deliver proprietary research designed to help organizations turn their aspirations into action.",
+      "image": "/images/deloitte/insights-top10.jpg"
+    },
+    {
+      "path": "/test/deloitte/us/en/dbriefs-webcasts/upcoming-webcasts/",
+      "title": "Upcoming Dbriefs webcasts | Deloitte US",
+      "date": "",
+      "description": "Get valuable insights on the important developments that affect your business. Our Dbriefs deliver practical knowledge from Deloitte specialists plus CPE credits.",
+      "image": "/images/deloitte/dbriefs-hero.jpg"
     }
   ],
-  "total": 29,
+  "total": 32,
   ":type": "sheet"
 }
