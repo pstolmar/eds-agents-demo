@@ -132,7 +132,7 @@ function buildDeloitteFooter() {
 
   const copyright = document.createElement('p');
   copyright.classList.add('dt-copyright');
-  copyright.innerHTML = `&copy; 2026. See <a href="/us/en/legal/legal.html">Terms of Use</a> for more information.`;
+  copyright.innerHTML = '&copy; 2026. See <a href="/us/en/legal/legal.html">Terms of Use</a> for more information.';
 
   const disclaimer = document.createElement('p');
   disclaimer.classList.add('dt-disclaimer');
