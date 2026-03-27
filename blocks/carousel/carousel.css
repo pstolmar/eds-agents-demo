@@ -154,26 +154,16 @@
   opacity: 0.08;
 }
 
-.carousel-controls .slide-prev::after {
-  content: '';
-  width: 10px;
-  height: 10px;
-  border-left: 2px solid currentcolor;
-  border-bottom: 2px solid currentcolor;
-  transform: rotate(45deg) translateX(2px);
+.carousel-controls button svg {
+  width: 20px;
+  height: 20px;
   position: relative;
   z-index: 1;
+  pointer-events: none;
 }
 
-.carousel-controls .slide-next::after {
-  content: '';
-  width: 10px;
-  height: 10px;
-  border-right: 2px solid currentcolor;
-  border-top: 2px solid currentcolor;
-  transform: rotate(45deg) translateX(-2px);
-  position: relative;
-  z-index: 1;
+.carousel-controls .slide-next svg {
+  transform: rotate(180deg);
 }
 
 /* Fraction pagination: "1 / 3" */

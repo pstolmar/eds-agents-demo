@@ -837,7 +837,18 @@ header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-e
     background-position: 0 100%;
     background-repeat: no-repeat;
     background-size: 0% 1px;
-    transition: background-size 0.4s ease, color 0.2s ease;
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.35s ease calc(var(--i, 0) * 0.04s + 0.12s),
+      transform 0.35s ease calc(var(--i, 0) * 0.04s + 0.12s),
+      background-size 0.4s ease,
+      color 0.2s ease;
+  }
+
+  header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] .dt-mega-links a {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .dt-mega-links a:hover {

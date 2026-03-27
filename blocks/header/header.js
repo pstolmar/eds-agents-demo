@@ -252,9 +252,9 @@ function rebuildDeloitteNav(nav) {
         <li><a href="#">All Services</a></li>
       </ul></li>
       <li><p>Our Thinking</p><ul>
-        <li><a href="#">Deloitte Insights</a></li>
+        <li><a href="/content/test/deloitte/us/en/insights/index">Deloitte Insights</a></li>
         <li><a href="#">Industry research</a></li>
-        <li><a href="#">Dbriefs webcasts</a></li>
+        <li><a href="/content/test/deloitte/us/en/dbriefs-webcasts/upcoming-webcasts/index">Dbriefs webcasts</a></li>
         <li><a href="#">Tech Trends 2026</a></li>
         <li><a href="#">TMT Predictions</a></li>
         <li><a href="#">CFO Insights</a></li>
@@ -382,10 +382,11 @@ function decorateDeloitteNav(nav) {
       const links = subUl.querySelectorAll('a');
       const colWrap = document.createElement('div');
       colWrap.className = 'dt-mega-links';
-      links.forEach((a) => {
+      links.forEach((a, i) => {
         const linkItem = document.createElement('a');
         linkItem.href = a.href;
         linkItem.textContent = a.textContent;
+        linkItem.style.setProperty('--i', i);
         colWrap.appendChild(linkItem);
       });
       panel.appendChild(colWrap);

@@ -94,10 +94,13 @@ export default async function decorate(block) {
     drag.classList.add('carousel-scrollbar-drag');
     scrollbar.append(drag);
 
+    const chevron = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 16L7 10L13 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
     const prevBtn = document.createElement('button');
     prevBtn.type = 'button';
     prevBtn.classList.add('slide-prev');
     prevBtn.setAttribute('aria-label', 'Previous');
+    prevBtn.innerHTML = chevron;
 
     const fraction = document.createElement('span');
     fraction.classList.add('carousel-fraction');
@@ -106,6 +109,7 @@ export default async function decorate(block) {
     nextBtn.type = 'button';
     nextBtn.classList.add('slide-next');
     nextBtn.setAttribute('aria-label', 'Next');
+    nextBtn.innerHTML = chevron;
 
     controls.append(scrollbar, prevBtn, fraction, nextBtn);
     block.append(controls);
