@@ -1,0 +1,244 @@
+/* ── Dbriefs Filter Block ── */
+.dbriefs-filter-container {
+  background: var(--background-color);
+}
+
+.dbriefs-filter-container .dbriefs-filter-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Filter Tabs ── */
+.dbriefs-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 2px solid #e5e5e5;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dbriefs-tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 12px 20px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #53565a;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  margin-bottom: -2px;
+}
+
+.dbriefs-tab:hover {
+  color: #000;
+}
+
+.dbriefs-tab.active {
+  color: #000;
+  font-weight: 600;
+  border-bottom-color: #86bc25;
+}
+
+/* ── Results Bar ── */
+.dbriefs-results-bar {
+  font-size: 14px;
+  color: #53565a;
+  margin-bottom: 24px;
+  padding: 0;
+}
+
+/* ── Card Grid ── */
+.dbriefs-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (width >= 600px) {
+  .dbriefs-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .dbriefs-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (width >= 1200px) {
+  .dbriefs-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ── Card ── */
+.dbriefs-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease;
+}
+
+.dbriefs-card:hover {
+  box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+}
+
+/* Card Image */
+.dbriefs-card-image {
+  position: relative;
+  line-height: 0;
+}
+
+.dbriefs-card-image img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.dbriefs-card-badge {
+  position: absolute;
+  bottom: 0;
+  right: 16px;
+  background: #86bc25;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 10px;
+  line-height: 1;
+}
+
+.dbriefs-badge-day {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.dbriefs-badge-month {
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+/* Card Body */
+.dbriefs-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.dbriefs-card-body h3 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0 0 8px;
+  color: #000;
+}
+
+.dbriefs-card-type {
+  font-size: 12px;
+  font-weight: 600;
+  color: #86bc25;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dbriefs-card-date {
+  font-size: 13px;
+  color: #53565a;
+  margin: 0 0 8px;
+}
+
+.dbriefs-card-desc {
+  font-size: 13px;
+  color: #53565a;
+  line-height: 1.5;
+  margin: 0 0 12px;
+  flex: 1;
+}
+
+/* Card Actions */
+.dbriefs-card-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.dbriefs-btn-register {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: #86bc25;
+  padding: 6px 16px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.dbriefs-btn-register:hover {
+  background: #6ea31e;
+}
+
+.dbriefs-btn-details {
+  font-size: 13px;
+  font-weight: 600;
+  color: #000;
+  text-decoration: none;
+  padding: 6px 0;
+  border-bottom: 1px solid #000;
+  transition: color 0.15s ease;
+}
+
+.dbriefs-btn-details:hover {
+  color: #86bc25;
+  border-bottom-color: #86bc25;
+}
+
+/* ── Show More ── */
+.dbriefs-show-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+  padding-bottom: 16px;
+}
+
+.dbriefs-show-more button {
+  padding: 10px 32px;
+  border: 2px solid #000;
+  background: transparent;
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.dbriefs-show-more button:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* ── Override button styling from global styles ── */
+.dbriefs-filter a.button:any-link {
+  border-radius: 0;
+}
+
+@media (width >= 900px) {
+  .dbriefs-filter-container .dbriefs-filter-wrapper {
+    padding: 0 56px;
+  }
+}
