@@ -252,9 +252,9 @@ function rebuildDeloitteNav(nav) {
         <li><a href="#">All Services</a></li>
       </ul></li>
       <li><p>Our Thinking</p><ul>
-        <li><a href="/content/test/deloitte/us/en/insights/index">Deloitte Insights</a></li>
-        <li><a href="#">Industry research</a></li>
-        <li><a href="/content/test/deloitte/us/en/dbriefs-webcasts/upcoming-webcasts/index">Dbriefs webcasts</a></li>
+        <li><a href="/test/deloitte/us/en/insights/">Deloitte Insights</a></li>
+        <li><a href="#" data-industry-trigger>Industry research</a></li>
+        <li><a href="/test/deloitte/us/en/dbriefs-webcasts/upcoming-webcasts/">Dbriefs webcasts</a></li>
         <li><a href="#">Tech Trends 2026</a></li>
         <li><a href="#">TMT Predictions</a></li>
         <li><a href="#">CFO Insights</a></li>
@@ -387,6 +387,10 @@ function decorateDeloitteNav(nav) {
         linkItem.href = a.href;
         linkItem.textContent = a.textContent;
         linkItem.style.setProperty('--i', i);
+        /* Preserve data attributes (e.g. data-industry-trigger) */
+        [...a.attributes].forEach((attr) => {
+          if (attr.name.startsWith('data-')) linkItem.setAttribute(attr.name, attr.value);
+        });
         colWrap.appendChild(linkItem);
       });
       panel.appendChild(colWrap);
@@ -406,10 +410,10 @@ function decorateDeloitteNav(nav) {
       } else if (label === 'Our Thinking') {
         featured.innerHTML = `<div class="dt-featured-card">
           <h4>Featured</h4>
-          <a href="/content/test/deloitte/us/en/insights/index">2026 Global Human Capital Trends</a>
-          <a href="/content/test/deloitte/us/en/insights/index">Tech Trends 2026</a>
-          <a href="/content/test/deloitte/us/en/insights/index">2026 Industry Outlooks</a>
-          <a href="/content/test/deloitte/us/en/dbriefs-webcasts/upcoming-webcasts/index">Upcoming Dbriefs</a>
+          <a href="/test/deloitte/us/en/insights/">2026 Global Human Capital Trends</a>
+          <a href="/test/deloitte/us/en/insights/">Tech Trends 2026</a>
+          <a href="/test/deloitte/us/en/insights/">2026 Industry Outlooks</a>
+          <a href="/test/deloitte/us/en/dbriefs-webcasts/upcoming-webcasts/">Upcoming Dbriefs</a>
         </div>`;
         panel.appendChild(featured);
       } else if (label === 'Careers') {
@@ -423,6 +427,36 @@ function decorateDeloitteNav(nav) {
       }
 
       subUl.replaceWith(panel);
+
+      /* Wire up "Industry research" expandable sub-links */
+      const industryTrigger = panel.querySelector('a[data-industry-trigger]');
+      if (industryTrigger) {
+        const industries = [
+          { name: 'Consumer', href: '#' },
+          { name: 'Energy, Resources & Industrials', href: '#' },
+          { name: 'Financial Services', href: '#' },
+          { name: 'Government & Public Services', href: '#' },
+          { name: 'Life Sciences & Health Care', href: '#' },
+          { name: 'Technology, Media & Telecom', href: '#' },
+        ];
+        const subList = document.createElement('div');
+        subList.className = 'dt-industry-sub';
+        industries.forEach((ind, idx) => {
+          const a = document.createElement('a');
+          a.href = ind.href;
+          a.textContent = ind.name;
+          a.style.setProperty('--j', idx);
+          subList.appendChild(a);
+        });
+        industryTrigger.parentElement.appendChild(subList);
+
+        industryTrigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const isOpen = subList.classList.toggle('open');
+          industryTrigger.classList.toggle('active', isOpen);
+        });
+      }
 
       /* Add chevron icon */
       const trigger = item.querySelector('p') || item.querySelector('a');

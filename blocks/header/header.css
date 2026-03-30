@@ -979,3 +979,69 @@ header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-
 header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-mega-panel a:hover {
   color: #86bc25;
 }
+
+/* Industry research expandable sub-links */
+.dt-industry-sub {
+  display: none;
+  flex-direction: column;
+  padding-left: 16px;
+  overflow: hidden;
+}
+
+.dt-industry-sub.open {
+  display: flex;
+}
+
+.dt-mega-links a[data-industry-trigger] {
+  position: relative;
+  padding-right: 24px;
+}
+
+.dt-mega-links a[data-industry-trigger]::after {
+  content: '+';
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  font-weight: 300;
+  color: #86bc25;
+  transition: transform 0.3s ease;
+}
+
+.dt-mega-links a[data-industry-trigger].active::after {
+  content: '\2212';
+}
+
+@media (width >= 900px) {
+  .dt-industry-sub {
+    padding-left: 24px;
+    margin-top: -4px;
+  }
+
+  .dt-industry-sub a {
+    display: block;
+    padding: 6px 0;
+    color: #999;
+    font-size: 14px;
+    font-weight: 300;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition:
+      opacity 0.3s ease calc(var(--j, 0) * 0.05s),
+      transform 0.3s ease calc(var(--j, 0) * 0.05s),
+      color 0.2s ease;
+  }
+
+  .dt-industry-sub.open a {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .dt-industry-sub a:hover {
+    color: #fff;
+  }
+}
+
+/* stylelint-enable no-descending-specificity */
