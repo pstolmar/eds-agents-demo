@@ -51,6 +51,104 @@
           ]
         }
       ]
+    },
+    {
+      "name": "deloitte-us-homepage",
+      "urls": [
+        "https://www.deloitte.com/us/en.html"
+      ],
+      "description": "Deloitte US homepage with hero, featured content sections, and promotional cards",
+      "blocks": [
+        {
+          "name": "hero",
+          "instances": [
+            ".cmp-cta__homepage-fixed"
+          ]
+        },
+        {
+          "name": "embed",
+          "instances": [
+            ".cmp-video__homepage"
+          ]
+        },
+        {
+          "name": "cards",
+          "instances": [
+            ".cmp-promo-container--single-row-multi-columns"
+          ]
+        },
+        {
+          "name": "carousel",
+          "instances": [
+            ".cmp-dual-slider"
+          ]
+        },
+        {
+          "name": "columns",
+          "instances": [
+            ".cmp-cta__standard-img--large"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "hero",
+          "name": "Hero Section",
+          "selector": ".cmp-cta__homepage-fixed",
+          "style": "dark",
+          "blocks": [
+            "hero"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "video",
+          "name": "Video Section",
+          "selector": ".cmp-video__homepage",
+          "style": "dark",
+          "blocks": [
+            "embed"
+          ],
+          "defaultContent": []
+        },
+        {
+          "id": "our-thinking",
+          "name": "Our Thinking Section",
+          "selector": ".cmp-promo-container--single-row-multi-columns",
+          "style": "light",
+          "blocks": [
+            "cards"
+          ],
+          "defaultContent": [
+            ".cmp-sticky-bar--homepage h3"
+          ]
+        },
+        {
+          "id": "our-work",
+          "name": "Our Work Section",
+          "selector": ".cmp-dual-slider",
+          "style": "dark",
+          "blocks": [
+            "carousel"
+          ],
+          "defaultContent": [
+            ".cmp-sticky-bar--homepage h3",
+            "a[href*='client-stories']"
+          ]
+        },
+        {
+          "id": "careers",
+          "name": "Careers Section",
+          "selector": ".cmp-cta__standard-img--large",
+          "style": null,
+          "blocks": [
+            "columns"
+          ],
+          "defaultContent": [
+            ".cmp-sticky-bar--homepage h3"
+          ]
+        }
+      ]
     }
   ]
 }

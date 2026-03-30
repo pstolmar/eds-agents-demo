@@ -3,35 +3,37 @@
 
 /**
  * Parser for embed block.
- * Base: embed. Source: corporate.walmart.com/suppliers/investing-in-american-jobs
- * Source selector: .video-2\.0
+ * Base: embed. Source: deloitte.com/us/en.html
+ * Source selector: .cmp-video__homepage
  * Source DOM structure:
- *   .video-2.0
- *     .video-component
- *       .video-wrapper
- *         iframe[src="https://player.vimeo.com/video/{id}?..."]
+ *   .cmp-video.cmp-video__homepage
+ *     .cmp-video__container-video
+ *       video > source[src="...mpd"]
+ *     .cmp-video__container-text
+ *       .cmp-title > .cmp-title__text (h2 heading)
+ *       .cmp-video__cta > a (CTA link)
  *
  * Block library structure (embed):
  * Single row with 1 cell containing a link to the video URL.
- * Vimeo player URLs are converted to clean vimeo.com URLs.
  */
 export default function parse(element, { document }) {
+  // Extract video source URL from video element or iframe
+  const videoSource = element.querySelector('video source');
   const iframe = element.querySelector('iframe');
-  if (!iframe) return;
+  let videoUrl = '';
 
-  let videoUrl = iframe.getAttribute('src') || '';
-
-  // Convert Vimeo player URL to clean URL
-  const vimeoMatch = videoUrl.match(/player\.vimeo\.com\/video\/(\d+)/);
-  if (vimeoMatch) {
-    videoUrl = `https://vimeo.com/${vimeoMatch[1]}`;
+  if (videoSource) {
+    videoUrl = videoSource.getAttribute('src') || '';
+  } else if (iframe) {
+    videoUrl = iframe.getAttribute('src') || '';
+    // Convert Vimeo/YouTube embed URLs
+    const vimeoMatch = videoUrl.match(/player\.vimeo\.com\/video\/(\d+)/);
+    const ytMatch = videoUrl.match(/youtube\.com\/embed\/([^?&]+)/);
+    if (vimeoMatch) videoUrl = `https://vimeo.com/${vimeoMatch[1]}`;
+    else if (ytMatch) videoUrl = `https://www.youtube.com/watch?v=${ytMatch[1]}`;
   }
 
-  // Convert YouTube embed URL to clean URL
-  const youtubeMatch = videoUrl.match(/youtube\.com\/embed\/([^?&]+)/);
-  if (youtubeMatch) {
-    videoUrl = `https://www.youtube.com/watch?v=${youtubeMatch[1]}`;
-  }
+  if (!videoUrl) return;
 
   const cells = [];
   const link = document.createElement('a');

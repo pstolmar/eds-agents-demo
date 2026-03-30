@@ -58,6 +58,49 @@ const embedTwitter = (url) => {
   return embedHTML;
 };
 
+/**
+ * Initialize DASH video playback using dash.js
+ * Plays .mpd manifests as full-bleed background video
+ */
+const embedDashVideo = (block, mpdUrl) => {
+  block.textContent = '';
+  block.classList.add('embed-dash-video', 'embed-is-loaded');
+
+  const video = document.createElement('video');
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.setAttribute('playsinline', '');
+  block.appendChild(video);
+
+  /* Play/pause on visibility via IntersectionObserver */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        video.play().catch(() => { /* autoplay blocked — silent */ });
+      } else {
+        video.pause();
+      }
+    });
+  }, { threshold: 0.15 });
+
+  loadScript(
+    'https://cdn.dashjs.org/latest/dash.all.min.js',
+    () => {
+      /* eslint-disable-next-line no-undef */
+      const player = dashjs.MediaPlayer().create();
+      player.updateSettings({
+        streaming: {
+          buffer: { fastSwitchEnabled: true },
+          abr: { autoSwitchBitrate: { video: true } },
+        },
+      });
+      player.initialize(video, mpdUrl, true); /* autoplay — muted video plays immediately */
+      observer.observe(block);
+    },
+  );
+};
+
 const loadEmbed = (block, link, autoplay) => {
   if (block.classList.contains('embed-is-loaded')) {
     return;
@@ -91,10 +134,21 @@ const loadEmbed = (block, link, autoplay) => {
 
 export default function decorate(block) {
   const placeholder = block.querySelector('picture');
-  const link = block.querySelector('a')?.href;
+  const anchor = block.querySelector('a');
+  /* Prefer textContent — AEM CDN rewrites href but preserves display text */
+  const rawText = anchor?.textContent?.trim();
+  const link = (rawText && /^https?:\/\//.test(rawText)) ? rawText : anchor?.href;
   block.textContent = '';
 
   if (!link) return;
+
+  /* MPEG-DASH .mpd — use dash.js for full-bleed video background */
+  if (link.endsWith('.mpd')) {
+    block.classList.add('embed-dash-video');
+    /* Load eagerly — hero-adjacent videos should buffer immediately */
+    embedDashVideo(block, link);
+    return;
+  }
 
   if (placeholder) {
     const wrapper = document.createElement('div');

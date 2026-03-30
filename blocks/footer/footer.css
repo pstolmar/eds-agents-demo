@@ -2,6 +2,8 @@ footer {
   background-color: #041f41;
   color: #fff;
   font-size: var(--body-font-size-xs);
+  position: relative;
+  z-index: 1;
 }
 
 footer .footer > div {
@@ -42,5 +44,183 @@ footer .footer a:hover {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+  }
+}
+
+/* ── Deloitte footer ── */
+footer:has(.dt-footer) {
+  background: #000;
+}
+
+footer:has(.dt-footer) .footer > div {
+  max-width: unset;
+  padding: 0;
+}
+
+footer .dt-footer {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Top: dark section */
+footer .dt-footer-top {
+  background: #000;
+  color: #d0d0ce;
+  padding: 64px 24px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+footer .dt-footer-top h3 {
+  font-size: 32px;
+  font-weight: 300;
+  color: #f5f6f6;
+  margin: 0 0 40px;
+}
+
+footer .dt-footer-links-social {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+footer .dt-footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+footer .dt-footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+footer .dt-footer-primary a:any-link {
+  font-size: 20px;
+  font-weight: 300;
+  color: #d0d0ce;
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+footer .dt-footer-col h4 {
+  font-size: 20px;
+  font-weight: 300;
+  color: #d0d0ce;
+  margin: 0;
+}
+
+footer .dt-footer-col a:any-link {
+  font-size: 14px;
+  font-weight: 300;
+  color: #d0d0ce;
+  text-decoration: none;
+  line-height: 1.7;
+}
+
+footer .dt-footer-col a:hover,
+footer .dt-footer-primary a:hover {
+  color: #86bc25;
+}
+
+/* Social */
+footer .dt-footer-social h5 {
+  font-size: 14px;
+  font-weight: 400;
+  color: #d0d0ce;
+  margin: 0 0 12px;
+}
+
+footer .dt-social-icons {
+  display: flex;
+  gap: 16px;
+}
+
+footer .dt-social-icons a:any-link {
+  color: #d0d0ce;
+  transition: color 0.2s ease;
+}
+
+footer .dt-social-icons a:hover {
+  color: #86bc25;
+}
+
+/* Bottom: light section */
+footer .dt-footer-bottom {
+  background: #fff;
+  color: #000;
+  padding: 24px;
+}
+
+footer .dt-footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-bottom: 16px;
+}
+
+footer .dt-footer-legal a:any-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  text-decoration: none;
+}
+
+footer .dt-footer-legal a:hover {
+  text-decoration: underline;
+}
+
+footer .dt-copyright {
+  font-size: 12px;
+  color: #000;
+  margin: 0 0 12px;
+}
+
+footer .dt-copyright a:any-link {
+  color: #000;
+  text-decoration: underline;
+}
+
+footer .dt-disclaimer {
+  font-size: 12px;
+  color: #000;
+  margin: 0;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
+@media (width >= 900px) {
+  footer .dt-footer-top {
+    padding: 80px 56px 64px;
+  }
+
+  footer .dt-footer-links {
+    flex-direction: row;
+    gap: 80px;
+  }
+
+  footer .dt-footer-links-social {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  footer .dt-footer-social {
+    align-self: flex-end;
+  }
+
+  footer .dt-footer-top h3 {
+    font-size: 40px;
+  }
+
+  footer .dt-footer-primary a:any-link {
+    font-size: 24px;
+  }
+
+  footer .dt-footer-col h4 {
+    font-size: 24px;
+  }
+
+  footer .dt-footer-bottom {
+    padding: 24px 56px;
   }
 }
