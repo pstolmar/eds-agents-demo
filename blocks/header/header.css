@@ -815,88 +815,99 @@ header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-e
     pointer-events: auto;
   }
 
-  /* Links column layout inside the panel */
-  .dt-mega-links {
+  /* ── Mega-panel inner layout: sidebar + tabpanel (matches source) ── */
+  .dt-mega-inner {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 40px 56px;
     display: flex;
-    flex-flow: column wrap;
-    max-height: 320px;
-    gap: 0 48px;
+    align-items: stretch;
+    min-height: 240px;
   }
 
-  .dt-mega-links a {
-    display: block;
-    padding: 10px 0;
+  /* Left sidebar — vertical category list */
+  .dt-mega-sidebar {
+    flex: 0 0 220px;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgb(255 255 255 / 8%);
+  }
+
+  .dt-sidebar-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px 12px 20px;
     color: #d0d0ce;
-    font-size: 16px;
+    font-size: 15px;
+    font-weight: 300;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .dt-sidebar-item:hover {
+    color: #fff;
+  }
+
+  .dt-sidebar-item.dt-sidebar-active {
+    color: #86bc25;
+    border-left-color: #86bc25;
+  }
+
+  .dt-sidebar-chevron {
+    font-size: 20px;
+    font-weight: 300;
+    opacity: 0.4;
+    margin-left: 8px;
+  }
+
+  .dt-sidebar-active .dt-sidebar-chevron {
+    opacity: 1;
+    color: #86bc25;
+  }
+
+  /* Right content area — tab panels */
+  .dt-mega-content {
+    flex: 1;
+    padding: 20px 40px;
+  }
+
+  .dt-tab-panel {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .dt-tab-panel.dt-tab-active {
+    display: flex;
+  }
+
+  .dt-tab-panel a {
+    display: block;
+    padding: 8px 0;
+    color: #d0d0ce;
+    font-size: 15px;
     font-weight: 300;
     text-decoration: none;
     background-image: linear-gradient(#43b02a, #43b02a);
     background-position: 0 100%;
     background-repeat: no-repeat;
     background-size: 0% 1px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition:
-      opacity 0.35s ease calc(var(--i, 0) * 0.04s + 0.12s),
-      transform 0.35s ease calc(var(--i, 0) * 0.04s + 0.12s),
-      background-size 0.4s ease,
-      color 0.2s ease;
+    transition: background-size 0.4s ease, color 0.2s ease;
   }
 
-  header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] .dt-mega-links a {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .dt-mega-links a:hover {
+  .dt-tab-panel a:hover {
     color: #fff;
     background-size: 100% 1px;
   }
 
-  /* Featured right-side panel inside mega-menu */
-  .dt-mega-featured {
-    border-left: 1px solid rgb(255 255 255 / 10%);
-    padding: 40px 48px;
-    min-width: 260px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
-  }
-
-  header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] .dt-mega-featured {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .dt-mega-panel {
-    display: flex;
-    align-items: flex-start;
-  }
-
-  .dt-featured-card h4 {
-    color: #86bc25;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin: 0 0 16px;
-  }
-
-  .dt-featured-card a {
-    display: block;
-    padding: 6px 0;
-    color: #d0d0ce;
-    font-size: 14px;
-    font-weight: 300;
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .dt-featured-card a:hover {
-    color: #fff;
+  /* Multi-column grid for panels with many items (e.g. Industry thinking) */
+  .dt-tab-panel.dt-panel-columns.dt-tab-active {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 32px;
   }
 }
 
@@ -967,6 +978,7 @@ header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-
   padding: 12px 0;
 }
 
+/* Mobile mega-panel link styles */
 header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-mega-panel a {
   display: block;
   padding: 8px 16px;
@@ -978,70 +990,6 @@ header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-
 
 header .deloitte-nav nav .nav-sections .default-content-wrapper > ul > li > .dt-mega-panel a:hover {
   color: #86bc25;
-}
-
-/* Industry research expandable sub-links */
-.dt-industry-sub {
-  display: none;
-  flex-direction: column;
-  padding-left: 16px;
-  overflow: hidden;
-}
-
-.dt-industry-sub.open {
-  display: flex;
-}
-
-.dt-mega-links a[data-industry-trigger] {
-  position: relative;
-  padding-right: 24px;
-}
-
-.dt-mega-links a[data-industry-trigger]::after {
-  content: '+';
-  position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  font-weight: 300;
-  color: #86bc25;
-  transition: transform 0.3s ease;
-}
-
-.dt-mega-links a[data-industry-trigger].active::after {
-  content: '\2212';
-}
-
-@media (width >= 900px) {
-  .dt-industry-sub {
-    padding-left: 24px;
-    margin-top: -4px;
-  }
-
-  .dt-industry-sub a {
-    display: block;
-    padding: 6px 0;
-    color: #999;
-    font-size: 14px;
-    font-weight: 300;
-    text-decoration: none;
-    opacity: 0;
-    transform: translateX(-8px);
-    transition:
-      opacity 0.3s ease calc(var(--j, 0) * 0.05s),
-      transform 0.3s ease calc(var(--j, 0) * 0.05s),
-      color 0.2s ease;
-  }
-
-  .dt-industry-sub.open a {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .dt-industry-sub a:hover {
-    color: #fff;
-  }
 }
 
 /* stylelint-enable no-descending-specificity */

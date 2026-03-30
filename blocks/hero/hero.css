@@ -60,15 +60,27 @@
   border-bottom-color: #fff;
 }
 
+.hero .button-container {
+  margin-top: 16px;
+}
+
 .hero a.button:any-link {
-  background: transparent;
+  display: inline-block;
+  background: #86bc25;
   border: none;
-  border-bottom: 2px solid var(--accent-color);
-  border-radius: 0;
-  padding: 0 0 4px;
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--text-color-inverted);
+  border-bottom: none;
+  border-radius: 24px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.hero a.button:any-link:hover {
+  background: #6da01f;
+  border-bottom-color: transparent;
 }
 
 .hero picture {
