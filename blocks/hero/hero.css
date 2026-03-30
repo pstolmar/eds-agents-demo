@@ -29,6 +29,14 @@
   width: 100%;
 }
 
+/* Prevent picture wrapper from creating a containing block (fallback when JS
+   doesn't lift the <picture> to a direct child of .hero) */
+.hero > div:has(picture) {
+  position: static;
+  z-index: 0;
+  max-width: unset;
+}
+
 .hero h1 {
   color: var(--text-color-inverted);
   font-size: clamp(28px, 5vw, 40px);
