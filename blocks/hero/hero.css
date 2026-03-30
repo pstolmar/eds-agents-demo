@@ -87,7 +87,9 @@
 .hero.hero-light {
   background-color: var(--background-color);
   min-height: auto;
-  padding: 60px 24px 40px;
+  padding: 48px 24px 32px;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .hero.hero-light::after {
@@ -96,11 +98,17 @@
 
 .hero.hero-light h1 {
   color: var(--text-color);
+  max-width: 700px;
+  font-weight: 300;
+  font-size: clamp(28px, 4vw, 36px);
 }
 
 .hero.hero-light p {
-  color: var(--text-color);
-  opacity: 0.7;
+  color: #53565a;
+  opacity: 1;
+  max-width: 600px;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .hero.hero-light a:any-link {
@@ -131,7 +139,7 @@
 
   .hero.hero-light {
     min-height: auto;
-    padding: 80px 56px 48px;
+    padding: 56px 56px 36px;
   }
 
   .hero h1 {
