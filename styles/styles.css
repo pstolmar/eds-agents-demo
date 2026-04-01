@@ -333,6 +333,7 @@ main .section.hero-container ~ .section {
 main .section.hero-container:has(.hero-light) {
   position: relative;
   z-index: auto;
+  margin-bottom: 0;
 }
 
 main .section.hero-container:has(.hero-light) ~ .section {
@@ -361,9 +362,10 @@ main .section.embed-container .embed-wrapper {
 }
 
 /* ── Insights-style topic bar: horizontal links after hero-light ── */
-main .section.hero-container:has(.hero-light) + .section {
+main .section.hero-container:has(.hero-light) + .section:not(.cards-container, .columns-container) {
   margin: 0;
-  padding: 16px 0;
+  padding: 20px 0;
+  border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
   background: var(--background-color);
 }
@@ -418,6 +420,14 @@ main .section > .default-content-wrapper:has(> ul > li > a[href*="research-cente
   main .section > .default-content-wrapper:has(> ul > li > a[href*="research-centers"]) ul {
     grid-template-columns: repeat(4, 1fr);
   }
+
+  /* Section headings inside cards sections — match source Deloitte typography */
+  main .section.cards-container > .default-content-wrapper h2 {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 0 0 24px;
+    color: var(--text-color);
+  }
 }
 
 main .section > .default-content-wrapper:has(> ul > li > a[href*="research-centers"]) li {
@@ -439,12 +449,19 @@ main .section > .default-content-wrapper:has(> ul > li > a[href*="research-cente
 
 /* stylelint-enable no-descending-specificity */
 
-/* ── Alternating section backgrounds for Insights-style pages ── */
-main .section.hero-container:has(.hero-light) ~ .section:nth-child(even of .section:not(.hero-container)) {
-  background-color: var(--light-color);
+/* ── Consistent section spacing for Insights-style pages (hero-light) ── */
+/* stylelint-disable no-descending-specificity, no-duplicate-selectors -- scoped to hero-light pattern */
+main .section.hero-container:has(.hero-light) ~ .section {
   padding: 40px 0;
   margin: 0;
 }
+
+/* Alternating gray backgrounds */
+main .section.hero-container:has(.hero-light) ~ .section:nth-child(even of .section:not(.hero-container)) {
+  background-color: var(--light-color);
+}
+
+/* stylelint-enable no-descending-specificity, no-duplicate-selectors */
 
 /* Hide debug/tracking artifacts */
 /* stylelint-disable no-descending-specificity */
