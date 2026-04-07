@@ -1,11 +1,18 @@
 export default function decorate(block) {
-  /* Promote bare <img> to <picture> for proper hero background positioning */
+  /* Move <picture>/<img> to be a direct child of the hero block for absolute positioning */
   const img = block.querySelector('img');
-  if (img && !img.closest('picture')) {
-    const picture = document.createElement('picture');
-    img.parentElement.replaceChild(picture, img);
-    picture.appendChild(img);
-    /* Move picture to be a direct child of the hero block for absolute positioning */
+  if (img) {
+    let picture = img.closest('picture');
+    if (!picture) {
+      picture = document.createElement('picture');
+      img.parentElement.replaceChild(picture, img);
+      picture.appendChild(img);
+    }
+    /* Remove the now-empty image wrapper row */
+    const emptyRow = [...block.children].find(
+      (row) => row.tagName === 'DIV' && !row.textContent.trim() && !row.querySelector('img'),
+    );
+    if (emptyRow) emptyRow.remove();
     block.prepend(picture);
   }
 

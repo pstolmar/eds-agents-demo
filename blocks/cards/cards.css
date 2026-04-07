@@ -57,6 +57,7 @@
 
 /* Image */
 .cards .cards-card-image {
+  position: relative;
   line-height: 0;
 }
 
@@ -91,15 +92,58 @@
 }
 
 .cards .cards-card-body p strong {
-  font-size: 20px;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--text-color);
-  line-height: 1.4;
+  line-height: 1.35;
+}
+
+/* Read-time text */
+.cards .cards-card-body p:not(:first-child, :last-child, :has(strong)) {
+  font-size: 12px;
+  color: #75787b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 /* Description text */
 .cards .cards-card-body p:last-child {
   margin-top: auto;
+}
+
+/* Auto-fit grid when fewer than 4 items */
+@media (width >= 900px) {
+  .cards > ul:not(:has(> li:nth-child(4))) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Video card play button overlay */
+.cards > ul > li:has(.cards-card-body a[href*="youtube.com"]) .cards-card-image::after,
+.cards > ul > li:has(.cards-card-body a[href*="youtu.be"]) .cards-card-image::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  background: rgb(0 0 0 / 70%);
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
+.cards > ul > li:has(.cards-card-body a[href*="youtube.com"]) .cards-card-image::before,
+.cards > ul > li:has(.cards-card-body a[href*="youtu.be"]) .cards-card-image::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-40%, -50%);
+  z-index: 1;
+  border-style: solid;
+  border-width: 10px 0 10px 18px;
+  border-color: transparent transparent transparent white;
 }
 
 /* Hide any residual button styling — whole card is the link */

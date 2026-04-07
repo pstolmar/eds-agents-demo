@@ -149,6 +149,116 @@
           ]
         }
       ]
+    },
+    {
+      "name": "wknd-homepage",
+      "urls": [
+        "https://wknd.site/"
+      ],
+      "description": "WKND homepage with hero, featured adventures carousel, featured articles, and next adventures section",
+      "blocks": [
+        {
+          "name": "carousel",
+          "instances": [
+            ".cmp-carousel--hero"
+          ]
+        },
+        {
+          "name": "columns",
+          "instances": [
+            ".cmp-teaser--featured"
+          ]
+        },
+        {
+          "name": "cards",
+          "instances": [
+            ".cmp-contentfragmentlist",
+            ".cmp-carousel:not(.cmp-carousel--hero)"
+          ]
+        },
+        {
+          "name": "hero",
+          "instances": [
+            ".teaser.cmp-teaser--hero:not(.cmp-carousel--hero .cmp-teaser--hero)"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "id": "hero-carousel",
+          "name": "Hero Carousel",
+          "selector": ".cmp-carousel--hero",
+          "style": null,
+          "blocks": ["carousel"],
+          "defaultContent": []
+        },
+        {
+          "id": "featured-article",
+          "name": "Featured Article",
+          "selector": ".cmp-teaser--featured",
+          "style": null,
+          "blocks": ["columns"],
+          "defaultContent": []
+        },
+        {
+          "id": "recent-articles",
+          "name": "Recent Articles",
+          "selector": ".cmp-contentfragmentlist",
+          "style": null,
+          "blocks": ["cards"],
+          "defaultContent": ["h2.cmp-title__text", ".cmp-teaser__action-link"]
+        },
+        {
+          "id": "next-adventures",
+          "name": "Next Adventures",
+          "selector": ".teaser.cmp-teaser--hero:not(.cmp-carousel--hero .cmp-teaser--hero)",
+          "style": null,
+          "blocks": ["hero"],
+          "defaultContent": ["h2.cmp-title__text"]
+        },
+        {
+          "id": "adventure-carousel",
+          "name": "Adventure Carousel",
+          "selector": ".cmp-carousel:not(.cmp-carousel--hero)",
+          "style": "dark",
+          "blocks": ["cards"],
+          "defaultContent": ["h3.cmp-title__text", ".cmp-teaser__action-link"]
+        }
+      ]
+    },
+    {
+      "name": "wknd-magazine",
+      "urls": [
+        "https://wknd.site/content/wknd/us/en/magazine.html"
+      ],
+      "description": "WKND magazine listing page with featured article hero and article card grid",
+      "blocks": [
+        {
+          "name": "columns",
+          "instances": [".cmp-teaser--featured"]
+        },
+        {
+          "name": "cards",
+          "instances": [".image-list .cmp-image-list"]
+        }
+      ]
+    },
+    {
+      "name": "wknd-adventures",
+      "urls": [
+        "https://wknd.site/content/wknd/us/en/adventures.html"
+      ],
+      "description": "WKND adventures listing page with category filter tabs and adventure card grid",
+      "blocks": [
+        {
+          "name": "hero",
+          "instances": [".cmp-teaser--hero .cmp-teaser"]
+        },
+        {
+          "name": "cards",
+          "instances": [".image-list .cmp-image-list"]
+        }
+      ]
     }
   ]
 }

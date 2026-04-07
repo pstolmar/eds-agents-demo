@@ -329,6 +329,18 @@ main .section.hero-container ~ .section {
   background: var(--background-color);
 }
 
+/* Hero-light (no background image): disable sticky parallax */
+main .section.hero-container:has(.hero-light) {
+  position: relative;
+  z-index: auto;
+  margin-bottom: 0;
+}
+
+main .section.hero-container:has(.hero-light) ~ .section {
+  position: static;
+  z-index: auto;
+}
+
 /* Preserve dark background for dark sections after hero */
 main .section.hero-container ~ .section.dark {
   background: var(--dark-color);
@@ -349,7 +361,110 @@ main .section.embed-container .embed-wrapper {
   padding: 0;
 }
 
+/* ── Insights-style topic bar: horizontal links after hero-light ── */
+main .section.hero-container:has(.hero-light) + .section:not(.cards-container, .columns-container) {
+  margin: 0;
+  padding: 20px 0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  background: var(--background-color);
+}
+
+main .section.hero-container:has(.hero-light) + .section h2 {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #53565a;
+  margin: 0 0 8px;
+}
+
+main .section.hero-container:has(.hero-light) + .section p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 2;
+}
+
+main .section.hero-container:has(.hero-light) + .section a:any-link {
+  color: var(--text-color);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+main .section.hero-container:has(.hero-light) + .section a:any-link:hover {
+  border-bottom-color: var(--accent-color);
+  text-decoration: none;
+}
+
+/* ── Research centers: styled as 2-column grid ── */
+/* stylelint-disable no-descending-specificity -- scoped to different DOM elements */
+main .section > .default-content-wrapper:has(> ul > li > a[href*="research-centers"]) ul {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (width >= 600px) {
+  main .section > .default-content-wrapper:has(> ul > li > a[href*="research-centers"]) ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  main .section > .default-content-wrapper:has(> ul > li > a[href*="research-centers"]) ul {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Section headings inside cards sections — match source Deloitte typography */
+  main .section.cards-container > .default-content-wrapper h2 {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 0 0 24px;
+    color: var(--text-color);
+  }
+}
+
+main .section > .default-content-wrapper:has(> ul > li > a[href*="research-centers"]) li {
+  padding: 16px 20px;
+  border: 1px solid #e5e5e5;
+  margin: -1px 0 0 -1px;
+}
+
+main .section > .default-content-wrapper:has(> ul > li > a[href*="research-centers"]) li a:any-link {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+main .section > .default-content-wrapper:has(> ul > li > a[href*="research-centers"]) li a:any-link:hover {
+  color: var(--link-color);
+}
+
+/* stylelint-enable no-descending-specificity */
+
+/* ── Consistent section spacing for Insights-style pages (hero-light) ── */
+/* stylelint-disable no-descending-specificity, no-duplicate-selectors -- scoped to hero-light pattern */
+main .section.hero-container:has(.hero-light) ~ .section {
+  padding: 40px 0;
+  margin: 0;
+}
+
+/* Alternating gray backgrounds */
+main .section.hero-container:has(.hero-light) ~ .section:nth-child(even of .section:not(.hero-container)) {
+  background-color: var(--light-color);
+}
+
+/* stylelint-enable no-descending-specificity, no-duplicate-selectors */
+
 /* Hide debug/tracking artifacts */
+/* stylelint-disable no-descending-specificity */
 a[href*="demdex.net"] {
   display: none !important;
 }
@@ -387,6 +502,7 @@ body:has(main > .section.dark:first-child) header nav .nav-brand p {
 body:has(main > .section.dark:first-child) header nav .nav-tools a:any-link {
   color: #fff;
 }
+/* stylelint-enable no-descending-specificity */
 
 /* Pre-blur demo pages while modules load — prevents flash of sensitive content */
 body.wm-demo-loading main {
