@@ -453,6 +453,12 @@ async function loadLazy(doc) {
   const main = doc.querySelector('main');
   await loadSections(main);
 
+  /* WKND pages: load visual effects after sections decorated */
+  if (pathname.includes('/test/wknd') || pathname.includes('/content/test/wknd')) {
+    loadCSS(`${window.hlx.codeBasePath}/styles/wknd-effects.css`);
+    import('./wknd-effects.js').then((mod) => mod.default());
+  }
+
   /* AskWalmart: decorate after sections load so accordions exist */
   if (pathname.includes('askwalmart')) {
     loadCSS(`${window.hlx.codeBasePath}/styles/wm-askwalmart.css`);
