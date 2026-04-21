@@ -1,0 +1,116 @@
+/* CTA Band block */
+.cta-band {
+  --cta-bg: rgba(255, 255, 255, 0.08);
+  --cta-text: #eef4ff;
+  --cta-label: #67d5ff;
+  --cta-muted: #b8c7e3;
+  --cta-btn-gradient: linear-gradient(135deg, #58c8ff, #9cf2ff);
+  --cta-btn-text: #04233a;
+  --cta-border: rgba(255, 255, 255, 0.14);
+  --cta-padding: 28px;
+  --cta-radius: 22px;
+
+  background: var(--cta-bg);
+  color: var(--cta-text);
+  padding: var(--cta-padding);
+  border-radius: var(--cta-radius);
+  border: 1px solid var(--cta-border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* Section background override  the CTA band lives on a dark page */
+main > .section:has(.cta-band) {
+  background: #0b1a2b;
+  margin: 0;
+  padding: 36px 0 52px;
+}
+
+/* Row layout: flex row on desktop */
+.cta-band > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+@media (width >= 900px) {
+  .cta-band > div {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* Text column */
+.cta-band > div > div:first-child {
+  flex: 1 1 auto;
+}
+
+/* Section label (em element) */
+.cta-band > div > div:first-child > p:first-child {
+  margin: 0 0 4px;
+}
+
+.cta-band em {
+  font-style: normal;
+  color: var(--cta-label);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.36px;
+}
+
+.cta-band h2 {
+  color: var(--cta-text);
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  line-height: 1.25;
+}
+
+@media (width >= 900px) {
+  .cta-band h2 {
+    font-size: 44px;
+  }
+}
+
+.cta-band > div > div:first-child > p:last-child {
+  color: var(--cta-muted);
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Button column */
+.cta-band > div > div:last-child {
+  flex-shrink: 0;
+}
+
+/* Override project button reset for CTA band button */
+main .cta-band .button-container {
+  display: block;
+}
+
+main .cta-band a.button:any-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cta-btn-gradient);
+  color: var(--cta-btn-text);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 999px;
+  min-width: 240px;
+  height: 48px;
+  padding: 0 18px;
+  border: none;
+  box-shadow: 0 12px 32px rgba(88, 200, 255, 0.25);
+  white-space: nowrap;
+  margin: 0;
+}
+
+main .cta-band a.button:hover {
+  opacity: 0.9;
+  background: var(--cta-btn-gradient);
+  color: var(--cta-btn-text);
+}
