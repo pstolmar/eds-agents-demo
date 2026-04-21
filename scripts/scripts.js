@@ -205,6 +205,12 @@ async function loadLazy(doc) {
   const main = doc.querySelector('main');
   await loadSections(main);
 
+  /* ExMod fast page: dark glassmorphism theme */
+  if (pathname.includes('/test/fast') || pathname.includes('/content/test/fast')) {
+    document.body.classList.add('exmod-fast');
+    loadCSS(`${window.hlx.codeBasePath}/styles/exmod-fast.css`);
+  }
+
   /* AskWalmart: decorate after sections load so accordions exist */
   if (pathname.includes('askwalmart')) {
     loadCSS(`${window.hlx.codeBasePath}/styles/wm-askwalmart.css`);
