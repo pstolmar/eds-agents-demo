@@ -1,0 +1,111 @@
+/* Split Band  2-col: left=label+heading+bullets, right=quote card */
+
+.split-band-wrapper {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+main .section:has(.split-band) {
+  background: #0f1923;
+  margin: 0;
+  padding: 40px 0;
+}
+
+.split-band {
+  --band-bg: #0f1923;
+  --band-text: #eef4ff;
+  --band-label: #67d5ff;
+  --band-quote-bg: rgba(255 255 255 / 0.08);
+  --band-quote-text: #b8c7e3;
+  --band-padding: 24px 32px;
+  --band-gap: 40px;
+
+  color: var(--band-text);
+  padding: var(--band-padding);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.split-band > div {
+  display: flex;
+  flex-direction: column;
+  gap: var(--band-gap);
+}
+
+.split-band h2 {
+  color: var(--band-text);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 700;
+  margin-top: 0.4em;
+  margin-bottom: 0.2em;
+  line-height: 1.2;
+}
+
+.split-band .section-label {
+  display: inline-block;
+  color: var(--band-label);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0;
+  padding: 2px 10px;
+  border: 1px solid rgba(103 213 255 / 0.3);
+  border-radius: 4px;
+  background: rgba(103 213 255 / 0.08);
+}
+
+.split-band ul {
+  padding-left: 20px;
+  margin-top: 0.8em;
+}
+
+.split-band li {
+  margin-bottom: 0.3em;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.split-band .quote-card {
+  background: var(--band-quote-bg);
+  border: 1px solid rgba(255 255 255 / 0.08);
+  border-radius: 22px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 220px;
+}
+
+.split-band .quote-card blockquote,
+.split-band .quote-card p {
+  color: var(--band-quote-text);
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.split-band .quote-card blockquote {
+  margin-bottom: 12px;
+}
+
+.split-band .quote-card .attribution {
+  color: var(--band-quote-text);
+  font-size: 16px;
+}
+
+@media (width >= 900px) {
+  .split-band > div {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .split-band > div > div:first-child {
+    flex: 3;
+  }
+
+  .split-band > div > div:last-child {
+    flex: 2;
+  }
+}
