@@ -205,7 +205,7 @@ async function loadLazy(doc) {
   const main = doc.querySelector('main');
   await loadSections(main);
 
-  /* ExMod fast page: dark glassmorphism theme */
+  /* ExMod fast page: dark glassmorphism theme v1.1 */
   if (pathname.includes('/test/fast') || pathname.includes('/content/test/fast')) {
     document.body.classList.add('exmod-fast');
     loadCSS(`${window.hlx.codeBasePath}/styles/exmod-fast.css`);
