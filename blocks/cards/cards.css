@@ -1,161 +1,223 @@
-/* Cards block — news-style grid with Show More */
-
-.cards > ul {
-  list-style: none;
+/* Section dark theme for cards */
+main .section:has(.cards) {
+  background: #0b1120;
+  color: #eef4ff;
   margin: 0;
-  padding: 0;
+  padding: 48px 0 56px;
+}
+
+/* Section label above cards */
+main .section:has(.cards) > div > p.section-label {
+  color: #67d5ff;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 8px;
+}
+
+/* Section heading */
+main .section:has(.cards) > div > h2 {
+  color: #eef4ff;
+  margin-top: 0;
+}
+
+/* Section copy  the plain <p> after h2 (not section-label, not toggle) */
+main .section:has(.cards) > div > p:not(.section-label) {
+  color: #b8c7e3;
+  font-size: 16px;
+  margin-bottom: 24px;
+}
+
+/* Cards block  offer grid */
+.cards {
+  --cards-text: #eef4ff;
+  --cards-muted: #b8c7e3;
+  --cards-gap: 18px;
+
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr;
+  gap: var(--cards-gap);
 }
 
-@media (width >= 900px) {
-  .cards > ul {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.cards > ul > li {
-  border-radius: 7px;
-  background-color: var(--background-color);
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgb(199 200 203);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.cards > ul > li:hover {
-  box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
-  transform: translateY(-2px);
-}
-
-.cards > ul > li.cards-hidden {
-  display: none;
-}
-
-.cards > ul > li.cards-reveal {
-  animation: cards-fade-in 0.4s ease both;
-}
-
-@keyframes cards-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Clickable card link wrapper */
-.cards .cards-card-link {
+/* Each row = one card (vertical stack) */
+.cards > div {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  text-decoration: none;
-  color: inherit;
 }
 
-/* Image */
-.cards .cards-card-image {
-  line-height: 0;
+/* Image cell */
+.cards > div > div:first-child {
+  aspect-ratio: 800 / 420;
+  overflow: hidden;
+  border-radius: 4px 4px 0 0;
 }
 
-.cards > ul > li img {
+.cards > div > div:first-child picture {
+  display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100%;
+}
+
+.cards > div > div:first-child img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-/* Body */
-.cards .cards-card-body {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+/* Text cell */
+.cards > div > div:last-child {
+  padding: 12px 0 16px;
 }
 
-/* Date */
-.cards .cards-card-date {
+/* Kicker  first p in text cell */
+.cards > div > div:last-child > p:first-child {
+  color: var(--cards-muted);
   font-size: 14px;
-  color: #46474a;
-  line-height: 1.15;
-  margin: 0 0 6px;
+  margin: 0 0 4px;
 }
 
-/* Title (bold strong in first p) */
-.cards .cards-card-body p {
-  margin: 0 0 6px;
-  font-size: 14px;
-  color: #333;
-  line-height: 1.43;
-}
-
-.cards .cards-card-body p strong {
-  font-size: 18px;
+.cards > div > div:last-child h3 {
+  color: var(--cards-text);
+  font-size: 20px;
   font-weight: 700;
-  color: #333;
-  line-height: 1.33;
+  margin: 0 0 8px;
 }
 
-/* Description text */
-.cards .cards-card-body p:last-child {
-  margin-top: auto;
+/* Body text */
+.cards > div > div:last-child > p:nth-child(3) {
+  color: var(--cards-muted);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 8px;
 }
 
-/* Hide any residual button styling — whole card is the link */
-.cards .cards-card-body a.button:any-link {
-  display: none;
+/* Link styles  reset EDS button auto-decoration */
+main .cards a.button:any-link {
+  color: #67d5ff;
+  text-decoration: underline;
+  font-size: 15px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-weight: 400;
+  text-align: left;
+  white-space: normal;
 }
 
-/* Show More button */
-.cards-show-more {
-  display: flex;
-  justify-content: center;
-  margin-top: 32px;
+main .cards .button-container {
+  display: inline;
 }
 
-.cards-show-more button {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 24px;
-  border: 1px solid #2e2f32;
-  border-radius: 30px;
-  background: white;
-  color: #2e2f32;
+@media (width >= 900px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Paginate wrapper */
+.cards-paginate-wrapper {
+  display: contents;
+}
+
+/* Paginate mode  tighter layout so 6 cards + controls fit on screen */
+.cards--paginate {
+  gap: 8px;
+}
+
+.cards--paginate > div > div:first-child {
+  aspect-ratio: 800 / 280;
+}
+
+.cards--paginate > div > div:last-child {
+  padding: 6px 0 8px;
+}
+
+.cards--paginate > div > div:last-child h3 {
   font-size: 16px;
-  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.cards--paginate > div > div:last-child > p {
+  font-size: 13px;
+  margin: 0 0 4px;
+}
+
+/* Scroll mode  cards fade in as they enter the viewport */
+.cards--hidden {
+  opacity: 0;
+  transform: translateY(32px);
+}
+
+.cards--visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+/* Pagination controls */
+.cards-pagination {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  justify-content: center;
+}
+
+.cards-pagination button {
+  background: rgba(255, 255, 255, 0.08);
+  color: #67d5ff;
+  border: 1px solid rgba(103, 213, 255, 0.3);
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-family: inherit;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background 0.15s;
 }
 
-.cards-show-more button:hover {
-  background: #2e2f32;
-  color: white;
+.cards-pagination button:hover:not(:disabled) {
+  background: rgba(103, 213, 255, 0.15);
 }
 
-/* Scroll-effects: flip + fade reveal triggered by IntersectionObserver */
-.cards > ul > li.cards-scroll-reveal {
-  animation: cards-scroll-in 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+.cards-pagination button:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
-@keyframes cards-scroll-in {
-  from {
-    opacity: 0;
-    transform: perspective(600px) translateY(40px) rotateX(8deg);
-  }
-
-  to {
-    opacity: 1;
-    transform: perspective(600px) translateY(0) rotateX(0);
-  }
+.cards-page-info {
+  color: #b8c7e3;
+  font-size: 14px;
+  min-width: 100px;
+  text-align: center;
 }
 
-/* Respect reduced-motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .cards > ul > li.cards-reveal,
-  .cards > ul > li.cards-scroll-reveal {
-    animation: none;
-  }
+/* Mode toggle */
+.cards-mode-toggle {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+
+.cards-mode-btn {
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(103, 213, 255, 0.35);
+  color: #67d5ff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.cards-mode-btn:hover {
+  background: rgba(103, 213, 255, 0.1);
+}
+
+.cards-mode-btn.active {
+  background: rgba(103, 213, 255, 0.18);
+  border-color: #67d5ff;
 }
