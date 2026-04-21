@@ -1,3 +1,5 @@
+@import url('brand.css');
+
 /*
  * Copyright 2020 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -43,6 +45,13 @@
 
   /* nav height */
   --nav-height: 64px;
+}
+
+main .button-container { display: inline; }
+main a.button:any-link {
+  background: none; border: none; border-radius: 0;
+  color: var(--link-color); font-size: inherit; font-weight: inherit;
+  padding: 0; margin: 0; text-decoration: underline; white-space: normal;
 }
 
 /* fallback fonts */
@@ -263,7 +272,7 @@ p:has(> a[href*="demdex.net"]:only-child) {
   display: none !important;
 }
 
-/* Pre-blur demo pages while modules load — prevents flash of sensitive content */
+/* Pre-blur demo pages while modules load  prevents flash of sensitive content */
 body.wm-demo-loading main {
   filter: blur(20px);
   opacity: 0.4;
