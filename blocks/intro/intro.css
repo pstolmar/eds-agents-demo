@@ -1,0 +1,85 @@
+/* Intro block  dark 2-col layout with callout card */
+
+main > .section:has(.intro-wrapper) {
+  background: #0b1726;
+  margin: 0;
+  padding: 0;
+}
+
+main > .section:has(.intro-wrapper) > div {
+  max-width: 1200px;
+  padding: 0 32px;
+}
+
+.intro {
+  --intro-text: #eef4ff;
+  --intro-muted: #b8c7e3;
+  --intro-label-color: #67d5ff;
+  --intro-callout-bg: rgba(255, 255, 255, 0.08);
+  --intro-callout-border: rgba(255, 255, 255, 0.14);
+  --intro-gap: 20px;
+
+  color: var(--intro-text);
+  padding: 32px 0 16px;
+}
+
+.intro h2 {
+  color: var(--intro-text);
+  font-size: 2.7rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-top: 0.4em;
+}
+
+.intro p {
+  color: var(--intro-muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.intro .section-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--intro-label-color);
+  background: rgba(103, 213, 255, 0.12);
+  padding: 4px 12px;
+  border-radius: 12px;
+  margin: 0;
+}
+
+.intro .callout {
+  background: var(--intro-callout-bg);
+  border: 1px solid var(--intro-callout-border);
+  border-radius: 22px;
+  padding: 24px;
+}
+
+.intro .callout h3 {
+  color: var(--intro-text);
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 0;
+}
+
+.intro .callout p {
+  color: var(--intro-muted);
+  font-size: 16px;
+}
+
+@media (width >= 900px) {
+  .intro > div {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: var(--intro-gap);
+    align-items: center;
+  }
+}
+
+@media (width < 900px) {
+  .intro .callout {
+    margin-top: 16px;
+  }
+}
