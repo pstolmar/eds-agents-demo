@@ -43,23 +43,10 @@ function applyPaginateMode(block) {
   const totalPages = Math.ceil(total / PAGE_SIZE);
   let page = 0;
 
-  // Insert a wrapper so we can place controls above and below
   const wrapper = document.createElement('div');
   wrapper.className = 'cards-paginate-wrapper';
   block.parentNode.insertBefore(wrapper, block);
   wrapper.appendChild(block);
-
-  let topBar = buildPaginationBar(page, totalPages, onPrev, onNext);
-  let bottomBar = buildPaginationBar(page, totalPages, onPrev, onNext);
-  wrapper.prepend(topBar);
-  wrapper.append(bottomBar);
-
-  function onPrev() {
-    if (page > 0) { page -= 1; render(); }
-  }
-  function onNext() {
-    if (page < totalPages - 1) { page += 1; render(); }
-  }
 
   function render() {
     const start = page * PAGE_SIZE;
@@ -67,18 +54,31 @@ function applyPaginateMode(block) {
     rows.forEach((row, i) => {
       row.style.display = (i >= start && i < end) ? '' : 'none';
     });
-
-    // Rebuild both bars in place (simplest way to update disabled state)
+    // eslint-disable-next-line no-use-before-define
     const newTop = buildPaginationBar(page, totalPages, onPrev, onNext);
+    // eslint-disable-next-line no-use-before-define
     const newBottom = buildPaginationBar(page, totalPages, onPrev, onNext);
     topBar.replaceWith(newTop);
     bottomBar.replaceWith(newBottom);
+    // eslint-disable-next-line no-use-before-define
     topBar = newTop;
+    // eslint-disable-next-line no-use-before-define
     bottomBar = newBottom;
-
-    // Scroll just the top of the wrapper into view  not the page top
     wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
+
+  function onPrev() {
+    if (page > 0) { page -= 1; render(); }
+  }
+
+  function onNext() {
+    if (page < totalPages - 1) { page += 1; render(); }
+  }
+
+  let topBar = buildPaginationBar(page, totalPages, onPrev, onNext);
+  let bottomBar = buildPaginationBar(page, totalPages, onPrev, onNext);
+  wrapper.prepend(topBar);
+  wrapper.append(bottomBar);
 
   block.classList.add('cards--paginate');
   render();
