@@ -222,4 +222,3 @@ export default function init() {
     if (s.children.length > 0) wrapper.appendChild(s);
   });
 }
-
