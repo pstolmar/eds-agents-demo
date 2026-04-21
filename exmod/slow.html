@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ExMod Slow Demo</title>
+  <meta
+    name="description"
+    content="Intentionally slow demo page for side-by-side EDS / ExMod before-and-after comparisons."
+  >
+  <link rel="stylesheet" href="./slow.css">
+  <script>
+    /*
+      Intentionally block first render.
+      Increase BLOCK_MS if Desktop Lighthouse is not low enough.
+    */
+    (() => {
+      const BLOCK_MS = 1600;
+      const start = performance.now();
+      while (performance.now() - start < BLOCK_MS) {
+        Math.sqrt(Math.random() * 1000);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <header class="hero shell">
+    <div class="eyebrow">Experience Modernization demo source page</div>
+    <h1>Modernize the experience, not the message</h1>
+    <p class="lede">
+      This page is intentionally implemented in a poor way so you can migrate or
+      optimize it and show a visually similar result with dramatically better performance.
+    </p>
+    <div class="hero-actions">
+      <a class="button primary" href="#offers">Explore offers</a>
+      <a class="button secondary" href="#faq">Read FAQ</a>
+    </div>
+    <ul class="stats">
+      <li><strong>48</strong><span>Markets</span></li>
+      <li><strong>12</strong><span>Business units</span></li>
+      <li><strong>250+</strong><span>Reusable stories</span></li>
+      <li><strong id="score-label">Poor</strong><span>Expected score</span></li>
+    </ul>
+  </header>
+
+  <main>
+    <section class="shell intro">
+      <div>
+        <div class="section-label">Why this page is slow</div>
+        <h2>Same content, deliberately bad implementation</h2>
+        <p>
+          The visual story is reasonable, but the implementation is intentionally bad:
+          render-blocking work, heavy DOM generation, layout thrashing, eager media,
+          and expensive scroll/resize handlers.
+        </p>
+      </div>
+      <div class="callout">
+        <h3>Demo objective</h3>
+        <p>
+          Rebuild this page into a fast page while keeping the overall look and the
+          same visible content.
+        </p>
+      </div>
+    </section>
+
+    <section id="offers" class="shell">
+      <div class="section-label">Offer grid</div>
+      <h2>Featured offers</h2>
+      <p class="section-copy">
+        The cards below are generated in an intentionally expensive way.
+      </p>
+      <div id="offers-grid" class="grid"></div>
+    </section>
+
+    <section class="shell split-band">
+      <div>
+        <div class="section-label">Proof points</div>
+        <h2>Content that should survive modernization</h2>
+        <ul class="bullets">
+          <li>Hero heading, text, and CTAs</li>
+          <li>Stats row</li>
+          <li>Offer cards with images, headings, body copy, and links</li>
+          <li>FAQ accordion-like content</li>
+          <li>Final CTA section</li>
+        </ul>
+      </div>
+      <div class="quote-card">
+        <p>
+          “The goal is not changing the story. The goal is making the same story feel instant.”
+        </p>
+        <span>— Demo narrator line</span>
+      </div>
+    </section>
+
+    <section id="faq" class="shell">
+      <div class="section-label">FAQ</div>
+      <h2>Frequently asked questions</h2>
+      <div id="faq-list" class="faq-list"></div>
+    </section>
+
+    <section class="shell cta-band">
+      <div>
+        <div class="section-label">Next step</div>
+        <h2>Compare this page against the optimized version</h2>
+        <p>
+          Use the same content, keep the visual intent, and move the implementation
+          to a performant pattern.
+        </p>
+      </div>
+      <a class="button primary large" href="/test/exmod/fast.html">See optimized version</a>
+    </section>
+  </main>
+
+  <footer class="site-footer shell">
+    <div>ExMod slow demo artifact</div>
+    <div>Built only for side-by-side modernization demos</div>
+  </footer>
+
+  <script src="./slow.js"></script>
+</body>
+</html>
