@@ -1,111 +1,101 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+const PAGE_SIZE = 6;
 
-const MONTHS = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
-const CARDS_PER_ROW = 4;
-
-function extractDateFromUrl(url) {
-  const match = url?.match(/\/(\d{4})\/(\d{2})\/(\d{2})\//);
-  if (!match) return null;
-  const [, y, m, d] = match;
-  return `${MONTHS[parseInt(m, 10) - 1]} ${parseInt(d, 10)}, ${y}`;
+function getMode() {
+  const param = new URLSearchParams(window.location.search).get('cards');
+  if (param === 'scroll' || param === 'paginate') return param;
+  return 'inline';
 }
 
-export default function decorate(block) {
-  /* change to ul, li */
-  const ul = document.createElement('ul');
-  [...block.children].forEach((row) => {
-    const li = document.createElement('li');
-    while (row.firstElementChild) li.append(row.firstElementChild);
-    [...li.children].forEach((div) => {
-      const hasPic = div.querySelector('picture') || div.querySelector('img');
-      if (div.children.length === 1 && hasPic) div.className = 'cards-card-image';
-      else div.className = 'cards-card-body';
-    });
+function applyScrollMode(block) {
+  block.classList.add('cards--scroll');
+  const rows = Array.from(block.children);
+  rows.forEach((row) => row.classList.add('cards--hidden'));
 
-    /* If card body has a link, make whole card clickable and extract date */
-    const body = li.querySelector('.cards-card-body');
-    const bodyLink = body?.querySelector('a');
-    if (bodyLink) {
-      const href = bodyLink.getAttribute('href');
-
-      /* Extract date from news-style URL */
-      const dateStr = extractDateFromUrl(href);
-      if (dateStr) {
-        const dateEl = document.createElement('p');
-        dateEl.className = 'cards-card-date';
-        dateEl.textContent = dateStr;
-        body.prepend(dateEl);
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('cards--hidden');
+        entry.target.classList.add('cards--visible');
+        io.unobserve(entry.target);
       }
-
-      /* Remove link paragraph ‚Äî whole card becomes clickable */
-      const linkP = bodyLink.closest('p');
-      if (linkP) linkP.remove();
-
-      /* Wrap li contents in an anchor */
-      const cardLink = document.createElement('a');
-      cardLink.href = href;
-      cardLink.className = 'cards-card-link';
-      while (li.firstChild) cardLink.appendChild(li.firstChild);
-      li.appendChild(cardLink);
-    }
-
-    ul.append(li);
-  });
-
-  ul.querySelectorAll('picture > img').forEach((img) => {
-    img.closest('picture').replaceWith(
-      createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]),
-    );
-  });
-
-  block.replaceChildren(ul);
-
-  /* Show More ‚Äî only when there are more cards than one row */
-  const allCards = [...ul.querySelectorAll('li')];
-  if (allCards.length > CARDS_PER_ROW) {
-    let visible = CARDS_PER_ROW;
-    allCards.forEach((card, i) => {
-      if (i >= CARDS_PER_ROW) card.classList.add('cards-hidden');
     });
+  }, { rootMargin: '0px 0px -60px 0px', threshold: 0.05 });
 
-    const showMore = document.createElement('div');
-    showMore.className = 'cards-show-more';
-    showMore.innerHTML = '<button type="button">Show More</button>';
-    block.appendChild(showMore);
+  rows.forEach((row) => io.observe(row));
+}
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function buildPaginationBar(page, totalPages, onPrev, onNext) {
+  const bar = document.createElement('div');
+  bar.className = 'cards-pagination';
+  bar.innerHTML = `
+    <button class="cards-prev" aria-label="Previous page"${page === 0 ? ' disabled' : ''}>ê Prev</button>
+    <span class="cards-page-info">Page ${page + 1} of ${totalPages}</span>
+    <button class="cards-next" aria-label="Next page"${page >= totalPages - 1 ? ' disabled' : ''}>Next í</button>
+  `;
+  bar.querySelector('.cards-prev').addEventListener('click', onPrev);
+  bar.querySelector('.cards-next').addEventListener('click', onNext);
+  return bar;
+}
 
-    const revealNextRow = (animClass) => {
-      const next = Math.min(visible + CARDS_PER_ROW, allCards.length);
-      for (let i = visible; i < next; i += 1) {
-        const card = allCards[i];
-        card.classList.remove('cards-hidden');
-        if (!reducedMotion) {
-          card.classList.add(animClass);
-          card.style.animationDelay = `${(i - visible) * 0.12}s`;
-        }
-      }
-      visible = next;
-      if (visible >= allCards.length) showMore.style.display = 'none';
-    };
+function applyPaginateMode(block) {
+  const rows = Array.from(block.children);
+  const total = rows.length;
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  let page = 0;
 
-    showMore.querySelector('button').addEventListener('click', () => {
-      revealNextRow('cards-reveal');
-    });
+  // Insert a wrapper so we can place controls above and below
+  const wrapper = document.createElement('div');
+  wrapper.className = 'cards-paginate-wrapper';
+  block.parentNode.insertBefore(wrapper, block);
+  wrapper.appendChild(block);
 
-    /* Scroll-effects toggle: ?extras=scroll enables IntersectionObserver auto-reveal */
-    const extras = new URLSearchParams(window.location.search).get('extras') || '';
-    const scrollEnabled = extras.split(',').some((t) => t.trim() === 'scroll');
-    if (scrollEnabled) {
-      block.classList.add('cards-scroll-active');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && visible < allCards.length) {
-            revealNextRow('cards-scroll-reveal');
-          }
-        });
-      }, { rootMargin: '200px 0px' });
-      observer.observe(showMore);
-    }
+  let topBar = buildPaginationBar(page, totalPages, onPrev, onNext);
+  let bottomBar = buildPaginationBar(page, totalPages, onPrev, onNext);
+  wrapper.prepend(topBar);
+  wrapper.append(bottomBar);
+
+  function onPrev() {
+    if (page > 0) { page -= 1; render(); }
   }
+  function onNext() {
+    if (page < totalPages - 1) { page += 1; render(); }
+  }
+
+  function render() {
+    const start = page * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+    rows.forEach((row, i) => {
+      row.style.display = (i >= start && i < end) ? '' : 'none';
+    });
+
+    // Rebuild both bars in place (simplest way to update disabled state)
+    const newTop = buildPaginationBar(page, totalPages, onPrev, onNext);
+    const newBottom = buildPaginationBar(page, totalPages, onPrev, onNext);
+    topBar.replaceWith(newTop);
+    bottomBar.replaceWith(newBottom);
+    topBar = newTop;
+    bottomBar = newBottom;
+
+    // Scroll just the top of the wrapper into view  not the page top
+    wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  block.classList.add('cards--paginate');
+  render();
+}
+
+function addModeToggle(block) {
+  const current = getMode();
+  const modes = ['inline', 'scroll', 'paginate'];
+  const nav = document.createElement('div');
+  nav.className = 'cards-mode-toggle';
+  nav.innerHTML = modes.map((m) => `<a href="?cards=${m}" class="cards-mode-btn${m === current ? ' active' : ''}">${m}</a>`).join('');
+  block.closest('.section').querySelector('h2').after(nav);
+}
+
+export default async function decorate(block) {
+  const mode = getMode();
+  addModeToggle(block);
+  if (mode === 'scroll') applyScrollMode(block);
+  else if (mode === 'paginate') applyPaginateMode(block);
 }
