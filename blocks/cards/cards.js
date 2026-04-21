@@ -48,24 +48,11 @@ function applyPaginateMode(block) {
   block.parentNode.insertBefore(wrapper, block);
   wrapper.appendChild(block);
 
-  function render() {
-    const start = page * PAGE_SIZE;
-    const end = start + PAGE_SIZE;
-    rows.forEach((row, i) => {
-      row.style.display = (i >= start && i < end) ? '' : 'none';
-    });
-    // eslint-disable-next-line no-use-before-define
-    const newTop = buildPaginationBar(page, totalPages, onPrev, onNext);
-    // eslint-disable-next-line no-use-before-define
-    const newBottom = buildPaginationBar(page, totalPages, onPrev, onNext);
-    topBar.replaceWith(newTop);
-    bottomBar.replaceWith(newBottom);
-    // eslint-disable-next-line no-use-before-define
-    topBar = newTop;
-    // eslint-disable-next-line no-use-before-define
-    bottomBar = newBottom;
-    wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+  // Declare bars first so render() can reference them
+  let topBar = document.createElement('div');
+  let bottomBar = document.createElement('div');
+  wrapper.prepend(topBar);
+  wrapper.append(bottomBar);
 
   function onPrev() {
     if (page > 0) { page -= 1; render(); }
@@ -75,10 +62,20 @@ function applyPaginateMode(block) {
     if (page < totalPages - 1) { page += 1; render(); }
   }
 
-  let topBar = buildPaginationBar(page, totalPages, onPrev, onNext);
-  let bottomBar = buildPaginationBar(page, totalPages, onPrev, onNext);
-  wrapper.prepend(topBar);
-  wrapper.append(bottomBar);
+  function render() {
+    const start = page * PAGE_SIZE;
+    const end = start + PAGE_SIZE;
+    rows.forEach((row, i) => {
+      row.style.display = (i >= start && i < end) ? '' : 'none';
+    });
+    const newTop = buildPaginationBar(page, totalPages, onPrev, onNext);
+    const newBottom = buildPaginationBar(page, totalPages, onPrev, onNext);
+    topBar.replaceWith(newTop);
+    bottomBar.replaceWith(newBottom);
+    topBar = newTop;
+    bottomBar = newBottom;
+    wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 
   block.classList.add('cards--paginate');
   render();
